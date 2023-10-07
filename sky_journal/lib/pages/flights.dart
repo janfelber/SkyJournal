@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'action/addFlightRecord.dart';
+import 'action/getCurrentDate.dart';
 
 class Flights extends StatefulWidget {
   const Flights({Key? key}) : super(key: key);
 
   @override
   State<Flights> createState() => _FlightsState();
-}
-
-String getCurrentDate() {
-  DateTime currentDate = DateTime.now();
-  String formattedDate = DateFormat.yMMMMd('en_US').format(currentDate);
-  return formattedDate;
 }
 
 class _FlightsState extends State<Flights> {
@@ -55,7 +50,9 @@ class _FlightsState extends State<Flights> {
                     ),
                     padding: EdgeInsets.all(12),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        addFlightRecord(context);
+                      },
                       child: Icon(
                         Icons.add_rounded,
                         color: Colors.white,
