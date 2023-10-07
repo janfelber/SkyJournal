@@ -92,8 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 10,
                 ),
-                //password textfield
 
+                //password textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Center(
                         child: Text(
-                          'Sign in',
+                          'Sign In',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
