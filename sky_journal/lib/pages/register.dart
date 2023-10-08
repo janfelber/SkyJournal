@@ -43,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future addUserDetails(
       String firstName, String lastName, String country, String email) async {
     await FirebaseFirestore.instance.collection('users').add({
-      'fist name': firstName,
+      'first name': firstName,
       'last name': lastName,
       'country': country,
       'email': email,
@@ -116,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderSide: BorderSide(color: Colors.orange),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      hintText: 'Fisrt Name',
+                      hintText: 'First Name',
                       fillColor: Colors.grey[200],
                       filled: true,
                     ),
@@ -264,7 +264,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 10,
                 ),
 
-                //sign in button
+                //sign up button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: GestureDetector(
