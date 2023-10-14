@@ -3,7 +3,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'action/addFlightRecord.dart';
+import 'package:sky_journal/components/my_list_tile.dart';
+import 'package:sky_journal/components/push_to_new_page.dart';
+import 'package:sky_journal/database/firestore.dart';
+import 'package:sky_journal/pages/add_flight_page.dart';
+import 'package:sky_journal/pages/flight_details_page.dart';
 import 'action/getCurrentDate.dart';
 
 class Flights extends StatefulWidget {
@@ -14,6 +18,8 @@ class Flights extends StatefulWidget {
 }
 
 class _FlightsState extends State<Flights> {
+  final FirestoreDatabase database = FirestoreDatabase();
+
   String? nameOfUser;
 
   @override
@@ -53,33 +59,35 @@ class _FlightsState extends State<Flights> {
       backgroundColor: Colors.blue[800],
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(25.0),
+          padding: EdgeInsets.only(left: 25, right: 25, top: 25),
           child: Column(
             children: [
-              //Greetings Row
+              // Greetings Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hello, ${nameOfUser}!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                  if (nameOfUser !=
+                      null) // Podmínka pro zobrazení pouze pokud je nameOfUser k dispozici
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hello, ${nameOfUser}!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        getCurrentDate(),
-                        style: TextStyle(color: Colors.blue[200]),
-                      )
-                    ],
-                  ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          getCurrentDate(),
+                          style: TextStyle(color: Colors.blue[200]),
+                        ),
+                      ],
+                    ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.blue[600],
@@ -88,7 +96,14 @@ class _FlightsState extends State<Flights> {
                     padding: EdgeInsets.all(12),
                     child: GestureDetector(
                       onTap: () {
-                        addFlightRecord(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (contex) {
+                              return AddFlightPage();
+                            },
+                          ),
+                        );
                       },
                       child: Icon(
                         Icons.add_rounded,
@@ -102,7 +117,7 @@ class _FlightsState extends State<Flights> {
               SizedBox(
                 height: 25,
               ),
-              //SearchBar
+              // SearchBar
               Container(
                 decoration: BoxDecoration(
                   color: Colors.blue[600],
@@ -129,6 +144,92 @@ class _FlightsState extends State<Flights> {
               SizedBox(
                 height: 25,
               ),
+
+              // Flight List
+              StreamBuilder(
+                stream: database.getFlightsStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(25),
+                        child: Text('No flights yet'),
+                      ),
+                    );
+                  }
+
+                  final flights = snapshot.data!.docs;
+                  final List<QueryDocumentSnapshot> userFlights = [];
+
+                  // Get current user
+                  User? currentUser = FirebaseAuth.instance.currentUser;
+
+                  if (currentUser != null) {
+                    // Get flights for the current user
+                    for (var flight in flights) {
+                      String userEmailAddress = flight['UserEmail'];
+
+                      if (userEmailAddress == currentUser.email) {
+                        userFlights.add(flight);
+                      }
+                    }
+                  }
+
+                  if (userFlights.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(25),
+                        child: Text('No flights for the current user'),
+                      ),
+                    );
+                  }
+
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: userFlights.length,
+                      itemBuilder: (context, index) {
+                        final flight = userFlights[index];
+
+                        String flightNumber = flight['FlightNumber'];
+                        String startDate = flight['StartDate'];
+                        String endDate = flight['EndDate'];
+                        String startDestination = flight['StartDestination'];
+                        String endDestination = flight['EndDestination'];
+                        String timeOfTakeOff = flight['TimeOfTakeOff'];
+                        String timeOfLanding = flight['TimeOfLanding'];
+                        String airline = flight['Airline'];
+
+                        return MyListTile(
+                            flightNumber: flightNumber,
+                            startDate: startDate,
+                            endDate: endDate,
+                            startDestination: startDestination,
+                            endDestination: endDestination,
+                            timeOfTakeOff: timeOfTakeOff,
+                            timeOfLanding: timeOfLanding,
+                            onTap: () {
+                              pushToNewPage(
+                                  context,
+                                  FlightDetailsPage(
+                                    flightNumber: flightNumber,
+                                    startDate: startDate,
+                                    endDate: endDate,
+                                    startDestination: startDestination,
+                                    endDestination: endDestination,
+                                    timeOfTakeOff: timeOfTakeOff,
+                                    timeOfLanding: timeOfLanding,
+                                    airline: airline,
+                                  ));
+                            });
+                      },
+                    ),
+                  );
+                },
+              )
             ],
           ),
         ),
@@ -136,35 +237,3 @@ class _FlightsState extends State<Flights> {
     );
   }
 }
-
-// List<String> flightDetails = [];
-
-// Future get() async {
-//   await FirebaseFirestore.instance
-//       .collection('users')
-//       .get()
-//       .then((QuerySnapshot querySnapshot) {
-//     querySnapshot.docs.forEach((document) {
-//       print(document.reference);
-//       flightDetails.add(document.reference.id);
-//     });
-//   });
-// }
-
-//Flight List
-// Expanded(
-//   child: FutureBuilder(
-//     future: getFlightDetails(),
-//     builder: (context, snapshot) {
-//       return ListView.builder(
-//         itemCount: flightDetails.length,
-//         itemBuilder: (context, index) {
-//           return ListTile(
-//               title: GetUserName(
-//             documentId: flightDetails[index],
-//           ));
-//         },
-//       );
-//     },
-//   ),
-// )
