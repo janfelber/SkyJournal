@@ -38,7 +38,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
   final TextEditingController _airlineController = TextEditingController();
 
   void addFlightRecord() {
-    //only add flight record if there is something in the text field
+    //only add flight record if there is something in the text fields
     if (_startDestinationController.text.isNotEmpty &&
         _endDestinationController.text.isNotEmpty &&
         _airlineController.text.isNotEmpty &&
@@ -74,16 +74,13 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   String GenerateFlightNumber() {
     //generate a random flight number start with random letter and then 4 random numbers
-    for (int i = 0; i < 1; i++) {
-      var random = Random();
-      String flightNumber = String.fromCharCode(random.nextInt(26) + 65) +
-          random.nextInt(10).toString() +
-          random.nextInt(10).toString() +
-          random.nextInt(10).toString() +
-          random.nextInt(10).toString();
-      return _flightNumberController.text = flightNumber;
-    }
-    return '';
+    var random = Random();
+    String flightNumber = String.fromCharCode(random.nextInt(26) + 65) +
+        random.nextInt(10).toString() +
+        random.nextInt(10).toString() +
+        random.nextInt(10).toString() +
+        random.nextInt(10).toString();
+    return _flightNumberController.text = flightNumber;
   }
 
   @override

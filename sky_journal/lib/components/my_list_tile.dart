@@ -11,6 +11,7 @@ class MyListTile extends StatelessWidget {
   final String endDestination;
   final String timeOfTakeOff;
   final String timeOfLanding;
+  final String lengthOfFlight;
 
   const MyListTile({
     super.key,
@@ -21,6 +22,7 @@ class MyListTile extends StatelessWidget {
     required this.endDestination,
     required this.timeOfTakeOff,
     required this.timeOfLanding,
+    required this.lengthOfFlight,
     required this.onTap,
   });
 
@@ -100,7 +102,7 @@ class MyListTile extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '13 h 25 min',
+                            '$lengthOfFlight',
                             style: TextStyle(color: Colors.grey),
                           )
                         ],

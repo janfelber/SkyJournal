@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sky_journal/components/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/database/firestore.dart';
@@ -51,6 +52,18 @@ class _FlightsState extends State<Flights> {
     } else {
       print('User is currently signed out');
     }
+  }
+
+  String calculateLengthOfFlight(String departureTime, String arrivalTime) {
+    var format = DateFormat("HH:mm");
+    var one = format.parse(departureTime);
+    var two = format.parse(arrivalTime);
+
+    var differenceBetweenTimes = two.difference(one);
+    var hoursOfFlight = differenceBetweenTimes.inHours;
+    var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+
+    return '$hoursOfFlight h $minutesOfFlight min';
   }
 
   @override
@@ -211,6 +224,8 @@ class _FlightsState extends State<Flights> {
                             endDestination: endDestination,
                             timeOfTakeOff: timeOfTakeOff,
                             timeOfLanding: timeOfLanding,
+                            lengthOfFlight: calculateLengthOfFlight(
+                                timeOfTakeOff, timeOfLanding),
                             onTap: () {
                               pushToNewPage(
                                   context,
