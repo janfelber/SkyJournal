@@ -18,12 +18,12 @@ class _SettingsState extends State<Settings> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Settings'),
-          Text('Signed in as: ' + user.email!),
+          const Text('Settings'),
+          Text('Signed in as: ${user.email!}'),
           MaterialButton(
             onPressed: FirebaseAuth.instance.signOut,
             color: Colors.red,
-            child: Text('Sign Out'),
+            child: const Text('Sign Out'),
           )
         ],
       )),

@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:sky_journal/pages/flights.dart';
-import 'package:sky_journal/pages/settings.dart';
-import 'package:sky_journal/pages/stats.dart';
-import 'pages/wallet.dart';
+import 'package:sky_journal/pages/flights_page.dart';
+import 'package:sky_journal/pages/settings_page.dart';
+import 'package:sky_journal/pages/stats_page.dart';
+import 'pages/wallet_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class HomePage extends StatefulWidget {

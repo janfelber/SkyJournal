@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sky_journal/pages/login.dart';
-import 'package:sky_journal/pages/register.dart';
+import 'package:sky_journal/pages/login_page.dart';
+import 'package:sky_journal/pages/register_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);

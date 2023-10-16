@@ -42,7 +42,13 @@ dependencies:
   firebase_core: ^2.17.0
   cloud_firestore: ^4.9.3
   smooth_page_indicator: ^1.1.0
+  flutter_svg: ^2.0.7
+  get: ^4.6.6
+  maps_curved_line: ^1.0.2
   google_maps_flutter: ^2.5.0
+  http: ^1.1.0
+  geocoding: ^2.1.1
+  
 
 
 dev_dependencies:
@@ -62,10 +68,15 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/style/
+    - assets/images/
+    - assets/svg/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

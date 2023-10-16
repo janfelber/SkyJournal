@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sky_journal/components/my_button.dart';
 import 'package:sky_journal/components/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
@@ -83,8 +84,15 @@ class _AddFlightPageState extends State<AddFlightPage> {
     return _flightNumberController.text = flightNumber;
   }
 
+  String getDateOnRecord() {
+    DateTime currentDate = DateTime.now();
+    String formattedDate = DateFormat('dd MMM yyy').format(currentDate);
+    return _startDateController.text = formattedDate;
+  }
+
   @override
   void initState() {
+    // getDateOnRecord();
     GenerateFlightNumber();
     super.initState();
   }

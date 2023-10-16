@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sky_journal/components/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/database/firestore.dart';
-import 'package:sky_journal/pages/add_flight_page.dart';
+import 'package:sky_journal/pages/addflight_page.dart';
 import 'package:sky_journal/pages/flight_details_page.dart';
 import 'action/getCurrentDate.dart';
 
@@ -42,7 +42,7 @@ class _FlightsState extends State<Flights> {
           .get();
 
       if (userQuery.docs.isNotEmpty) {
-        String userName = userQuery.docs.first.data()?['first name'];
+        String userName = userQuery.docs.first.data()['first name'];
         setState(() {
           nameOfUser = userName; //there we rewrite nameOfUser
         });

@@ -131,7 +131,7 @@ class _WalletState extends State<Wallet> {
             ),
 
             //cards
-            Container(
+            SizedBox(
               height: 200,
               child: PageView(
                 controller: _controller,
