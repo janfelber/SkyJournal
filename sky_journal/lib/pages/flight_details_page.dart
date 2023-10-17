@@ -9,10 +9,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
+import 'package:sky_journal/components/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/pages/view_map.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 import 'package:sky_journal/util/button.dart';
+import 'package:sky_journal/util/flightsdetails_card.dart';
 import 'package:sky_journal/util/routes.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:sky_journal/util/space.dart';
@@ -62,7 +64,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
   final Set<Polyline> _polylines = Set();
 
   CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(48.148598, 17.107748),
+    target: LatLng(48.2195335, 16.3784883),
     zoom: 10.4746,
   );
 
@@ -74,6 +76,16 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     });
 
     _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+  }
+
+  Future<LatLng> _getCinty(city) async {
+    List<Location> locationsFrom = await locationFromAddress(city);
+
+    if (locationsFrom.isNotEmpty) {
+      print(LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude));
+      return LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
+    }
+    return LatLng(0.0, 0.0);
   }
 
   // Metóda pre získanie súradníc mesta zo zadaného názvu
@@ -135,12 +147,50 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 semanticsLabel: 'A red up arrow'),
                           ],
                         ),
-                        Text(
-                          '${widget.startDestination}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.startDestination,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: textColor),
+                              ),
+                              Space.Y(5),
+                              Text(
+                                widget.startDestination,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 12,
+                                    color: textColor.withOpacity(0.5)),
+                              ),
+                              Space.Y(10),
+                              FlightCard(
+                                startDate: widget.startDate,
+                                startDestination: widget.startDestination,
+                                endDestination: widget.endDestination,
+                                timeOfTakeOff: widget.timeOfTakeOff,
+                                timeOfLanding: widget.timeOfLanding,
+                              ),
+                              Space.Y(10),
+                              Text(
+                                widget.endDestination,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: textColor),
+                              ),
+                              Space.Y(5),
+                              Text(
+                                widget.endDestination,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 12,
+                                    color: textColor.withOpacity(0.5)),
+                              ),
+                            ],
                           ),
                         ),
                         Space.X(10),

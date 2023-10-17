@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sky_journal/components/push_to_new_page.dart';
+import 'package:sky_journal/pages/addcard_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../util/my_card.dart';
@@ -112,7 +114,7 @@ class _WalletState extends State<Wallet> {
                   //add card button
                   GestureDetector(
                     onTap: () {
-                      addNewCard();
+                      pushToNewPage(context, AddCard());
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),

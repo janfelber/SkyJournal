@@ -26,6 +26,11 @@ class _ViewMapState extends State<ViewMap> {
 
   final Completer<GoogleMapController> _controller = Completer();
   late GoogleMapController mapController;
+
+  CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(0, 0),
+    zoom: 10.4746,
+  );
   LatLng _point1 = LatLng(
     0.0,
     0.0,
@@ -43,6 +48,8 @@ class _ViewMapState extends State<ViewMap> {
     });
 
     _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+
+    setupGooglePlex();
   }
 
   Future<void> _getCoordinatesFromCity(
@@ -66,10 +73,25 @@ class _ViewMapState extends State<ViewMap> {
     }
   }
 
-  final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(48.148598, 17.107748),
-    zoom: 10.4746,
-  );
+  Future<LatLng> _getCinty(city) async {
+    List<Location> locationsFrom = await locationFromAddress(city);
+
+    if (locationsFrom.isNotEmpty) {
+      print(LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude));
+      return LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
+    }
+    return LatLng(0.0, 0.0);
+  }
+
+  Future<void> setupGooglePlex() async {
+    LatLng target = await _getCinty(widget
+        .startDestination); // Nahraďte "Názov_mesta" skutočným názvom mesta, pre ktoré chcete získať súradnice
+    // Aktualizácia _kGooglePlex
+    _kGooglePlex = CameraPosition(
+      target: target,
+      zoom: 10.4746,
+    );
+  }
 
   final Set<Polyline> _polylines = Set();
 
