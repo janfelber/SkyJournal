@@ -1,24 +1,19 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_final_fields, avoid_print
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_final_fields, avoid_print, prefer_interpolation_to_compose_strings, prefer_collection_literals, avoid_unnecessary_containers
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
-import 'package:sky_journal/components/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/pages/view_map.dart';
 import 'package:sky_journal/theme/color_theme.dart';
-import 'package:sky_journal/util/button.dart';
+import 'package:sky_journal/util/cutom_appbar.dart';
 import 'package:sky_journal/util/flightsdetails_card.dart';
-import 'package:sky_journal/util/routes.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:sky_journal/util/space.dart';
-import 'package:geocoding/geocoding.dart';
 
 class FlightDetailsPage extends StatefulWidget {
   final String flightNumber;
@@ -29,6 +24,8 @@ class FlightDetailsPage extends StatefulWidget {
   final String timeOfTakeOff;
   final String timeOfLanding;
   final String airline;
+  final String numbersOfPassengers;
+  final String avgSpeed;
 
   const FlightDetailsPage(
       {super.key,
@@ -39,7 +36,9 @@ class FlightDetailsPage extends StatefulWidget {
       required this.endDestination,
       required this.timeOfTakeOff,
       required this.timeOfLanding,
-      required this.airline});
+      required this.airline,
+      required this.numbersOfPassengers,
+      required this.avgSpeed});
 
   @override
   State<FlightDetailsPage> createState() => _FlightDetailsPageState();
@@ -62,6 +61,8 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
   );
 
   final Set<Polyline> _polylines = Set();
+
+  LatLng target = LatLng(0, 0);
 
   CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(48.2195335, 16.3784883),
@@ -124,8 +125,8 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     ));
     return Scaffold(
       backgroundColor: Surface,
-      appBar: AppBar(
-        title: Text('Flight Details'),
+      appBar: CustomAppBar(
+        title: 'Flight Details',
       ),
       body: Container(
         child: Stack(
@@ -147,6 +148,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 semanticsLabel: 'A red up arrow'),
                           ],
                         ),
+                        Space.X(10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,6 +175,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 endDestination: widget.endDestination,
                                 timeOfTakeOff: widget.timeOfTakeOff,
                                 timeOfLanding: widget.timeOfLanding,
+                                airline: widget.airline,
                               ),
                               Space.Y(10),
                               Text(
@@ -190,18 +193,6 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                     fontSize: 12,
                                     color: textColor.withOpacity(0.5)),
                               ),
-                            ],
-                          ),
-                        ),
-                        Space.X(10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Space.Y(5),
-                              Space.Y(10),
-                              Space.Y(10),
-                              Space.Y(5),
                             ],
                           ),
                         ),
@@ -265,8 +256,259 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                           ],
                         )),
                     Space.Y(20),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                        color: cards,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pilot Information',
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 24,
+                                color: textColor,
+                              ),
+                            ),
+                            Space.Y(20),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.airplanemode_active,
+                                  color: textColor.withOpacity(0.5),
+                                ),
+                                Space.X(10),
+                                Text(
+                                  'Flight Number: ' + widget.flightNumber,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Space.Y(20),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.people,
+                                  color: textColor.withOpacity(0.5),
+                                ),
+                                Space.X(10),
+                                Text(
+                                  'Number of passengers: ' +
+                                      widget.numbersOfPassengers,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Space.Y(20),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.speed,
+                                  color: textColor.withOpacity(0.5),
+                                ),
+                                Space.X(10),
+                                Text(
+                                  'Average Speed: ' + widget.avgSpeed + 'km/h',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Space.Y(20),
+                          ],
+                        ),
+                      ),
+                    ),
                     Space.Y(20),
-                    Space.Y(100),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                        color: cards,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 0, top: 10, bottom: 15),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'AIRCRAFT INFORMATION',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: textColor.withOpacity(0.3)),
+                                ),
+                                Space.Y(5),
+                                Text(
+                                  'Aircraft Details',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 20,
+                                      color: textColor),
+                                ),
+                                Space.Y(20),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/svg/airplane.svg',
+                                      color: Green,
+                                    ),
+                                    Space.X(10),
+                                    Text(
+                                      'Aircraft Type: Boeing 737',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 14,
+                                          color: textColor),
+                                    ),
+                                  ],
+                                ),
+                                Space.Y(20),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Space.X(10),
+                                    Text(
+                                      'Seating Layout: 3-3-3',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 14,
+                                          color: textColor),
+                                    ),
+                                  ],
+                                ),
+                                Space.Y(20),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Space.X(10),
+                                    Text(
+                                      'Max capacity: 388 passengers',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 14,
+                                          color: textColor),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Space.Y(20),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.all(
+                    //       Radius.circular(15),
+                    //     ),
+                    //     color: cards,
+                    //   ),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(15.0),
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         Text(
+                    //           'Pilots Safety Checklist',
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.normal,
+                    //               fontSize: 24,
+                    //               color: textColor),
+                    //         ),
+                    //         Space.Y(20),
+                    //         Text(
+                    //           'Here are some key safety procedures followed by the flight crew:',
+                    //           style: TextStyle(
+                    //               fontWeight: FontWeight.normal,
+                    //               fontSize: 16,
+                    //               color: textColor),
+                    //         ),
+                    //         Space.Y(20),
+                    //         Row(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             SvgPicture.asset(
+                    //               'assets/svg/tick.svg',
+                    //               color: Green,
+                    //             ),
+                    //             Space.X(10),
+                    //             Text(
+                    //               'Preflight safety inspections of the aircraft, including avionics, controls, and emergency equipment.',
+                    //               style: TextStyle(
+                    //                   fontWeight: FontWeight.normal,
+                    //                   fontSize: 14,
+                    //                   color: textColor),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         Space.Y(10),
+                    //         Row(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             SvgPicture.asset(
+                    //               'assets/svg/tick.svg',
+                    //               color: Green,
+                    //             ),
+                    //             Space.X(10),
+                    //             Text(
+                    //               'Crew coordination and communication protocols to ensure safe operations.',
+                    //               style: TextStyle(
+                    //                   fontWeight: FontWeight.normal,
+                    //                   fontSize: 14,
+                    //                   color: textColor),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         Space.Y(10),
+                    //         Row(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             SvgPicture.asset(
+                    //               'assets/svg/tick.svg',
+                    //               color: Green,
+                    //             ),
+                    //             Space.X(10),
+                    //             Text(
+                    //               'Emergency response training and procedures for various in-flight scenarios.',
+                    //               style: TextStyle(
+                    //                   fontWeight: FontWeight.normal,
+                    //                   fontSize: 14,
+                    //                   color: textColor),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
               ),

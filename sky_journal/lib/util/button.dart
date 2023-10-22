@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_unnecessary_containers, sort_child_properties_last, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
-import 'package:sky_journal/theme/color_theme.dart';
 
 class Press extends StatelessWidget {
   final String title;

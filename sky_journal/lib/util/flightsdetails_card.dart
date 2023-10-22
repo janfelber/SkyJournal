@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:sky_journal/theme/color_theme.dart';
+import 'package:sky_journal/util/airlines_convertor.dart';
 import 'package:sky_journal/util/space.dart';
 
 class FlightCard extends StatelessWidget {
@@ -8,6 +11,7 @@ class FlightCard extends StatelessWidget {
   final String startDate;
   final String timeOfTakeOff;
   final String timeOfLanding;
+  final String airline;
 
   const FlightCard({
     Key? key,
@@ -16,6 +20,7 @@ class FlightCard extends StatelessWidget {
     required this.startDate,
     required this.timeOfTakeOff,
     required this.timeOfLanding,
+    required this.airline,
   }) : super(key: key);
 
   @override
@@ -79,13 +84,10 @@ class FlightCard extends StatelessWidget {
             Space.Y(15),
             Row(
               children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 24,
-                ),
+                getAirlineLogo(airline),
                 Space.X(20),
                 Text(
-                  'Tus air',
+                  airline,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 12,

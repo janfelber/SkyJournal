@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_new
 
 import 'dart:math';
 
@@ -16,6 +16,10 @@ class AddFlightPage extends StatefulWidget {
 }
 
 class _AddFlightPageState extends State<AddFlightPage> {
+  String numOfPassengers = "0";
+
+  String avgSpeed = "0";
+
   final FirestoreDatabase database = FirestoreDatabase();
 
   final TextEditingController _flightNumberController = TextEditingController();
@@ -55,8 +59,18 @@ class _AddFlightPageState extends State<AddFlightPage> {
       String timeOfTakeOff = _timeOfTakeOffController.text;
       String timeOfLanding = _timeOfLandingController.text;
       String airline = _airlineController.text;
-      database.addFlight(flightNumber, startDate, endDate, startDestination,
-          endDestination, timeOfTakeOff, timeOfLanding, airline);
+      database.addFlight(
+        flightNumber,
+        startDate,
+        endDate,
+        startDestination,
+        endDestination,
+        timeOfTakeOff,
+        timeOfLanding,
+        airline,
+        numOfPassengers,
+        avgSpeed,
+      );
     }
 
     //clear the text field
@@ -73,7 +87,27 @@ class _AddFlightPageState extends State<AddFlightPage> {
     Navigator.pop(context);
   }
 
-  String GenerateFlightNumber() {
+  String generateRandomNUmberOfPassangers() {
+    Random rnd;
+    int min = 170;
+    int max = 388;
+    rnd = new Random();
+    int numberOfPassangers = min + rnd.nextInt(max - min);
+    numOfPassengers = numberOfPassangers.toString();
+    return numOfPassengers;
+  }
+
+  String generateRandomAvgSpeed() {
+    Random rnd;
+    int min = 800;
+    int max = 1000;
+    rnd = new Random();
+    int averageSpeed = min + rnd.nextInt(max - min);
+    avgSpeed = averageSpeed.toString();
+    return avgSpeed;
+  }
+
+  String generateFlightNumber() {
     //generate a random flight number start with random letter and then 4 random numbers
     var random = Random();
     String flightNumber = String.fromCharCode(random.nextInt(26) + 65) +
@@ -93,7 +127,9 @@ class _AddFlightPageState extends State<AddFlightPage> {
   @override
   void initState() {
     // getDateOnRecord();
-    GenerateFlightNumber();
+    generateRandomAvgSpeed();
+    generateRandomNUmberOfPassangers();
+    generateFlightNumber();
     super.initState();
   }
 

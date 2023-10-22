@@ -215,6 +215,8 @@ class _FlightsState extends State<Flights> {
                         String timeOfTakeOff = flight['TimeOfTakeOff'];
                         String timeOfLanding = flight['TimeOfLanding'];
                         String airline = flight['Airline'];
+                        String numOfPassengers = flight['NumberOfPassangers'];
+                        String avgSpeed = flight['AvarageSpeed'];
 
                         return MyListTile(
                             flightNumber: flightNumber,
@@ -238,6 +240,8 @@ class _FlightsState extends State<Flights> {
                                     timeOfTakeOff: timeOfTakeOff,
                                     timeOfLanding: timeOfLanding,
                                     airline: airline,
+                                    numbersOfPassengers: numOfPassengers,
+                                    avgSpeed: avgSpeed,
                                   ));
                             });
                       },
