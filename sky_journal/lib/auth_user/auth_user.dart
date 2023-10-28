@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sky_journal/homepage.dart';
-import 'package:sky_journal/pages/auth/auth_page.dart';
+import 'package:sky_journal/auth_user/auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthUser extends StatelessWidget {

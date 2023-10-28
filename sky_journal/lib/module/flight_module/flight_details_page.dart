@@ -8,12 +8,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
-import 'package:sky_journal/pages/view_map.dart';
+import 'package:sky_journal/module/flight_module/view_map.dart';
 import 'package:sky_journal/theme/color_theme.dart';
-import 'package:sky_journal/util/cutom_appbar.dart';
-import 'package:sky_journal/util/flightsdetails_card.dart';
+import 'package:sky_journal/global_widgets/cutom_appbar.dart';
+import 'package:sky_journal/module/flight_module/components/flight_card.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:sky_journal/util/space.dart';
+import 'package:sky_journal/global_widgets/space.dart';
 
 class FlightDetailsPage extends StatefulWidget {
   final String flightNumber;
@@ -228,7 +228,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               bottom: 0,
                               left: 0,
                               right: 0,
-                              child: Container(
+                              child: SizedBox(
                                   height: 50,
                                   width: double.infinity,
                                   child: GestureDetector(

@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/components/my_list_tile.dart';
+import 'package:sky_journal/global_widgets/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/database/firestore.dart';
-import 'package:sky_journal/pages/addflight_page.dart';
-import 'package:sky_journal/pages/flight_details_page.dart';
-import 'action/getCurrentDate.dart';
+import 'package:sky_journal/module/flight_module/addflight_page.dart';
+import 'package:sky_journal/module/flight_module/flight_details_page.dart';
+import '../../global_util/getCurrentDate.dart';
 
 class Flights extends StatefulWidget {
   const Flights({Key? key}) : super(key: key);
@@ -164,15 +164,6 @@ class _FlightsState extends State<Flights> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
-                  }
-
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(25),
-                        child: Text('No flights yet'),
-                      ),
-                    );
                   }
 
                   final flights = snapshot.data!.docs;

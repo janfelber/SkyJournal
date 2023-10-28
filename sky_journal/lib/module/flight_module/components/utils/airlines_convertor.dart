@@ -11,7 +11,7 @@ Widget getAirlineLogo(String airlineName) {
   } else if (lowercaseAirlineName == 'emirates airlines' ||
       lowercaseAirlineName == 'emirates') {
     return Image.asset(
-      'assets/images/airlines/emirates-airlines-logo.png',
+      'assets/airlines/emirates-airlines-logo.png',
       height: 60,
     );
   } else if (lowercaseAirlineName == 'qatar airways') {

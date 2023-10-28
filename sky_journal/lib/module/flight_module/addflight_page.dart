@@ -4,8 +4,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/components/my_button.dart';
-import 'package:sky_journal/components/my_textfield.dart';
+import 'package:sky_journal/global_widgets/my_button.dart';
+import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
 
 class AddFlightPage extends StatefulWidget {
@@ -232,7 +232,10 @@ class _AddFlightPageState extends State<AddFlightPage> {
               SizedBox(
                 height: 20.0,
               ),
-              MyButton(text: 'Add Record', onTap: addFlightRecord),
+              MyButton(
+                  text: 'Add Record',
+                  color: Colors.orange,
+                  onTap: addFlightRecord),
             ],
           ),
         ),

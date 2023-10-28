@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:sky_journal/theme/color_theme.dart';
-import 'package:sky_journal/util/airlines_convertor.dart';
-import 'package:sky_journal/util/space.dart';
+import 'package:sky_journal/module/flight_module/components/utils/airlines_convertor.dart';
+import 'package:sky_journal/global_widgets/space.dart';
 
 class FlightCard extends StatelessWidget {
   final String startDestination;

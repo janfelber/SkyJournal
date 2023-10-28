@@ -119,4 +119,10 @@ class FirestoreDatabase {
         .snapshots();
     return flightsStream;
   }
+
+  Stream<QuerySnapshot> getCardStream() {
+    final cardStream =
+        FirebaseFirestore.instance.collection('license-card').snapshots();
+    return cardStream;
+  }
 }

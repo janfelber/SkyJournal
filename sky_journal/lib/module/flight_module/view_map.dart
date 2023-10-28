@@ -95,7 +95,7 @@ class _ViewMapState extends State<ViewMap> {
     );
   }
 
-  final Set<Polyline> _polylines = Set();
+  final Set<Polyline> _polylines = {};
 
   @override
   Widget build(BuildContext context) {
