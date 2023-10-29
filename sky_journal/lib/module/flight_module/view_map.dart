@@ -29,7 +29,7 @@ class _ViewMapState extends State<ViewMap> {
   late GoogleMapController mapController;
 
   CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(0, 0),
+    target: LatLng(48.2195335, 16.3784883),
     zoom: 10.4746,
   );
   LatLng _point1 = LatLng(

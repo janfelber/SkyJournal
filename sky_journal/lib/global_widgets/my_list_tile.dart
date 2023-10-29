@@ -88,9 +88,9 @@ class MyListTile extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(Icons.fiber_manual_record, color: Colors.grey),
-                            Text('- - - - - - - - - - -'),
+                            Text('- - - - - - - - - - '),
                             Icon(Icons.flight_takeoff, color: Colors.grey),
-                            Text('- - - - - - - - - - -'),
+                            Text('- - - - - - - - - - '),
                             Icon(Icons.location_on, color: Colors.grey),
                           ],
                         ),

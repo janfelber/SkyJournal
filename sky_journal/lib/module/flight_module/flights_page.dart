@@ -8,8 +8,10 @@ import 'package:sky_journal/global_widgets/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/module/flight_module/addflight_page.dart';
+import 'package:sky_journal/module/flight_module/components/searchbar_flights.dart';
 import 'package:sky_journal/module/flight_module/flight_details_page.dart';
 import '../../global_util/getCurrentDate.dart';
+import '../../theme/color_theme.dart';
 
 class Flights extends StatefulWidget {
   const Flights({Key? key}) : super(key: key);
@@ -20,6 +22,10 @@ class Flights extends StatefulWidget {
 
 class _FlightsState extends State<Flights> {
   final FirestoreDatabase database = FirestoreDatabase();
+
+  final TextEditingController _searchController = TextEditingController();
+
+  bool isFocused = false;
 
   String? nameOfUser;
 
@@ -69,7 +75,7 @@ class _FlightsState extends State<Flights> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[800],
+      backgroundColor: Surface,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(left: 25, right: 25, top: 25),
@@ -130,29 +136,41 @@ class _FlightsState extends State<Flights> {
               SizedBox(
                 height: 25,
               ),
+
+              SearchBarFlights(),
               // SearchBar
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue[600],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      'Search',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     setState(() {
+              //       isSearching = true;
+              //     });
+              //   },
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       color: Colors.blue[600],
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     padding: EdgeInsets.all(12),
+              //     child: Row(
+              //       children: [
+              //         Icon(
+              //           Icons.search,
+              //           color: Colors.white,
+              //         ),
+              //         SizedBox(
+              //           width: 5,
+              //         ),
+              //         Text(
+              //           'Search',
+              //           style: TextStyle(
+              //             color: Colors.white,
+              //             fontSize: 16,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
 
               SizedBox(
                 height: 25,
