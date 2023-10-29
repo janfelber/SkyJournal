@@ -118,38 +118,3 @@ class MyListTile extends StatelessWidget {
     ]);
   }
 }
-
-//   return Padding(
-//     padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10),
-//     child: Container(
-//       decoration: BoxDecoration(
-//         color: Colors.blue[800], // Farba pozadia lietadlového lístka
-//         borderRadius: BorderRadius.circular(10), // Zaoblené rohy
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.2), // Tieni farba
-//             blurRadius: 5, // Rozostrenie tieni
-//             offset: Offset(0, 2), // Posunutie tieni
-//           ),
-//         ],
-//       ),
-//       child: ListTile(
-//         title: Text(
-//           tile,
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontSize: 20,
-//           ),
-//         ),
-//         subtitle: Text(
-//           subtile,
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontSize: 16,
-//           ),
-//         ),
-//         onTap: onTap,
-//       ),
-//     ),
-//   );
-// }

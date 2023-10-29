@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_brace_in_string_interps
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_brace_in_string_interps, prefer_final_fields
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,8 +8,8 @@ import 'package:sky_journal/global_widgets/my_list_tile.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/module/flight_module/addflight_page.dart';
-import 'package:sky_journal/module/flight_module/components/searchbar_flights.dart';
 import 'package:sky_journal/module/flight_module/flight_details_page.dart';
+
 import '../../global_util/getCurrentDate.dart';
 import '../../theme/color_theme.dart';
 
@@ -23,7 +23,7 @@ class Flights extends StatefulWidget {
 class _FlightsState extends State<Flights> {
   final FirestoreDatabase database = FirestoreDatabase();
 
-  final TextEditingController _searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
 
   bool isFocused = false;
 
@@ -137,46 +137,63 @@ class _FlightsState extends State<Flights> {
                 height: 25,
               ),
 
-              SearchBarFlights(),
-              // SearchBar
-              // GestureDetector(
-              //   onTap: () {
-              //     setState(() {
-              //       isSearching = true;
-              //     });
-              //   },
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //       color: Colors.blue[600],
-              //       borderRadius: BorderRadius.circular(12),
-              //     ),
-              //     padding: EdgeInsets.all(12),
-              //     child: Row(
-              //       children: [
-              //         Icon(
-              //           Icons.search,
-              //           color: Colors.white,
-              //         ),
-              //         SizedBox(
-              //           width: 5,
-              //         ),
-              //         Text(
-              //           'Search',
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 16,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  });
+                },
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: isFocused ? Colors.blue : Colors.grey,
+                    ),
+                    label: Text(
+                      'Search Flights',
+                      style: TextStyle(
+                        color: isFocused ? Colors.grey : Colors.grey,
+                      ),
+                    ),
+                    alignLabelWithHint: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  onTap: () {
+                    setState(() {
+                      isFocused = true;
+                    });
+                  },
+                  onSubmitted: (value) {
+                    setState(() {
+                      isFocused = false;
+                    });
+                  },
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
 
               SizedBox(
                 height: 25,
               ),
 
-              // Flight List
               StreamBuilder(
                 stream: database.getFlightsStream(),
                 builder: (context, snapshot) {
@@ -201,11 +218,50 @@ class _FlightsState extends State<Flights> {
                     }
                   }
 
+                  if (_searchController.text.isNotEmpty) {
+                    userFlights.removeWhere((flight) {
+                      String flightNumber =
+                          flight['FlightNumber'].toString().toLowerCase();
+                      String startDestination =
+                          flight['StartDestination'].toString().toLowerCase();
+                      String endDestination =
+                          flight['EndDestination'].toString().toLowerCase();
+                      String startDate =
+                          flight['StartDate'].toString().toLowerCase();
+                      String endDate =
+                          flight['EndDate'].toString().toLowerCase();
+                      String timeOfTakeOff =
+                          flight['TimeOfTakeOff'].toString().toLowerCase();
+                      String timeOfLanding =
+                          flight['TimeOfLanding'].toString().toLowerCase();
+                      String airline =
+                          flight['Airline'].toString().toLowerCase();
+                      String numOfPassengers =
+                          flight['NumberOfPassangers'].toString().toLowerCase();
+                      String avgSpeed =
+                          flight['AvarageSpeed'].toString().toLowerCase();
+                      String searchQuery = _searchController.text.toLowerCase();
+                      return !flightNumber.contains(searchQuery) &&
+                          !startDestination.contains(searchQuery) &&
+                          !endDestination.contains(searchQuery) &&
+                          !startDate.contains(searchQuery) &&
+                          !endDate.contains(searchQuery) &&
+                          !timeOfTakeOff.contains(searchQuery) &&
+                          !timeOfLanding.contains(searchQuery) &&
+                          !airline.contains(searchQuery) &&
+                          !numOfPassengers.contains(searchQuery) &&
+                          !avgSpeed.contains(searchQuery);
+                    });
+                  }
+
                   if (userFlights.isEmpty) {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.all(25),
-                        child: Text('No flights for the current user'),
+                        child: Text(
+                          'No flights for the current user',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     );
                   }
@@ -258,6 +314,11 @@ class _FlightsState extends State<Flights> {
                   );
                 },
               )
+
+              // Flight List
+              // StreamBuilderFligts(
+              //   searchController: _searchController,
+              // ),
             ],
           ),
         ),
