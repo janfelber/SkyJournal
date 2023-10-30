@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/module/settings_module/settings_options/about.dart';
+import 'package:sky_journal/module/settings_module/settings_options/appearance.dart';
 import 'package:sky_journal/module/settings_module/settings_options/privacy.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 
@@ -133,12 +134,14 @@ class _SettingsState extends State<Settings> {
                     SettingsGroup(
                       items: [
                         SettingsItem(
-                          title: 'Apparence',
+                          title: 'Appearance',
                           titleStyle: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Change the apparence',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            pushToNewPage(context, AppareancePage());
+                          },
                           icons: CupertinoIcons.pencil_outline,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,
