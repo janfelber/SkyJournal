@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sky_journal/components/push_to_new_page.dart';
+import 'package:sky_journal/module/settings_module/settings_options/about.dart';
+import 'package:sky_journal/module/settings_module/settings_options/privacy.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 
 import 'components/icon_style.dart';
@@ -21,8 +24,6 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  String appVersion = '';
-
   String? nameOfUser;
   String? surnameOfUser;
 
@@ -30,15 +31,6 @@ class _SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     getCurrentUserName();
-    fetchPackageInfo();
-  }
-
-  Future<void> fetchPackageInfo() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    final version = packageInfo.version;
-    setState(() {
-      appVersion = version;
-    });
   }
 
   Future getCurrentUserName() async {
@@ -78,7 +70,7 @@ class _SettingsState extends State<Settings> {
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 25.0, vertical: 25),
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
                 child: Column(
                   children: [
                     Row(children: [
@@ -161,7 +153,9 @@ class _SettingsState extends State<Settings> {
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Manage your privacy settings',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            pushToNewPage(context, PrivacyPage());
+                          },
                           icons: Icons.fingerprint,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,
@@ -180,7 +174,9 @@ class _SettingsState extends State<Settings> {
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Learn more about Sky Journal',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            pushToNewPage(context, AboutApp());
+                          },
                           icons: Icons.info_rounded,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,
@@ -223,7 +219,9 @@ class _SettingsState extends State<Settings> {
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Sign out of your account',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            FirebaseAuth.instance.signOut();
+                          },
                           icons: Icons.exit_to_app_rounded,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,

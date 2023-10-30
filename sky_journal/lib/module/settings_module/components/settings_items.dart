@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sky_journal/module/settings_module/components/icon_style.dart';
 
-import 'icon_style.dart';
 import 'screen_utils.dart';
 
 class SettingsItem extends StatelessWidget {
-  final IconData icons;
+  final IconData? icons; // Make icons parameter nullable
   final IconStyle? iconStyle;
   final String title;
   final TextStyle? titleStyle;
@@ -18,7 +18,7 @@ class SettingsItem extends StatelessWidget {
   final TextOverflow? overflow;
 
   SettingsItem(
-      {required this.icons,
+      {this.icons, // Make icons parameter nullable
       this.iconStyle,
       required this.title,
       this.titleStyle,
@@ -37,26 +37,29 @@ class SettingsItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(15),
       child: ListTile(
         onTap: onTap,
-        leading: (iconStyle != null && iconStyle!.withBackground!)
-            ? Container(
-                decoration: BoxDecoration(
-                  color: iconStyle!.backgroundColor,
-                  borderRadius: BorderRadius.circular(iconStyle!.borderRadius!),
-                ),
-                padding: EdgeInsets.all(5),
-                child: Icon(
-                  icons,
-                  size: SettingsScreenUtils.settingsGroupIconSize,
-                  color: iconStyle!.iconsColor,
-                ),
-              )
-            : Padding(
-                padding: EdgeInsets.all(5),
-                child: Icon(
-                  icons,
-                  size: SettingsScreenUtils.settingsGroupIconSize,
-                ),
-              ),
+        leading: (icons != null) // Check if icons is not null
+            ? (iconStyle != null && iconStyle!.withBackground!)
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: iconStyle!.backgroundColor,
+                      borderRadius:
+                          BorderRadius.circular(iconStyle!.borderRadius!),
+                    ),
+                    padding: EdgeInsets.all(5),
+                    child: Icon(
+                      icons,
+                      size: SettingsScreenUtils.settingsGroupIconSize,
+                      color: iconStyle!.iconsColor,
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Icon(
+                      icons,
+                      size: SettingsScreenUtils.settingsGroupIconSize,
+                    ),
+                  )
+            : null, // If icons is null, don't include the icon
         title: Text(
           title,
           style: titleStyle ?? TextStyle(fontWeight: FontWeight.bold),
