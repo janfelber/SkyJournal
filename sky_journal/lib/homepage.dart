@@ -7,6 +7,8 @@ import 'package:sky_journal/module/stats_module/stats_page.dart';
 import 'module/wallet_module/wallet_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import 'theme/color_theme.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -30,13 +32,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
-        color: const Color(0xFF01366A),
+        color: Surface,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
           child: GNav(
-              backgroundColor: Color(0xFF01366A),
-              color: Colors.white,
-              activeColor: Colors.orange,
+              backgroundColor: Surface,
+              activeColor: Yellow,
               gap: 8,
               selectedIndex: _selectedIndex,
               onTabChange: _navigateBottomBar,
@@ -45,18 +46,22 @@ class _HomePageState extends State<HomePage> {
                 GButton(
                   icon: Icons.wallet,
                   text: 'Cards',
+                  iconColor: Colors.white,
                 ),
                 GButton(
                   icon: Icons.home,
                   text: 'Flights',
+                  iconColor: Colors.white,
                 ),
                 GButton(
                   icon: Icons.stacked_bar_chart,
                   text: 'Stats',
+                  iconColor: Colors.white,
                 ),
                 GButton(
                   icon: Icons.settings,
                   text: 'Settings',
+                  iconColor: Colors.white,
                 )
               ]),
         ),

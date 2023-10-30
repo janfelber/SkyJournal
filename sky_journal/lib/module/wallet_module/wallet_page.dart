@@ -25,15 +25,6 @@ class _WalletState extends State<Wallet> {
 
   List<QueryDocumentSnapshot> userCards = [];
 
-  // create some values
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
-
-// ValueChanged<Color> callback
-  void changeColor(Color color) {
-    setState(() => pickerColor = color);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +34,8 @@ class _WalletState extends State<Wallet> {
           children: [
             //app bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -72,8 +64,6 @@ class _WalletState extends State<Wallet> {
               height: 25,
             ),
 
-            //cards
-            //cards
             //cards
             SizedBox(
               height: 230,
@@ -117,8 +107,10 @@ class _WalletState extends State<Wallet> {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.all(25),
-                        child: Text('No cards for the current user',
-                            style: TextStyle(color: textColor)),
+                        child: Text(
+                          'No cards for the current user',
+                          style: TextStyle(color: textColor),
+                        ),
                       ),
                     );
                   }
@@ -136,9 +128,8 @@ class _WalletState extends State<Wallet> {
                       SizedBox(height: 10),
                       SmoothPageIndicator(
                         controller: _controller,
-                        count: cardWidgets.length, // Počet kariet
-                        effect:
-                            WormEffect(), // Môžete zmeniť efekt podľa svojich potrieb
+                        count: cardWidgets.length,
+                        effect: WormEffect(),
                       ),
                     ],
                   );
@@ -155,23 +146,3 @@ class _WalletState extends State<Wallet> {
     );
   }
 }
-
-// if (cards.isNotEmpty) ...cards,
-//                   // if cards is empty show this
-//                   if (cards.isEmpty)
-//                     Container( 
-//                       color: Colors.white,
-//                       child: Center(
-//                         child: Text(
-//                           'No cards on the wallet yet.',
-//                           style: TextStyle(fontSize: 18),
-//                         ),
-//                       ),
-//                     ),
-
-// Zobrazí sa len ak sú karty k dispozícii
-// if (cards.isNotEmpty)
-//   SmoothPageIndicator(
-//     controller: _controller,
-//     count: cards.length,
-//   )

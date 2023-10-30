@@ -314,11 +314,6 @@ class _FlightsState extends State<Flights> {
                   );
                 },
               )
-
-              // Flight List
-              // StreamBuilderFligts(
-              //   searchController: _searchController,
-              // ),
             ],
           ),
         ),
