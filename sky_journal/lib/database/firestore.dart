@@ -73,7 +73,7 @@ class FirestoreDatabase {
       'DateOfBirth': dateOfBirth,
       'CertificateNumber': certificateNumber,
       'DateOfIssue': dateOfIssue,
-      'DateOfEpiry': dateOfExpiry,
+      'DateOfExpiry': dateOfExpiry,
       'Sex': sex,
       'Height': height,
       'Weight': weight,

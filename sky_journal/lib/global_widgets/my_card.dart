@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sky_journal/global_util/transform_nationality.dart';
 
 class MyCard extends StatelessWidget {
+  final String certificationNumber;
   final String name;
   final String country;
   final String sex;
@@ -11,33 +12,35 @@ class MyCard extends StatelessWidget {
   final String height;
   final String hairColor;
   final String eyeColor;
-  final int expiryMonth;
-  final int expiryYear;
-  final color;
+  final String dateOfExpiry;
+  final String dateOfBirthDay;
+  final String dateOfIssue;
+  final Color? colorCard;
 
-  const MyCard(
-      {Key? key,
-      required this.name,
-      required this.country,
-      required this.sex,
-      required this.weight,
-      required this.height,
-      required this.hairColor,
-      required this.eyeColor,
-      required this.expiryMonth,
-      required this.expiryYear,
-      required this.color})
-      : super(key: key);
+  const MyCard({
+    Key? key,
+    required this.name,
+    required this.country,
+    required this.sex,
+    required this.weight,
+    required this.height,
+    required this.hairColor,
+    required this.eyeColor,
+    this.colorCard,
+    required this.dateOfBirthDay,
+    required this.dateOfIssue,
+    required this.certificationNumber,
+    required this.dateOfExpiry,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: Container(
-        width: 300,
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: color,
+          color: colorCard,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -74,6 +77,37 @@ class MyCard extends StatelessWidget {
                     fontSize: 11,
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  certificationNumber,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  dateOfBirthDay,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  dateOfExpiry,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                  ),
+                ),
+                Text(
+                  dateOfIssue,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                  ),
+                )
               ],
             ),
             Column(
@@ -177,89 +211,3 @@ class MyCard extends StatelessWidget {
     );
   }
 }
-
-// Row(
-//   children: [
-    // Column(
-    //   children: [
-    //     Text('Sex',
-    //         style:
-    //             TextStyle(color: Colors.white, fontSize: 10)),
-    //     Row(
-    //       children: [
-    //         Text(
-    //           sex,
-    //           style:
-    //               TextStyle(color: Colors.white, fontSize: 10),
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // ),
-//     SizedBox(width: 8),
-//     Column(
-//       children: [
-//         Text('WEIGHT',
-//             style:
-//                 TextStyle(color: Colors.white, fontSize: 10)),
-//         Row(
-//           children: [
-//             Text(
-//               weight,
-//               style:
-//                   TextStyle(color: Colors.white, fontSize: 10),
-//             ),
-//           ],
-//         ),
-//       ],
-//     ),
-//     SizedBox(width: 8),
-//     Column(
-//       children: [
-//         Text('HEIGHT',
-//             style: TextStyle(color: Colors.white, fontSize: 8)),
-//         Row(
-//           children: [
-//             Text(
-//               height,
-//               style:
-//                   TextStyle(color: Colors.white, fontSize: 8),
-//             ),
-//           ],
-//         ),
-//       ],
-//     ),
-//     SizedBox(width: 8),
-//     Column(
-//       children: [
-//         Text('HAIR COLOR',
-//             style: TextStyle(color: Colors.white, fontSize: 8)),
-//         Row(
-//           children: [
-//             Text(
-//               hairColor,
-//               style:
-//                   TextStyle(color: Colors.white, fontSize: 8),
-//             ),
-//           ],
-//         ),
-//       ],
-//     ),
-//     SizedBox(width: 8),
-//     Column(
-//       children: [
-//         Text('EYE COLOR',
-//             style: TextStyle(color: Colors.white, fontSize: 8)),
-//         Row(
-//           children: [
-//             Text(
-//               eyeColor,
-//               style:
-//                   TextStyle(color: Colors.white, fontSize: 8),
-//             ),
-//           ],
-//         ),
-//       ],
-//     ),
-//   ],
-// )

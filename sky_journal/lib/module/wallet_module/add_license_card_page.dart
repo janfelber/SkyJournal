@@ -1,10 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
+
+import '../../global_widgets/my_card.dart';
+import '../../theme/color_theme.dart';
 
 class AddLicenseCard extends StatefulWidget {
   const AddLicenseCard({Key? key}) : super(key: key);
@@ -16,7 +21,7 @@ class AddLicenseCard extends StatefulWidget {
 class _AddLicenseCardState extends State<AddLicenseCard> {
   final FirestoreDatabase database = FirestoreDatabase();
 
-  final TextEditingController _certifaceteNumber = TextEditingController();
+  final TextEditingController _certifacicateNumber = TextEditingController();
 
   final TextEditingController _dateOfIssue = TextEditingController();
 
@@ -36,8 +41,26 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
 
   final TextEditingController _sex = TextEditingController();
 
+  final StreamController<String> _sexController =
+      StreamController<String>.broadcast();
+
+  final StreamController<String> _weightController =
+      StreamController<String>.broadcast();
+
+  final StreamController<String> _heightController =
+      StreamController<String>.broadcast();
+
+  final StreamController<String> _hairController =
+      StreamController<String>.broadcast();
+
+  final StreamController<String> _eyeController =
+      StreamController<String>.broadcast();
+
+  final StreamController<String> _certificateNumberController =
+      StreamController<String>.broadcast();
+
   void addCardToDatabase() {
-    if (_certifaceteNumber.text.isNotEmpty &&
+    if (_certifacicateNumber.text.isNotEmpty &&
         _dateOfIssue.text.isNotEmpty &&
         _dateOfExpiry.text.isNotEmpty &&
         _nationality.text.isNotEmpty &&
@@ -47,7 +70,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
         _hair.text.isNotEmpty &&
         _eyes.text.isNotEmpty &&
         _sex.text.isNotEmpty) {
-      String certificateNumber = _certifaceteNumber.text;
+      String certificateNumber = _certifacicateNumber.text;
       String dateOfIssue = _dateOfIssue.text;
       String dateOfExpiry = _dateOfExpiry.text;
       String nationality = _nationality.text;
@@ -71,7 +94,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       );
     }
 
-    _certifaceteNumber.clear();
+    _certifacicateNumber.clear();
     _dateOfIssue.clear();
     _dateOfExpiry.clear();
     _nationality.clear();
@@ -87,7 +110,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
 
   @override
   void dispose() {
-    _certifaceteNumber.dispose();
+    super.dispose();
+    _certifacicateNumber.dispose();
     _dateOfIssue.dispose();
     _dateOfExpiry.dispose();
     _nationality.dispose();
@@ -96,157 +120,249 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     _weight.dispose();
     _hair.dispose();
     _eyes.dispose();
+    _sexController.close();
+    _weightController.close();
+    _heightController.close();
+    _hairController.close();
+    _eyeController.close();
+    _certificateNumberController.close();
     _sex.dispose();
-    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _sex.addListener(() {
+      _sexController.sink.add(_sex.text);
+    });
+    _weight.addListener(() {
+      _weightController.sink.add(_weight.text);
+    });
+    _height.addListener(() {
+      _heightController.sink.add(_height.text);
+    });
+    _hair.addListener(() {
+      _hairController.sink.add(_hair.text);
+    });
+    _eyes.addListener(() {
+      _eyeController.sink.add(_eyes.text);
+    });
+    _certifacicateNumber.addListener(() {
+      _certificateNumberController.sink.add(_certifacicateNumber.text);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Surface,
         appBar: CustomAppBar(
           title: 'Add License Card',
         ),
-        body: SafeArea(
-            child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _certifaceteNumber,
-                      hintText: 'Certificate Number',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _dateOfIssue,
-                      hintText: 'Date of Issue',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _dateOfExpiry,
-                      hintText: 'Date of Expiry',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _sex,
-                      hintText: 'Sex',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _nationality,
-                      hintText: 'Nationality',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _dateOfBirth,
-                      hintText: 'Date of Birth',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _height,
-                      hintText: 'Height',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _weight,
-                      hintText: 'Weight',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _hair,
-                      hintText: 'Hair Color',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MyTextField(
-                      controller: _eyes,
-                      hintText: 'Eyes Color',
-                      obscureText: false,
-                      enabled: true,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  // add button
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: MyButton(
-                        text: 'Add Card',
-                        color: Colors.orange,
-                        onTap: addCardToDatabase),
-                  )
-                ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
               ),
-            ),
+              SizedBox(
+                height: 200,
+                child: StreamBuilder<String>(
+                  stream: _sexController.stream,
+                  initialData: '',
+                  builder: (context, sexSnapshot) {
+                    return StreamBuilder<String>(
+                      stream: _weightController.stream,
+                      initialData: '',
+                      builder: (context, weightSnapshot) {
+                        return StreamBuilder(
+                            stream: _heightController.stream,
+                            initialData: '',
+                            builder: (context, heightSnapschot) {
+                              return StreamBuilder(
+                                  stream: _hairController.stream,
+                                  initialData: '',
+                                  builder: (context, hairSnapschot) {
+                                    return StreamBuilder(
+                                        stream: _eyeController.stream,
+                                        initialData: '',
+                                        builder: (context, eyeSnapshot) {
+                                          return StreamBuilder(
+                                              stream:
+                                                  _certificateNumberController
+                                                      .stream,
+                                              initialData: '',
+                                              builder: (context,
+                                                  certificationNumberSnapshot) {
+                                                return MyCard(
+                                                  name: '',
+                                                  country: '',
+                                                  sex: sexSnapshot.data ?? '',
+                                                  weight:
+                                                      weightSnapshot.data ?? '',
+                                                  height:
+                                                      heightSnapschot.data ??
+                                                          '',
+                                                  hairColor:
+                                                      hairSnapschot.data ?? '',
+                                                  eyeColor:
+                                                      eyeSnapshot.data ?? '',
+                                                  colorCard: Colors.black12,
+                                                  dateOfBirthDay: '12.10.2002',
+                                                  dateOfIssue: '12.10.2023',
+                                                  dateOfExpiry: '14.6.2029',
+                                                  certificationNumber:
+                                                      certificationNumberSnapshot
+                                                              .data ??
+                                                          '',
+                                                );
+                                              });
+                                        });
+                                  });
+                            });
+                      },
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _certifacicateNumber,
+                        hintText: 'Certificate Number',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _dateOfIssue,
+                        hintText: 'Date of Issue',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _dateOfExpiry,
+                        hintText: 'Date of Expiry',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _sex,
+                        hintText: 'Sex',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _nationality,
+                        hintText: 'Nationality',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _dateOfBirth,
+                        hintText: 'Date of Birth',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _height,
+                        hintText: 'Height',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _weight,
+                        hintText: 'Weight',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _hair,
+                        hintText: 'Hair Color',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MyTextField(
+                        controller: _eyes,
+                        hintText: 'Eyes Color',
+                        obscureText: false,
+                        enabled: true,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    // add button
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: MyButton(
+                          text: 'Add Card',
+                          color: Colors.orange,
+                          onTap: addCardToDatabase),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-        )));
+        ));
   }
 }

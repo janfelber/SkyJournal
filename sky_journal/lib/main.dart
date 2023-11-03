@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_journal/auth_user/auth_user.dart';
-import 'package:sky_journal/global_widgets/pincode_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -66,7 +66,7 @@ class _WalletState extends State<Wallet> {
 
             //cards
             SizedBox(
-              height: 230,
+              height: 230.0,
               child: StreamBuilder(
                 stream: database.getCardStream(),
                 builder: (context, snapshot) {
@@ -83,20 +83,31 @@ class _WalletState extends State<Wallet> {
                   if (currentUser != null) {
                     for (var card in cards) {
                       String userEmailAddress = card['UserEmail'];
+                      String sex = card['Sex'];
+                      String weight = card['Weight'];
+                      String height = card['Height'];
+                      String hairColor = card['Hair'];
+                      String eyeColor = card['Eyes'];
+                      String dateOfBirth = card['DateOfBirth'];
+                      String dateOfIssue = card['DateOfIssue'];
+                      String certificationNumber = card['CertificateNumber'];
+                      String dateOfExpiry = card['DateOfExpiry'];
 
                       if (userEmailAddress == currentUser.email) {
                         cardWidgets.add(
                           MyCard(
-                            name: 'test',
-                            country: "test",
-                            sex: "test",
-                            weight: "test",
-                            height: "test",
-                            hairColor: "test",
-                            eyeColor: "test",
-                            expiryMonth: 12,
-                            expiryYear: 2020,
-                            color: Colors.blue,
+                            name: 'name',
+                            country: "country",
+                            sex: sex,
+                            weight: weight,
+                            height: height,
+                            hairColor: hairColor,
+                            eyeColor: eyeColor,
+                            colorCard: Colors.black,
+                            dateOfBirthDay: dateOfBirth,
+                            dateOfIssue: dateOfIssue,
+                            certificationNumber: certificationNumber,
+                            dateOfExpiry: dateOfExpiry,
                           ),
                         );
                       }
