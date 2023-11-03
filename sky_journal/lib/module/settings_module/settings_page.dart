@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/module/settings_module/settings_options/about.dart';
 import 'package:sky_journal/module/settings_module/settings_options/appearance.dart';

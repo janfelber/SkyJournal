@@ -2,9 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/module/settings_module/components/settings_group.dart';
 import 'package:sky_journal/module/settings_module/components/settings_items.dart';
+import 'package:sky_journal/module/settings_module/settings_options/privacy_editaccount/editaccount_page.dart';
 
 import '../../../theme/color_theme.dart';
 import '../components/icon_style.dart';
@@ -35,11 +37,12 @@ class _PrivacyPageState extends State<PrivacyPage> {
                           color: Colors.white, fontWeight: FontWeight.bold),
                       items: [
                         SettingsItem(
-                          title: 'Edit Profile',
-                          titleStyle: TextStyle(color: Colors.white),
-                          subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
-                        ),
+                            title: 'Edit Profile',
+                            titleStyle: TextStyle(color: Colors.white),
+                            subtitleStyle: TextStyle(color: Colors.white),
+                            onTap: () {
+                              pushToNewPage(context, EdirProfilePage());
+                            }),
                       ]),
                   SettingsGroup(
                       settingsGroupTitle: 'Privacy and Security',
