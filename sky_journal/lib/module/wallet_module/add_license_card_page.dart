@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
@@ -22,8 +23,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   final FirestoreDatabase database = FirestoreDatabase();
 
   final TextEditingController _certifacicateNumber = TextEditingController();
-
-  final TextEditingController _dateOfIssue = TextEditingController();
 
   final TextEditingController _dateOfExpiry = TextEditingController();
 
@@ -61,7 +60,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
 
   void addCardToDatabase() {
     if (_certifacicateNumber.text.isNotEmpty &&
-        _dateOfIssue.text.isNotEmpty &&
         _dateOfExpiry.text.isNotEmpty &&
         _nationality.text.isNotEmpty &&
         _dateOfBirth.text.isNotEmpty &&
@@ -71,7 +69,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
         _eyes.text.isNotEmpty &&
         _sex.text.isNotEmpty) {
       String certificateNumber = _certifacicateNumber.text;
-      String dateOfIssue = _dateOfIssue.text;
       String dateOfExpiry = _dateOfExpiry.text;
       String nationality = _nationality.text;
       String dateOfBirth = _dateOfBirth.text;
@@ -84,7 +81,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
         nationality,
         dateOfBirth,
         certificateNumber,
-        dateOfIssue,
         dateOfExpiry,
         sex,
         height,
@@ -95,7 +91,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     }
 
     _certifacicateNumber.clear();
-    _dateOfIssue.clear();
     _dateOfExpiry.clear();
     _nationality.clear();
     _dateOfBirth.clear();
@@ -112,7 +107,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   void dispose() {
     super.dispose();
     _certifacicateNumber.dispose();
-    _dateOfIssue.dispose();
     _dateOfExpiry.dispose();
     _nationality.dispose();
     _dateOfBirth.dispose();
@@ -209,7 +203,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                                                       eyeSnapshot.data ?? '',
                                                   colorCard: Colors.black12,
                                                   dateOfBirthDay: '12.10.2002',
-                                                  dateOfIssue: '12.10.2023',
                                                   dateOfExpiry: '14.6.2029',
                                                   certificationNumber:
                                                       certificationNumberSnapshot
@@ -242,18 +235,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                     SizedBox(
                       height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: MyTextField(
-                        controller: _dateOfIssue,
-                        hintText: 'Date of Issue',
-                        obscureText: false,
-                        enabled: true,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: MyTextField(

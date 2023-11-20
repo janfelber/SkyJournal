@@ -4,8 +4,11 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_journal/auth_user/auth_user.dart';
 
+import 'global_util/notifi_service.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
 
   await Firebase.initializeApp();
 

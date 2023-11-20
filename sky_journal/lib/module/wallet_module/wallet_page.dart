@@ -3,6 +3,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:sky_journal/global_util/notifi_service.dart';
+import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_card.dart';
 import 'package:sky_journal/module/wallet_module/components/popup_walltet_menu.dart';
 import 'package:sky_journal/theme/color_theme.dart';
@@ -61,12 +64,12 @@ class _WalletState extends State<Wallet> {
               ),
             ),
             SizedBox(
-              height: 25,
+              height: 5,
             ),
 
             //cards
             SizedBox(
-              height: 230.0,
+              height: 400.0,
               child: StreamBuilder(
                 stream: database.getCardStream(),
                 builder: (context, snapshot) {
@@ -89,15 +92,15 @@ class _WalletState extends State<Wallet> {
                       String hairColor = card['Hair'];
                       String eyeColor = card['Eyes'];
                       String dateOfBirth = card['DateOfBirth'];
-                      String dateOfIssue = card['DateOfIssue'];
                       String certificationNumber = card['CertificateNumber'];
                       String dateOfExpiry = card['DateOfExpiry'];
+                      String nationality = card['Nationality'];
 
                       if (userEmailAddress == currentUser.email) {
                         cardWidgets.add(
                           MyCard(
                             name: 'name',
-                            country: "country",
+                            country: nationality,
                             sex: sex,
                             weight: weight,
                             height: height,
@@ -105,7 +108,6 @@ class _WalletState extends State<Wallet> {
                             eyeColor: eyeColor,
                             colorCard: Colors.black,
                             dateOfBirthDay: dateOfBirth,
-                            dateOfIssue: dateOfIssue,
                             certificationNumber: certificationNumber,
                             dateOfExpiry: dateOfExpiry,
                           ),
@@ -136,12 +138,39 @@ class _WalletState extends State<Wallet> {
                           children: cardWidgets,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 15),
                       SmoothPageIndicator(
                         controller: _controller,
                         count: cardWidgets.length,
-                        effect: WormEffect(),
+                        effect:
+                            ExpandingDotsEffect(dotHeight: 15, dotWidth: 15),
                       ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      ElevatedButton(
+                        child: Text('Show notification'),
+                        onPressed: () {
+                          if (cardWidgets.isNotEmpty) {
+                            MyCard firstCard = cardWidgets.first as MyCard;
+                            if (firstCard.dateOfExpiry != null) {
+                              DateTime dateOfExpiry = DateFormat('dd.MM.yyyy')
+                                  .parse(firstCard.dateOfExpiry!);
+                              DateTime now = DateTime.now();
+                              if (dateOfExpiry.difference(now).inDays <= 7) {
+                                NotificationService().showNotification(
+                                    title: 'Card', body: 'expiring soon ');
+                              } else {
+                                String formattedDate = DateFormat('dd.MM.yyyy')
+                                    .format(dateOfExpiry);
+                                NotificationService().showNotification(
+                                    title: 'Card',
+                                    body: 'expiring $formattedDate');
+                              }
+                            }
+                          }
+                        },
+                      )
                     ],
                   );
                 },

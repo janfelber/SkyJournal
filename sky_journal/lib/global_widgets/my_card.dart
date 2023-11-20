@@ -14,7 +14,6 @@ class MyCard extends StatelessWidget {
   final String eyeColor;
   final String dateOfExpiry;
   final String dateOfBirthDay;
-  final String dateOfIssue;
   final Color? colorCard;
 
   const MyCard({
@@ -28,7 +27,6 @@ class MyCard extends StatelessWidget {
     required this.eyeColor,
     this.colorCard,
     required this.dateOfBirthDay,
-    required this.dateOfIssue,
     required this.certificationNumber,
     required this.dateOfExpiry,
   }) : super(key: key);
@@ -40,171 +38,238 @@ class MyCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: colorCard,
+          color: Colors.green,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                country,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                'DEPARTMENT OF TRANSPORTATION ■ WORLDWIDE AVIATION ADMINISTRATION',
+                style: TextStyle(fontSize: 7, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 3,
+            ),
+            Row(
               children: [
                 Text(
-                  'NAME',
+                  'Name',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
                 ),
+              ],
+            ),
+            Row(
+              children: [
                 Text(
                   name,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-                Text(
-                  'NATIONALITY',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 13,
+            ),
+            Row(
+              children: [
+                Text(
+                  'Natinality ',
+                  style: TextStyle(
+                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
+                ),
+                SizedBox(
+                  width: 3,
                 ),
                 Text(
                   transformNationalityName(country),
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                  ),
+                      fontSize: 11, fontWeight: FontWeight.w800, height: 0),
                 ),
                 SizedBox(
-                  height: 20,
+                  width: 35,
+                ),
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          'Sex',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        Text(
+                          sex,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Height ',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        Text(
+                          height,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Weight ',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        Text(
+                          weight,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Hair ',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        Text(
+                          hairColor,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          'Eyes ',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        Text(
+                          eyeColor,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 3,
+            ),
+            Row(
+              children: [
+                Text(
+                  'Has been found to be properly to exercise the privilege of',
+                  style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 30,
+                ),
+                Text('|  ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, height: 0, fontSize: 11)),
+                Text(
+                  'STUDENT PILOT',
+                  style: TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.bold, height: 0),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 30,
+                ),
+                Text(
+                  '|| Certificate Number',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, height: 0, fontSize: 11),
+                ),
+                SizedBox(
+                  width: 10,
                 ),
                 Text(
                   certificationNumber,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                  ),
+                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 30,
                 ),
                 Text(
-                  dateOfBirthDay,
+                  '||| Date of Expiry                ',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                  ),
+                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
                 ),
                 Text(
                   dateOfExpiry,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                  ),
-                ),
-                Text(
-                  dateOfIssue,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                  ),
+                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
                 )
               ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Sex',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-                Text(
-                  sex,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'WEIGHT',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-                Text(
-                  weight,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'HEIGHT',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-                Text(
-                  height,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'HAIR COLOR',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-                Text(
-                  hairColor,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'EYE COLOR',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-                Text(
-                  eyeColor,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-              ],
-            ),
+            )
           ],
         ),
       ),
