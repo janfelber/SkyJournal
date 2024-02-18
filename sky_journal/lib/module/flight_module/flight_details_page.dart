@@ -51,14 +51,8 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   late GoogleMapController mapController;
 
-  LatLng _point1 = LatLng(
-    0.0,
-    0.0,
-  );
-  LatLng _point2 = LatLng(
-    0.0,
-    0.0,
-  );
+  LatLng _point1 = LatLng(48.2195335, 16.3784883);
+  LatLng _point2 = LatLng(52.5200, 13.4050);
 
   final Set<Polyline> _polylines = Set();
 

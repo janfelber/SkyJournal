@@ -202,8 +202,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                                                   eyeColor:
                                                       eyeSnapshot.data ?? '',
                                                   colorCard: Colors.black12,
-                                                  dateOfBirthDay: '12.10.2002',
-                                                  dateOfExpiry: '14.6.2029',
+                                                  dateOfBirthDay: '',
+                                                  dateOfExpiry: '',
                                                   certificationNumber:
                                                       certificationNumberSnapshot
                                                               .data ??

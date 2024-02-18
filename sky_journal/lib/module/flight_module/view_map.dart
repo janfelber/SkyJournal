@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
+import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 
 class ViewMap extends StatefulWidget {
@@ -32,14 +33,8 @@ class _ViewMapState extends State<ViewMap> {
     target: LatLng(48.2195335, 16.3784883),
     zoom: 10.4746,
   );
-  LatLng _point1 = LatLng(
-    0.0,
-    0.0,
-  );
-  LatLng _point2 = LatLng(
-    0.0,
-    0.0,
-  );
+  LatLng _point1 = LatLng(48.2195335, 16.3784883);
+  LatLng _point2 = LatLng(52.5200, 13.4050);
 
   @override
   void initState() {
@@ -110,8 +105,8 @@ class _ViewMapState extends State<ViewMap> {
       color: Primary,
     ));
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
+      appBar: CustomAppBar(
+        title: 'Map Detail Of Flight',
       ),
       body: Container(
         child: GoogleMap(

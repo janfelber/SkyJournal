@@ -4,9 +4,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
+
+import '../../theme/color_theme.dart';
 
 class AddFlightPage extends StatefulWidget {
   const AddFlightPage({Key? key}) : super(key: key);
@@ -150,93 +153,95 @@ class _AddFlightPageState extends State<AddFlightPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue[400],
-        elevation: 0,
+      backgroundColor: Surface,
+      appBar: CustomAppBar(
+        title: 'Add Your Flight',
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MyTextField(
-                controller: _flightNumberController,
-                hintText: 'Flight Number',
-                obscureText: false,
-                enabled: false,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _startDateController,
-                hintText: 'Date of Departure',
-                obscureText: false,
-                enabled: true,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _endDateController,
-                hintText: 'Date of Arrival',
-                obscureText: false,
-                enabled: true,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _startDestinationController,
-                hintText: 'Start Destination',
-                enabled: true,
-                obscureText: false,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _endDestinationController,
-                hintText: 'End Destination',
-                obscureText: false,
-                enabled: true,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _timeOfTakeOffController,
-                hintText: 'Time of Take Off',
-                obscureText: false,
-                enabled: true,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _timeOfLandingController,
-                hintText: 'Time of Landing',
-                obscureText: false,
-                enabled: true,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              MyTextField(
-                controller: _airlineController,
-                hintText: 'Airline',
-                enabled: true,
-                obscureText: false,
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              MyButton(
-                  text: 'Add Record',
-                  color: Colors.orange,
-                  onTap: addFlightRecord),
-            ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyTextField(
+                  controller: _flightNumberController,
+                  hintText: 'Flight Number',
+                  obscureText: false,
+                  enabled: false,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _startDateController,
+                  hintText: 'Date of Departure',
+                  obscureText: false,
+                  enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _endDateController,
+                  hintText: 'Date of Arrival',
+                  obscureText: false,
+                  enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _startDestinationController,
+                  hintText: 'Start Destination',
+                  enabled: true,
+                  obscureText: false,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _endDestinationController,
+                  hintText: 'End Destination',
+                  obscureText: false,
+                  enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _timeOfTakeOffController,
+                  hintText: 'Time of Take Off',
+                  obscureText: false,
+                  enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _timeOfLandingController,
+                  hintText: 'Time of Landing',
+                  obscureText: false,
+                  enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _airlineController,
+                  hintText: 'Airline',
+                  enabled: true,
+                  obscureText: false,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                MyButton(
+                    text: 'Add Record',
+                    color: Colors.orange,
+                    onTap: addFlightRecord),
+              ],
+            ),
           ),
         ),
       ),
