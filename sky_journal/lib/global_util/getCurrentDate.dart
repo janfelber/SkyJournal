@@ -2,8 +2,8 @@
 
 import 'package:intl/intl.dart';
 
-String getCurrentDate() {
+String getCurrentDate(String format) {
   DateTime currentDate = DateTime.now();
-  String formattedDate = DateFormat.yMMMMd('en_US').format(currentDate);
+  String formattedDate = DateFormat(format).format(currentDate);
   return formattedDate;
 }

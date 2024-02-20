@@ -102,7 +102,7 @@ class _FlightsState extends State<Flights> {
                           height: 8,
                         ),
                         Text(
-                          getCurrentDate(),
+                          getCurrentDate('MMMM dd, yyyy'),
                           style: TextStyle(color: Colors.blue[200]),
                         ),
                       ],

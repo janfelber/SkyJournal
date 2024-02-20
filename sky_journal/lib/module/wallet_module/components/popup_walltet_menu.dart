@@ -6,6 +6,7 @@ import 'package:sky_journal/theme/color_theme.dart';
 import '../../../components/push_to_new_page.dart';
 import '../add_insurance_card_page.dart';
 import '../add_license_card_page.dart';
+import '../doctors appoinments/add_appoinment_page.dart';
 
 class WalletPopUpMenu extends StatelessWidget {
   const WalletPopUpMenu({super.key});
@@ -34,8 +35,7 @@ class WalletPopUpMenu extends StatelessWidget {
           pushToNewPage(context, AddLicenseCard());
         }
         if (id == 2) {
-          pushToNewPage(context, AddInsuranceCard());
-          print(id);
+          pushToNewPage(context, AddDoctorAppointment());
         }
       },
     );

@@ -34,6 +34,25 @@ class FirestoreDatabase {
   final CollectionReference flights =
       FirebaseFirestore.instance.collection('flights');
 
+  final CollectionReference doctorAppointment =
+      FirebaseFirestore.instance.collection('docotor-applications');
+
+  //add doctors apoointment to firestore
+  Future<void> addDoctorAppointment(
+    String doctorName,
+    DateTime date,
+    String time,
+    String doctorSpeciality,
+  ) {
+    return doctorAppointment.add({
+      'UserEmail': user!.email,
+      'Date': date,
+      'Time': time,
+      'DoctorName': doctorName,
+      'DoctorSpeciality': doctorSpeciality,
+    });
+  }
+
   //add health insurance card to firestore
   Future<void> addHealthCard(
     String dateOfBirth,
