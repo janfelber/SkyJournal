@@ -50,6 +50,7 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
         date,
         time,
         speciality,
+        "Upcoming",
       );
     }
 

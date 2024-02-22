@@ -43,6 +43,7 @@ class FirestoreDatabase {
     DateTime date,
     String time,
     String doctorSpeciality,
+    String status,
   ) {
     return doctorAppointment.add({
       'UserEmail': user!.email,
@@ -50,6 +51,7 @@ class FirestoreDatabase {
       'Time': time,
       'DoctorName': doctorName,
       'DoctorSpeciality': doctorSpeciality,
+      'Status': status,
     });
   }
 
@@ -141,5 +143,17 @@ class FirestoreDatabase {
     final cardStream =
         FirebaseFirestore.instance.collection('license-card').snapshots();
     return cardStream;
+  }
+
+  Stream<QuerySnapshot> getDoctorAppointmentStream() {
+    final doctorAppointmentStream = FirebaseFirestore.instance
+        .collection('docotor-applications')
+        .orderBy('Date', descending: true)
+        .snapshots();
+    return doctorAppointmentStream;
+  }
+
+  updateDoctorAppointmentStatus(String appointmentId, String status) {
+    doctorAppointment.doc(appointmentId).update({'Status': status});
   }
 }
