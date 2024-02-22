@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class MyColorTheme {
+  static const Color surface = const Color(0xFF1D2026);
+}
+
 Color Surface = const Color(0xFF1D2026);
 Color PopUp = const Color.fromARGB(255, 49, 48, 47);
 Color cards = const Color(0xFF2D303A);

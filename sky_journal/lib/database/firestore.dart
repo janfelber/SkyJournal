@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 /*
 
@@ -155,5 +156,133 @@ class FirestoreDatabase {
 
   updateDoctorAppointmentStatus(String appointmentId, String status) {
     doctorAppointment.doc(appointmentId).update({'Status': status});
+  }
+
+  //get numbers of flight for current user
+  Future<int> getNumberOfFlights() async {
+    final snapshot =
+        await flights.where('UserEmail', isEqualTo: user!.email).get();
+    return snapshot.docs.length;
+  }
+
+  //get total flight hour with minutes for current user
+  Future<String> calculateTotalHours() async {
+    final snapshot =
+        await flights.where('UserEmail', isEqualTo: user!.email).get();
+    int totalHour = 0;
+    int totalMinutes = 0;
+
+    for (var doc in snapshot.docs) {
+      var format = DateFormat("HH:mm");
+
+      final startDate = (doc['TimeOfTakeOff']);
+      final endDate = (doc['TimeOfLanding']);
+      var one = format.parse(startDate);
+      var two = format.parse(endDate);
+      var differenceBetweenTimes = two.difference(one);
+      var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+      var hoursOfFlight = differenceBetweenTimes.inHours;
+
+      totalHour += hoursOfFlight;
+      totalMinutes += minutesOfFlight;
+    }
+
+    return '$totalHour h and $totalMinutes m';
+  }
+
+  //get most visited destination for current user
+
+  Future<String> getMostVisitedDestination() async {
+    // Získání snapshotu všech letů pro aktuálního uživatele
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    // Mapa pro ukládání počtu výskytů každé destinace
+    final Map<String, int> destinationCounts = {};
+
+    // Projití každého dokumentu ve snapshotu
+    for (var doc in snapshot.docs) {
+      // Získání EndDestination z dokumentu
+      final endDestination = doc['EndDestination'];
+
+      // Inkrementace počtu výskytů dané destinace
+      destinationCounts[endDestination] =
+          (destinationCounts[endDestination] ?? 0) + 1;
+    }
+
+    // Nalezení destinace s největším počtem výskytů
+    String mostVisitedDestination = '';
+    int max = 0;
+    destinationCounts.forEach((destination, count) {
+      if (count > max) {
+        max = count;
+        mostVisitedDestination = destination;
+      }
+    });
+
+    return mostVisitedDestination;
+  }
+
+  //get number of longest flight for current user
+  Future<Map<String, dynamic>> getLongestFlight() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    int longestFlight = 0;
+    String longestFlightId = '';
+
+    //calculate for every flight the time of flight
+    for (var doc in snapshot.docs) {
+      var format = DateFormat("HH:mm");
+
+      final startDate = (doc['TimeOfTakeOff']);
+      final endDate = (doc['TimeOfLanding']);
+      var one = format.parse(startDate);
+      var two = format.parse(endDate);
+      var differenceBetweenTimes = two.difference(one);
+      var minutesOfFlight = differenceBetweenTimes.inHours;
+
+      if (minutesOfFlight > longestFlight) {
+        longestFlight = minutesOfFlight;
+        longestFlightId = doc['FlightNumber'];
+      }
+    }
+    return {'length': longestFlight, 'id': longestFlightId};
+  }
+
+  //get average of flghts for current user
+  Future<String> getAverageOfFlights() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    int totalFlights = snapshot.docs.length;
+    int totalHours = 0;
+    int totalMinutes = 0;
+
+    for (var doc in snapshot.docs) {
+      var format = DateFormat("HH:mm");
+
+      final startDate = (doc['TimeOfTakeOff']);
+      final endDate = (doc['TimeOfLanding']);
+      var one = format.parse(startDate);
+      var two = format.parse(endDate);
+      var differenceBetweenTimes = two.difference(one);
+      var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+      var hoursOfFlight = differenceBetweenTimes.inHours;
+
+      totalHours += hoursOfFlight;
+      totalMinutes += minutesOfFlight;
+    }
+
+    int averageHours = totalHours ~/ totalFlights;
+    int averageMinutes = totalMinutes ~/ totalFlights;
+
+    return '$averageHours h and $averageMinutes m';
   }
 }

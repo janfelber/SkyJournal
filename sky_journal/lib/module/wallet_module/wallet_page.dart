@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/global_util/notifi_service.dart';
-import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_card.dart';
 import 'package:sky_journal/module/wallet_module/components/popup_walltet_menu.dart';
 import 'package:sky_journal/module/wallet_module/doctors%20appoinments/doctor_appointment.dart';
