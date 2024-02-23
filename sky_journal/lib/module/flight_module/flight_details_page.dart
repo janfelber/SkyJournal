@@ -8,11 +8,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
+import 'package:sky_journal/module/flight_module/updateflight_page.dart';
 import 'package:sky_journal/module/flight_module/view_map.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/module/flight_module/components/flight_card.dart';
 import 'package:geocoding/geocoding.dart';
+
 import 'package:sky_journal/global_widgets/space.dart';
 
 class FlightDetailsPage extends StatefulWidget {
@@ -51,17 +53,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   late GoogleMapController mapController;
 
-  LatLng _point1 = LatLng(48.2195335, 16.3784883);
-  LatLng _point2 = LatLng(52.5200, 13.4050);
+  LatLng _point1 = LatLng(48.148598, 17.107748);
+  LatLng _point2 = LatLng(48.210033, 16.363449);
 
   final Set<Polyline> _polylines = Set();
-
-  LatLng target = LatLng(0, 0);
-
-  CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(48.2195335, 16.3784883),
-    zoom: 10.4746,
-  );
 
   @override
   void initState() {
@@ -73,22 +68,21 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
   }
 
-  Future<LatLng> _getCinty(city) async {
-    List<Location> locationsFrom = await locationFromAddress(city);
-
-    if (locationsFrom.isNotEmpty) {
-      print(LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude));
-      return LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
+  Future<List<Location>> getLocationFromCityName(String cityName) async {
+    try {
+      return await locationFromAddress(cityName);
+    } catch (e) {
+      print('Chyba pri získavaní súradníc z mesta $cityName: $e');
+      return [];
     }
-    return LatLng(0.0, 0.0);
   }
 
-  // Metóda pre získanie súradníc mesta zo zadaného názvu
   Future<void> _getCoordinatesFromCity(
       String cityNameFrom, String cityNameTo) async {
     try {
-      List<Location> locationsFrom = await locationFromAddress(cityNameFrom);
-      List<Location> locationsTo = await locationFromAddress(cityNameTo);
+      List<Location> locationsFrom =
+          await getLocationFromCityName(cityNameFrom);
+      List<Location> locationsTo = await getLocationFromCityName(cityNameTo);
 
       if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
         setState(() {
@@ -96,12 +90,31 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           _point1 =
               LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
           _point2 = LatLng(locationsTo[0].latitude, locationsTo[0].longitude);
+          _setInitialCameraPosition(locationsFrom[0]);
         });
       } else {
-        print('Nepodarilo sa nájsť súradnice pre mesto $locationsFrom');
+        print('Nepodarilo sa nájsť súradnice pre mesto $cityNameFrom');
       }
     } catch (e) {
       print('Chyba pri získavaní súradníc: $e');
+    }
+  }
+
+  Future<void> _setInitialCameraPosition(Location location) async {
+    try {
+      setState(() {
+        // Nastavenie inicializačnej pozície kamery na základe získaných zemepisných súradníc
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(location.latitude, location.longitude),
+              zoom: 10.4746,
+            ),
+          ),
+        );
+      });
+    } catch (e) {
+      print('Chyba pri nastavovaní kamery: $e');
     }
   }
 
@@ -205,16 +218,37 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(15.0),
-                              child: GoogleMap(
-                                mapType: MapType.normal,
-                                initialCameraPosition: _kGooglePlex,
-                                polylines: _polylines,
-                                onMapCreated: (GoogleMapController controller) {
-                                  mapController = controller;
-
-                                  mapController.setMapStyle(_mapStyle);
-
-                                  _controller.complete(controller);
+                              child: FutureBuilder<List<Location>>(
+                                future: getLocationFromCityName(
+                                    widget.startDestination),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}'));
+                                  } else {
+                                    final targetLatLng = LatLng(
+                                        snapshot.data![0].latitude,
+                                        snapshot.data![0].longitude);
+                                    return GoogleMap(
+                                      mapType: MapType.normal,
+                                      initialCameraPosition: CameraPosition(
+                                        target: targetLatLng,
+                                        zoom: 9,
+                                      ),
+                                      polylines: _polylines,
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                        mapController = controller;
+                                        mapController.setMapStyle(_mapStyle);
+                                        _controller.complete(controller);
+                                      },
+                                    );
+                                  }
                                 },
                               ),
                             ),
@@ -368,10 +402,6 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SvgPicture.asset(
-                                      'assets/svg/airplane.svg',
-                                      color: Green,
-                                    ),
                                     Space.X(10),
                                     Text(
                                       'Aircraft Type: Boeing 737',
@@ -418,91 +448,6 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                       ),
                     ),
                     Space.Y(20),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.all(
-                    //       Radius.circular(15),
-                    //     ),
-                    //     color: cards,
-                    //   ),
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(15.0),
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: [
-                    //         Text(
-                    //           'Pilots Safety Checklist',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.normal,
-                    //               fontSize: 24,
-                    //               color: textColor),
-                    //         ),
-                    //         Space.Y(20),
-                    //         Text(
-                    //           'Here are some key safety procedures followed by the flight crew:',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.normal,
-                    //               fontSize: 16,
-                    //               color: textColor),
-                    //         ),
-                    //         Space.Y(20),
-                    //         Row(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: [
-                    //             SvgPicture.asset(
-                    //               'assets/svg/tick.svg',
-                    //               color: Green,
-                    //             ),
-                    //             Space.X(10),
-                    //             Text(
-                    //               'Preflight safety inspections of the aircraft, including avionics, controls, and emergency equipment.',
-                    //               style: TextStyle(
-                    //                   fontWeight: FontWeight.normal,
-                    //                   fontSize: 14,
-                    //                   color: textColor),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         Space.Y(10),
-                    //         Row(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: [
-                    //             SvgPicture.asset(
-                    //               'assets/svg/tick.svg',
-                    //               color: Green,
-                    //             ),
-                    //             Space.X(10),
-                    //             Text(
-                    //               'Crew coordination and communication protocols to ensure safe operations.',
-                    //               style: TextStyle(
-                    //                   fontWeight: FontWeight.normal,
-                    //                   fontSize: 14,
-                    //                   color: textColor),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         Space.Y(10),
-                    //         Row(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: [
-                    //             SvgPicture.asset(
-                    //               'assets/svg/tick.svg',
-                    //               color: Green,
-                    //             ),
-                    //             Space.X(10),
-                    //             Text(
-                    //               'Emergency response training and procedures for various in-flight scenarios.',
-                    //               style: TextStyle(
-                    //                   fontWeight: FontWeight.normal,
-                    //                   fontSize: 14,
-                    //                   color: textColor),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
               ),

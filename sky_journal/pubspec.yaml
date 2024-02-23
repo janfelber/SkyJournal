@@ -48,7 +48,7 @@ dependencies:
   http: ^1.1.0
 
   maps_curved_line: ^1.0.2
-  google_maps_flutter: ^2.5.0
+  google_maps_flutter: ^2.5.3
   geocoding: ^2.1.1
 
   firebase_auth: ^4.10.1

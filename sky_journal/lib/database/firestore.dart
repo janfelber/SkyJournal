@@ -285,4 +285,28 @@ class FirestoreDatabase {
 
     return '$averageHours h and $averageMinutes m';
   }
+
+  //update flight in firestore
+  Future<void> updateFlight(
+    String flightNumber,
+    String startDate,
+    String endDate,
+    String startDestination,
+    String endDestination,
+    String timeOfTakeOff,
+    String timeOfLanding,
+    String airLine,
+    String id,
+  ) {
+    return flights.doc(id).update({
+      'FlightNumber': flightNumber,
+      'StartDate': startDate,
+      'EndDate': endDate,
+      'StartDestination': startDestination,
+      'EndDestination': endDestination,
+      'TimeOfTakeOff': timeOfTakeOff,
+      'TimeOfLanding': timeOfLanding,
+      'Airline': airLine,
+    });
+  }
 }

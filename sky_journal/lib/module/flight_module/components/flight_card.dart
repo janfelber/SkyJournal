@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 import 'package:sky_journal/module/flight_module/components/utils/airlines_convertor.dart';

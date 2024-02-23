@@ -163,6 +163,9 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenHeight = screenSize.height;
+    final double screenWidth = screenSize.width;
     return Scaffold(
       backgroundColor: Surface,
       appBar: CustomAppBar(
@@ -171,7 +174,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.05, vertical: screenHeight * 0.05),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -449,9 +453,15 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   height: 15.0,
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width *
+                        0.02, // Adjust the horizontal padding
+                    vertical:
+                        screenSize.height * 0.01, // Adjust the vertical padding
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(
+                        screenSize.width * 0.03), // Adjust the border radius
                     border: Border.all(color: Colors.grey[700]!),
                   ),
                   child: DropdownButtonHideUnderline(
@@ -459,11 +469,15 @@ class _AddFlightPageState extends State<AddFlightPage> {
                       isExpanded: true,
                       value: selectedAirline,
                       dropdownColor: PopUp,
-                      icon: const Icon(Icons.arrow_drop_down,
-                          color: Colors.white),
-                      iconSize: 24,
-                      hint: Text('Select Airline',
-                          style: TextStyle(color: Colors.white)),
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      ),
+                      iconSize: screenSize.width * 0.06,
+                      hint: Text(
+                        'Select Airline',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       items: airlines.map(buildMenuItem).toList(),
                       onChanged: (value) {
                         setState(() {
