@@ -286,7 +286,7 @@ class FirestoreDatabase {
     return '$averageHours h and $averageMinutes m';
   }
 
-  //update flight in firestore
+  //update flight in firestore by flight number
   Future<void> updateFlight(
     String flightNumber,
     String startDate,
@@ -296,17 +296,27 @@ class FirestoreDatabase {
     String timeOfTakeOff,
     String timeOfLanding,
     String airLine,
-    String id,
   ) {
-    return flights.doc(id).update({
-      'FlightNumber': flightNumber,
-      'StartDate': startDate,
-      'EndDate': endDate,
-      'StartDestination': startDestination,
-      'EndDestination': endDestination,
-      'TimeOfTakeOff': timeOfTakeOff,
-      'TimeOfLanding': timeOfLanding,
-      'Airline': airLine,
+    return flights
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where('FlightNumber', isEqualTo: flightNumber)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isEmpty) {
+        throw Exception('Flight not found');
+      } else {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.update({
+            'StartDate': startDate,
+            'EndDate': endDate,
+            'StartDestination': startDestination,
+            'EndDestination': endDestination,
+            'TimeOfTakeOff': timeOfTakeOff,
+            'TimeOfLanding': timeOfLanding,
+            'Airline': airLine,
+          });
+        });
+      }
     });
   }
 }

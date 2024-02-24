@@ -18,29 +18,30 @@ import 'package:geocoding/geocoding.dart';
 import 'package:sky_journal/global_widgets/space.dart';
 
 class FlightDetailsPage extends StatefulWidget {
-  final String flightNumber;
-  final String startDate;
-  final String endDate;
-  final String startDestination;
-  final String endDestination;
-  final String timeOfTakeOff;
-  final String timeOfLanding;
-  final String airline;
-  final String numbersOfPassengers;
-  final String avgSpeed;
+  String flightNumber;
+  String startDate;
+  String endDate;
+  String startDestination;
+  String endDestination;
+  String timeOfTakeOff;
+  String timeOfLanding;
+  String airline;
+  String numbersOfPassengers;
+  String avgSpeed;
 
-  const FlightDetailsPage(
-      {super.key,
-      required this.flightNumber,
-      required this.startDate,
-      required this.endDate,
-      required this.startDestination,
-      required this.endDestination,
-      required this.timeOfTakeOff,
-      required this.timeOfLanding,
-      required this.airline,
-      required this.numbersOfPassengers,
-      required this.avgSpeed});
+  FlightDetailsPage({
+    Key? key,
+    required this.flightNumber,
+    required this.startDate,
+    required this.endDate,
+    required this.startDestination,
+    required this.endDestination,
+    required this.timeOfTakeOff,
+    required this.timeOfLanding,
+    required this.airline,
+    required this.numbersOfPassengers,
+    required this.avgSpeed,
+  }) : super(key: key);
 
   @override
   State<FlightDetailsPage> createState() => _FlightDetailsPageState();
@@ -118,6 +119,41 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     }
   }
 
+  void _navigateToUpdateFlightPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpadateFlight(
+          flightNumber: widget.flightNumber,
+          startDate: widget.startDate,
+          endDate: widget.endDate,
+          startDestination: widget.startDestination,
+          endDestination: widget.endDestination,
+          timeOfTakeOff: widget.timeOfTakeOff,
+          timeOfLanding: widget.timeOfLanding,
+          airline: widget.airline,
+        ),
+      ),
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          // Aktualizujte údaje o lete s novými hodnotami
+          widget.flightNumber = value['flightNumber'];
+          widget.startDate = value['startDate'];
+          widget.endDate = value['endDate'];
+          widget.startDestination = value['startDestination'];
+          widget.endDestination = value['endDestination'];
+          widget.timeOfTakeOff = value['timeOfTakeOff'];
+          widget.timeOfLanding = value['timeOfLanding'];
+          widget.airline = value['airline'];
+
+          _getCoordinatesFromCity(
+              widget.startDestination, widget.endDestination);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _polylines.add(Polyline(
@@ -183,6 +219,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 timeOfTakeOff: widget.timeOfTakeOff,
                                 timeOfLanding: widget.timeOfLanding,
                                 airline: widget.airline,
+                                onEdit: _navigateToUpdateFlightPage,
                               ),
                               Space.Y(10),
                               Text(

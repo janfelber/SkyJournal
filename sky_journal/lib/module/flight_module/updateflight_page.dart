@@ -2,8 +2,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
+import 'package:sky_journal/global_widgets/my_button.dart';
+import 'package:sky_journal/module/flight_module/flight_details_page.dart';
+import 'package:table_calendar/table_calendar.dart';
 
+import '../../database/firestore.dart';
 import '../../global_widgets/my_textfield.dart';
 import '../../theme/color_theme.dart';
 
@@ -33,6 +39,16 @@ class UpadateFlight extends StatefulWidget {
 }
 
 class _UpadateFlightState extends State<UpadateFlight> {
+  DateTime? selectedDate;
+
+  DateTime? selectedEndDate;
+
+  String? selectedAirline;
+
+  final airlines = ['Emirates', 'Qatar Airways', 'Lufthansa', 'Air France'];
+
+  final FirestoreDatabase database = FirestoreDatabase();
+
   final TextEditingController _flightNumberController = TextEditingController();
 
   final TextEditingController _startDateController = TextEditingController();
@@ -51,8 +67,6 @@ class _UpadateFlightState extends State<UpadateFlight> {
   final TextEditingController _timeOfLandingController =
       TextEditingController();
 
-  final TextEditingController _airlineController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -63,7 +77,65 @@ class _UpadateFlightState extends State<UpadateFlight> {
     _endDestinationController.text = widget.endDestination;
     _timeOfTakeOffController.text = widget.timeOfTakeOff;
     _timeOfLandingController.text = widget.timeOfLanding;
-    _airlineController.text = widget.airline;
+
+    selectedDate = _parseDate(widget.startDate);
+    selectedEndDate = _parseDate(widget.endDate);
+    selectedAirline = widget.airline;
+  }
+
+  DateTime? _parseDate(String date) {
+    try {
+      // Rozdelíme dátum na časti
+      List<String> parts = date.split('.');
+      // Ak máme 3 časti, môžeme získať dátum
+      if (parts.length == 3) {
+        // Konvertujeme časti na čísla a vytvoríme DateTime objekt
+        int year = int.parse(parts[2]);
+        int month = int.parse(parts[1]);
+        int day = int.parse(parts[0]);
+        return DateTime(year, month, day);
+      }
+    } catch (e) {
+      print('Invalid date format: $date');
+    }
+    return null; // Ak sa nepodarilo parsovať dátum, vrátime null
+  }
+
+  //edit flight
+  void editFlight() {
+    // Získanie aktualizovaných údajov z kontrolórov
+    String flightNumber = _flightNumberController.text;
+    String startDate = _startDateController.text;
+    String endDate = _endDateController.text;
+    String startDestination = _startDestinationController.text;
+    String endDestination = _endDestinationController.text;
+    String timeOfTakeOff = _timeOfTakeOffController.text;
+    String timeOfLanding = _timeOfLandingController.text;
+    String airline = selectedAirline!;
+
+    // Aktualizácia údajov v Firestore
+    database.updateFlight(
+      flightNumber,
+      startDate,
+      endDate,
+      startDestination,
+      endDestination,
+      timeOfTakeOff,
+      timeOfLanding,
+      airline,
+    );
+
+    // Odoslanie aktualizovaných údajov späť na predchádzajúcu stránku
+    Navigator.pop(context, {
+      'flightNumber': flightNumber,
+      'startDate': startDate,
+      'endDate': endDate,
+      'startDestination': startDestination,
+      'endDestination': endDestination,
+      'timeOfTakeOff': timeOfTakeOff,
+      'timeOfLanding': timeOfLanding,
+      'airline': airline,
+    });
   }
 
   @override
@@ -98,15 +170,156 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   controller: _startDateController,
                   obscureText: false,
                   enabled: true,
+                  icon: Icon(Icons.calendar_today, color: Colors.white),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor:
+                            PopUp, // Prispôsobte farbu podľa svojich potrieb
+                        title: Text(
+                          "Departure Date",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        content: Container(
+                          height: 410,
+                          width: 300,
+                          child: TableCalendar(
+                            selectedDayPredicate: (day) =>
+                                isSameDay(selectedDate ?? DateTime.now(), day),
+                            headerStyle: HeaderStyle(
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                              titleTextStyle: TextStyle(color: Colors.white),
+                              leftChevronIcon: Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                              ),
+                              rightChevronIcon: Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onDaySelected: (selectedDay, focusedDay) {
+                              if (selectedDay != null) {
+                                setState(() {
+                                  selectedDate = selectedDay;
+                                  _startDateController.text =
+                                      DateFormat('dd.M.yyyy')
+                                          .format(selectedDate!);
+                                });
+                                Navigator.pop(context);
+                              }
+                            },
+                            calendarStyle: CalendarStyle(
+                              defaultTextStyle: TextStyle(color: Colors.white),
+                              holidayTextStyle: TextStyle(color: Colors.white),
+                              weekNumberTextStyle:
+                                  TextStyle(color: Colors.white),
+                              weekendTextStyle: TextStyle(color: Colors.white),
+                              selectedTextStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              todayTextStyle: TextStyle(
+                                color: Colors.blue,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Colors.transparent,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            focusedDay: selectedDate ?? DateTime.now(),
+                            firstDay: DateTime(2000),
+                            lastDay: DateTime(2050),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 10.0,
                 ),
                 MyTextField(
-                    hintText: 'Date of Arrival',
-                    obscureText: false,
-                    enabled: true,
-                    controller: _endDateController),
+                  hintText: 'Date of Arrival',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _endDateController,
+                  icon: Icon(Icons.calendar_today, color: Colors.white),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor:
+                            PopUp, // Prispôsobte farbu podľa svojich potrieb
+                        title: Text(
+                          "Departure Date",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        content: Container(
+                          height: 410,
+                          width: 300,
+                          child: TableCalendar(
+                            selectedDayPredicate: (day) => isSameDay(
+                                selectedEndDate ?? DateTime.now(), day),
+                            headerStyle: HeaderStyle(
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                              titleTextStyle: TextStyle(color: Colors.white),
+                              leftChevronIcon: Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                              ),
+                              rightChevronIcon: Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onDaySelected: (selectedDay, focusedDay) {
+                              if (selectedDay != null) {
+                                setState(() {
+                                  selectedEndDate = selectedDay;
+                                  _endDateController.text =
+                                      DateFormat('dd.M.yyyy')
+                                          .format(selectedEndDate!);
+                                });
+                                Navigator.pop(context);
+                              }
+                            },
+                            calendarStyle: CalendarStyle(
+                              defaultTextStyle: TextStyle(color: Colors.white),
+                              holidayTextStyle: TextStyle(color: Colors.white),
+                              weekNumberTextStyle:
+                                  TextStyle(color: Colors.white),
+                              weekendTextStyle: TextStyle(color: Colors.white),
+                              selectedTextStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              todayTextStyle: TextStyle(
+                                color: Colors.blue,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Colors.transparent,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            focusedDay: selectedEndDate ?? DateTime.now(),
+                            firstDay: DateTime(2000),
+                            lastDay: DateTime(2050),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -127,22 +340,152 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   height: 10.0,
                 ),
                 MyTextField(
-                    hintText: 'Time of Take Off',
-                    obscureText: false,
-                    enabled: true,
-                    controller: _timeOfTakeOffController),
+                  hintText: 'Time of Take Off',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _timeOfTakeOffController,
+                  icon: Icon(Icons.access_time, color: Colors.white),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Take Off Time',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          backgroundColor: PopUp,
+                          content: Container(
+                            height: 200,
+                            child: CupertinoTheme(
+                              data: CupertinoThemeData(
+                                textTheme: CupertinoTextThemeData(
+                                  dateTimePickerTextStyle: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: CupertinoDatePicker(
+                                      mode: CupertinoDatePickerMode.time,
+                                      initialDateTime: DateFormat('HH:mm')
+                                          .parse(_timeOfTakeOffController.text),
+                                      use24hFormat: true,
+                                      onDateTimeChanged:
+                                          (DateTime newDateTime) {
+                                        setState(() {
+                                          // Handle selected time
+                                          _timeOfTakeOffController.text =
+                                              DateFormat('HH:mm')
+                                                  .format(newDateTime);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
                 SizedBox(
                   height: 10.0,
                 ),
                 MyTextField(
-                    hintText: 'Time of Landing',
-                    obscureText: false,
-                    enabled: true,
-                    controller: _timeOfLandingController),
+                  hintText: 'Time of Landing',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _timeOfLandingController,
+                  icon: Icon(Icons.access_time, color: Colors.white),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Take Off Time',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          backgroundColor: PopUp,
+                          content: Container(
+                            height: 200,
+                            child: CupertinoTheme(
+                              data: CupertinoThemeData(
+                                textTheme: CupertinoTextThemeData(
+                                  dateTimePickerTextStyle: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: CupertinoDatePicker(
+                                      mode: CupertinoDatePickerMode.time,
+                                      use24hFormat: true,
+                                      initialDateTime: DateFormat('HH:mm')
+                                          .parse(_timeOfLandingController.text),
+                                      onDateTimeChanged:
+                                          (DateTime newDateTime) {
+                                        setState(() {
+                                          // Handle selected time
+                                          _timeOfLandingController.text =
+                                              DateFormat('HH:mm')
+                                                  .format(newDateTime);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
                 SizedBox(
-                  height: 10.0,
+                  height: 15.0,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width *
+                        0.02, // Adjust the horizontal padding
+                    vertical:
+                        screenSize.height * 0.01, // Adjust the vertical padding
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        screenSize.width * 0.03), // Adjust the border radius
+                    border: Border.all(color: Colors.grey[700]!),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: selectedAirline,
+                      dropdownColor: PopUp,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      ),
+                      iconSize: screenSize.width * 0.06,
+                      items: airlines.map(buildMenuItem).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedAirline = value;
+                        });
+                      },
+                    ),
+                  ),
                 ),
                 Text('Airline: ${widget.airline}'),
+                MyButton(text: 'Edit Flight', onTap: editFlight, color: Primary)
               ],
             ),
           ),
@@ -150,4 +493,12 @@ class _UpadateFlightState extends State<UpadateFlight> {
       ),
     );
   }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(color: Colors.white),
+        ),
+      );
 }
