@@ -26,15 +26,13 @@ class _AddFlightPageState extends State<AddFlightPage> {
   String avgSpeed = "0";
 
   final airlines = [
+    'Private',
     'Air Canada',
-    'Air France',
     'British Airways',
-    'EasyJet',
     'Emirates',
     'Etihad Airways',
     'Japan Airlines',
     'Lufthansa',
-    'Personal',
     'Qatar Airways',
     'Ryanair',
     'Tus Airways',
@@ -525,9 +523,17 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
         value: item,
-        child: Text(
-          item,
-          style: TextStyle(color: Colors.white),
+        child: Row(
+          children: [
+            if (item == 'Private') ...[
+              Icon(Icons.star, color: Colors.white),
+              SizedBox(width: 10),
+            ],
+            Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
         ),
       );
 }

@@ -45,7 +45,19 @@ class _UpadateFlightState extends State<UpadateFlight> {
 
   String? selectedAirline;
 
-  final airlines = ['Emirates', 'Qatar Airways', 'Lufthansa', 'Air France'];
+  final airlines = [
+    'Private',
+    'Air Canada',
+    'British Airways',
+    'Emirates',
+    'Etihad Airways',
+    'Japan Airlines',
+    'Lufthansa',
+    'Qatar Airways',
+    'Ryanair',
+    'Tus Airways',
+    'Wizz Air',
+  ];
 
   final FirestoreDatabase database = FirestoreDatabase();
 
@@ -155,7 +167,6 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 horizontal: screenWidth * 0.05, vertical: screenHeight * 0.05),
             child: Column(
               children: [
-                Text('Flight Number: ${widget.flightNumber}'),
                 MyTextField(
                   hintText: 'Flight Number',
                   controller: _flightNumberController,
@@ -484,7 +495,9 @@ class _UpadateFlightState extends State<UpadateFlight> {
                     ),
                   ),
                 ),
-                Text('Airline: ${widget.airline}'),
+                SizedBox(
+                  height: 50.0,
+                ),
                 MyButton(text: 'Edit Flight', onTap: editFlight, color: Primary)
               ],
             ),
@@ -496,9 +509,17 @@ class _UpadateFlightState extends State<UpadateFlight> {
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
         value: item,
-        child: Text(
-          item,
-          style: TextStyle(color: Colors.white),
+        child: Row(
+          children: [
+            if (item == 'Private') ...[
+              Icon(Icons.star, color: Colors.white),
+              SizedBox(width: 10),
+            ],
+            Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
         ),
       );
 }

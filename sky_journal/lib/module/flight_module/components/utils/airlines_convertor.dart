@@ -7,21 +7,13 @@ Widget getAirlineLogo(String airlineName) {
     return Image.asset(
       'assets/airlines/air-canada_logo.png',
       height: 60,
-    );
-  } else if (lowercaseAirlineName == 'air france') {
-    return Image.asset(
-      'assets/airlines/air-france_logo.png',
-      height: 60,
+      width: 60,
     );
   } else if (lowercaseAirlineName == 'british airways') {
     return Image.asset(
       'assets/airlines/british-airways_logo.png',
       height: 60,
-    );
-  } else if (lowercaseAirlineName == 'easyjet') {
-    return Image.asset(
-      'assets/airlines/easyjet_logo.png',
-      height: 60,
+      width: 100,
     );
   } else if (lowercaseAirlineName == 'emirates') {
     return Image.asset(
@@ -31,12 +23,13 @@ Widget getAirlineLogo(String airlineName) {
   } else if (lowercaseAirlineName == 'etihad airways') {
     return Image.asset(
       'assets/airlines/etihad-airways_logo.png',
-      height: 60,
+      height: 80,
+      width: 80,
     );
   } else if (lowercaseAirlineName == 'japan airlines') {
     return Image.asset(
       'assets/airlines/japan-airlines_logo.png',
-      height: 60,
+      height: 55,
     );
   } else if (lowercaseAirlineName == 'lufthansa') {
     return Image.asset(
@@ -52,6 +45,7 @@ Widget getAirlineLogo(String airlineName) {
     return Image.asset(
       'assets/airlines/ryanair_logo.png',
       height: 60,
+      width: 50,
     );
   } else if (lowercaseAirlineName == 'tus airways') {
     return Image.asset(
@@ -63,10 +57,10 @@ Widget getAirlineLogo(String airlineName) {
       'assets/airlines/wizz-air_logo.png',
       height: 60,
     );
-  } else if (lowercaseAirlineName == 'personal') {
+  } else if (lowercaseAirlineName == 'private') {
     return Image.asset(
       'assets/airlines/private-jet_logo.png',
-      height: 60,
+      height: 80,
     );
   } else {
     // If there is an unknown airline, we will return no logo

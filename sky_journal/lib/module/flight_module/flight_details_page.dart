@@ -54,8 +54,8 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   late GoogleMapController mapController;
 
-  LatLng _point1 = LatLng(48.148598, 17.107748);
-  LatLng _point2 = LatLng(48.210033, 16.363449);
+  LatLng _point1 = LatLng(0, 0);
+  LatLng _point2 = LatLng(0, 0);
 
   final Set<Polyline> _polylines = Set();
 
@@ -147,6 +147,11 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           widget.timeOfLanding = value['timeOfLanding'];
           widget.airline = value['airline'];
 
+          _polylines.clear();
+          _point1 = LatLng(0, 0);
+          _point2 = LatLng(0, 0);
+
+          // Obnovte mapu na pôvodný stav
           _getCoordinatesFromCity(
               widget.startDestination, widget.endDestination);
         });
