@@ -38,7 +38,6 @@ class _AddFlightPageState extends State<AddFlightPage> {
     'Qatar Airways',
     'Ryanair',
     'Tus Airways',
-    'United Airlines',
     'Wizz Air',
   ];
 
