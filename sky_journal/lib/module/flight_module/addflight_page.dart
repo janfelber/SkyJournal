@@ -25,7 +25,22 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   String avgSpeed = "0";
 
-  final airlines = ['Emirates', 'Qatar Airways', 'Lufthansa', 'Air France'];
+  final airlines = [
+    'Air Canada',
+    'Air France',
+    'British Airways',
+    'EasyJet',
+    'Emirates',
+    'Etihad Airways',
+    'Japan Airlines',
+    'Lufthansa',
+    'Personal',
+    'Qatar Airways',
+    'Ryanair',
+    'Tus Airways',
+    'United Airlines',
+    'Wizz Air',
+  ];
 
   String? selectedAirline;
 
