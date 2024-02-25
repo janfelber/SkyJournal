@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, curly_braces_in_flow_control_structures
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,12 @@ class _WalletState extends State<Wallet> {
     database.updateDoctorAppointmentStatus(status, 'Canceled');
   }
 
+  final StreamController<List<QueryDocumentSnapshot>> _cardStreamController =
+      StreamController<List<QueryDocumentSnapshot>>();
+  final StreamController<List<QueryDocumentSnapshot>>
+      _appointmentStreamController =
+      StreamController<List<QueryDocumentSnapshot>>();
+
   List<QueryDocumentSnapshot> userCards = [];
   List doctorAppointments = [];
 
@@ -47,14 +55,19 @@ class _WalletState extends State<Wallet> {
   void loadCards() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     var cardStream = await FirebaseFirestore.instance
-        .collection('your_collection_name') // Zmeniť na názov vašej kolekcie
-        .where('UserEmail',
-            isEqualTo: currentUser?.email) // Filter podľa používateľa
+        .collection('license-card')
+        .where('UserEmail', isEqualTo: currentUser?.email)
         .get();
+    _cardStreamController.add(cardStream.docs);
+  }
 
-    setState(() {
-      userCards = cardStream.docs; // Uloženie dokumentov do stavu
-    });
+  void loadDoctorAppointments() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    var appointmentStream = await FirebaseFirestore.instance
+        .collection('docotor-applications')
+        .where('UserEmail', isEqualTo: currentUser?.email)
+        .get();
+    _appointmentStreamController.add(appointmentStream.docs);
   }
 
   @override
@@ -98,14 +111,14 @@ class _WalletState extends State<Wallet> {
               ),
 
               //cards
-              StreamBuilder(
-                stream: database.getCardStream(),
+              StreamBuilder<List<QueryDocumentSnapshot>>(
+                stream: _cardStreamController.stream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   }
 
-                  final cards = snapshot.data!.docs;
+                  final cards = snapshot.data!;
 
                   User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -263,8 +276,8 @@ class _WalletState extends State<Wallet> {
                 ),
               ),
 
-              StreamBuilder<QuerySnapshot>(
-                stream: database.getDoctorAppointmentStream(),
+              StreamBuilder<List<QueryDocumentSnapshot>>(
+                stream: _appointmentStreamController.stream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -274,7 +287,7 @@ class _WalletState extends State<Wallet> {
                   }
                   // Filter the appointments for the current user
                   User? currentUser = FirebaseAuth.instance.currentUser;
-                  final userAppointments = snapshot.data!.docs
+                  final userAppointments = snapshot.data!
                       .where((doc) => doc['UserEmail'] == currentUser?.email)
                       .toList();
                   // Build the appointment widgets

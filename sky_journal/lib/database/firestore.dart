@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geodesy/geodesy.dart';
 
 /*
 
@@ -166,7 +168,7 @@ class FirestoreDatabase {
   }
 
   //get total flight hour with minutes for current user
-  Future<String> calculateTotalHours() async {
+  Future<Map<String, dynamic>> calculateTotalHours() async {
     final snapshot =
         await flights.where('UserEmail', isEqualTo: user!.email).get();
     int totalHour = 0;
@@ -187,7 +189,7 @@ class FirestoreDatabase {
       totalMinutes += minutesOfFlight;
     }
 
-    return '$totalHour h and $totalMinutes m';
+    return {'hours': totalHour, 'minutes': totalMinutes};
   }
 
   //get most visited destination for current user
@@ -232,30 +234,38 @@ class FirestoreDatabase {
         .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 
-    int longestFlight = 0;
+    int longestFlightInMinutes = 0;
     String longestFlightId = '';
 
-    //calculate for every flight the time of flight
+    // Výpočet dĺžky letu pre každý let
     for (var doc in snapshot.docs) {
       var format = DateFormat("HH:mm");
 
-      final startDate = (doc['TimeOfTakeOff']);
-      final endDate = (doc['TimeOfLanding']);
-      var one = format.parse(startDate);
-      var two = format.parse(endDate);
-      var differenceBetweenTimes = two.difference(one);
-      var minutesOfFlight = differenceBetweenTimes.inHours;
+      final startDate = doc['TimeOfTakeOff'];
+      final endDate = doc['TimeOfLanding'];
+      var takeOffTime = format.parse(startDate);
+      var landingTime = format.parse(endDate);
 
-      if (minutesOfFlight > longestFlight) {
-        longestFlight = minutesOfFlight;
+      // Rozdiel v čase v minútach
+      var differenceInMinutes = landingTime.difference(takeOffTime).inMinutes;
+
+      // Ak je aktuálny let dlhší, aktualizujte najdlhší let
+      if (differenceInMinutes > longestFlightInMinutes) {
+        longestFlightInMinutes = differenceInMinutes;
         longestFlightId = doc['FlightNumber'];
       }
     }
-    return {'length': longestFlight, 'id': longestFlightId};
+
+    // Prevod na hodiny a minúty
+    int hours = longestFlightInMinutes ~/ 60;
+    int minutes = longestFlightInMinutes % 60;
+
+    // Návratová hodnota: najdlhší let a jeho ID vo formáte hodín a minút
+    return {'hours': hours, 'minutes': minutes, 'id': longestFlightId};
   }
 
   //get average of flghts for current user
-  Future<String> getAverageOfFlights() async {
+  Future<Map<String, dynamic>> getAverageOfFlights() async {
     final snapshot = await FirebaseFirestore.instance
         .collection('flights')
         .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
@@ -283,7 +293,7 @@ class FirestoreDatabase {
     int averageHours = totalHours ~/ totalFlights;
     int averageMinutes = totalMinutes ~/ totalFlights;
 
-    return '$averageHours h and $averageMinutes m';
+    return {'hours': averageHours, 'minutes': averageMinutes};
   }
 
   //update flight in firestore by flight number
@@ -318,5 +328,50 @@ class FirestoreDatabase {
         });
       }
     });
+  }
+
+  //get location from city name
+  Future<LatLng> getLocationFromCityName(String cityName) async {
+    try {
+      List<Location> locations = await locationFromAddress(cityName);
+      if (locations.isNotEmpty) {
+        return LatLng(locations[0].latitude, locations[0].longitude);
+      } else {
+        throw Exception('No location found for the city name: $cityName');
+      }
+    } catch (e) {
+      print('Error while getting location: $e');
+      rethrow; // rethrow the exception for handling it at a higher level
+    }
+  }
+
+  //calculate total distance of all flights for current user
+  Future<double> calculateTotalDistance() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    double totalDistance = 0;
+
+    for (var doc in snapshot.docs) {
+      final startDestination = doc['StartDestination'];
+      final endDestination = doc['EndDestination'];
+
+      final startCoordinates = await getLocationFromCityName(startDestination);
+      final endCoordinates = await getLocationFromCityName(endDestination);
+
+      final distance = Geodesy().distanceBetweenTwoGeoPoints(
+        LatLng(startCoordinates.latitude, startCoordinates.longitude),
+        LatLng(endCoordinates.latitude, endCoordinates.longitude),
+      );
+
+      totalDistance += distance;
+    }
+
+    double totalDistanceInKm = totalDistance / 1000;
+    totalDistanceInKm = double.parse(totalDistanceInKm.toStringAsFixed(0));
+
+    return totalDistanceInKm;
   }
 }
