@@ -29,41 +29,53 @@ class _ViewMapState extends State<ViewMap> {
   final Completer<GoogleMapController> _controller = Completer();
   late GoogleMapController mapController;
 
-  CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(48.2195335, 16.3784883),
-    zoom: 10.4746,
-  );
-  LatLng _point1 = LatLng(48.2195335, 16.3784883);
-  LatLng _point2 = LatLng(52.5200, 13.4050);
+  LatLng _point1 = LatLng(0, 0);
+  LatLng _point2 = LatLng(0, 0);
 
-  @override
-  void initState() {
-    super.initState();
+  Future<List<Location>> getLocationFromCityName(String cityName) async {
+    try {
+      return await locationFromAddress(cityName);
+    } catch (e) {
+      print('Chyba pri získavaní súradníc z mesta $cityName: $e');
+      return [];
+    }
+  }
 
-    rootBundle.loadString('assets/style/map_style.json').then((string) {
-      _mapStyle = string;
-    });
-
-    _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
-
-    setupGooglePlex();
+  Future<void> _setInitialCameraPosition(Location location) async {
+    try {
+      setState(() {
+        // set the initial camera position to the location of the first city
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(location.latitude, location.longitude),
+              zoom: 10.4746,
+            ),
+          ),
+        );
+      });
+    } catch (e) {
+      print('Chyba pri nastavovaní kamery: $e');
+    }
   }
 
   Future<void> _getCoordinatesFromCity(
       String cityNameFrom, String cityNameTo) async {
     try {
-      List<Location> locationsFrom = await locationFromAddress(cityNameFrom);
-      List<Location> locationsTo = await locationFromAddress(cityNameTo);
+      List<Location> locationsFrom =
+          await getLocationFromCityName(cityNameFrom);
+      List<Location> locationsTo = await getLocationFromCityName(cityNameTo);
 
       if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
         setState(() {
-          // Nastavte súradnice pre _point1 na získané hodnoty
+          //set the coordinates of the two cities
           _point1 =
               LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
           _point2 = LatLng(locationsTo[0].latitude, locationsTo[0].longitude);
+          _setInitialCameraPosition(locationsFrom[0]);
         });
       } else {
-        print('Nepodarilo sa nájsť súradnice pre mesto $locationsFrom');
+        print('Nepodarilo sa nájsť súradnice pre mesto $cityNameFrom');
       }
     } catch (e) {
       print('Chyba pri získavaní súradníc: $e');
@@ -80,17 +92,18 @@ class _ViewMapState extends State<ViewMap> {
     return LatLng(0.0, 0.0);
   }
 
-  Future<void> setupGooglePlex() async {
-    LatLng target = await _getCinty(widget
-        .startDestination); // Nahraďte "Názov_mesta" skutočným názvom mesta, pre ktoré chcete získať súradnice
-    // Aktualizácia _kGooglePlex
-    _kGooglePlex = CameraPosition(
-      target: target,
-      zoom: 10.4746,
-    );
-  }
-
   final Set<Polyline> _polylines = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    rootBundle.loadString('assets/style/map_style.json').then((string) {
+      _mapStyle = string;
+    });
+
+    _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,15 +122,30 @@ class _ViewMapState extends State<ViewMap> {
         title: 'Map Detail Of Flight',
       ),
       body: Container(
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: _kGooglePlex,
-          polylines: _polylines,
-          onMapCreated: (GoogleMapController controller) {
-            mapController = controller;
-
-            mapController.setMapStyle(_mapStyle);
-            _controller.complete(controller);
+        child: FutureBuilder<List<Location>>(
+          future: getLocationFromCityName(widget.startDestination),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              final targetLatLng = LatLng(
+                  snapshot.data![0].latitude, snapshot.data![0].longitude);
+              return GoogleMap(
+                mapType: MapType.normal,
+                initialCameraPosition: CameraPosition(
+                  target: targetLatLng,
+                  zoom: 9,
+                ),
+                polylines: _polylines,
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                  mapController.setMapStyle(_mapStyle);
+                  _controller.complete(controller);
+                },
+              );
+            }
           },
         ),
       ),
