@@ -1,12 +1,10 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, sized_box_for_whitespace
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
-import 'package:sky_journal/module/flight_module/flight_details_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../database/firestore.dart';

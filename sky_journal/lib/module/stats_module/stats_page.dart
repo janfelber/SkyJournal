@@ -1,16 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, prefer_adjacent_string_concatenation
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:geocoding/geocoding.dart';
-
-import 'package:geodesy/geodesy.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../database/firestore.dart';
-import '../../global_widgets/cutom_appbar.dart';
 import '../../theme/color_theme.dart';
-import 'info_stats.dart';
 
 class Stats extends StatefulWidget {
   const Stats({Key? key}) : super(key: key);

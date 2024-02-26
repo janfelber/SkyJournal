@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_final_fields, avoid_print, prefer_interpolation_to_compose_strings, prefer_collection_literals, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_final_fields, avoid_print, prefer_interpolation_to_compose_strings, prefer_collection_literals, avoid_unnecessary_containers, must_be_immutable
 
 import 'dart:async';
 

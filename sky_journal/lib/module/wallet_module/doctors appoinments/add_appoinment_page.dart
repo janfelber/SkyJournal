@@ -3,7 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_journal/database/firestore.dart';
-import 'package:sky_journal/global_util/getCurrentDate.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
