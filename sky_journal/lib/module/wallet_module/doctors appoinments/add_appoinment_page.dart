@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sky_journal/components/time_picker/minutes.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/global_util/getCurrentDate.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';

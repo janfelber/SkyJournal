@@ -27,6 +27,8 @@ class _WalletState extends State<Wallet> {
 
   final FirestoreDatabase database = FirestoreDatabase();
 
+  String? nameOfUser;
+
   void updateStatusToCompleted(String status) {
     database.updateDoctorAppointmentStatus(status, 'Completed');
     loadDoctorAppointments();
@@ -48,9 +50,35 @@ class _WalletState extends State<Wallet> {
 
   int _buttonIndex = 0;
 
+  Future getCurrentUserName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String email = user.email!;
+
+      // get user name from firestore by email
+      QuerySnapshot<Map<String, dynamic>> userQuery = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (userQuery.docs.isNotEmpty) {
+        String userName = userQuery.docs.first.data()['first name'];
+        setState(() {
+          nameOfUser = userName; //there we rewrite nameOfUser
+        });
+      } else {
+        print('User does not exist in the database');
+      }
+    } else {
+      print('User is currently signed out');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getCurrentUserName();
     loadCards();
     loadDoctorAppointments();
   }
@@ -109,6 +137,9 @@ class _WalletState extends State<Wallet> {
                       onAppointmentAdded: () {
                         loadDoctorAppointments();
                       },
+                      onLicenseCardAdded: () {
+                        loadCards();
+                      },
                     ),
                   ],
                 ),
@@ -134,6 +165,7 @@ class _WalletState extends State<Wallet> {
                   if (currentUser != null) {
                     for (var card in cards) {
                       String userEmailAddress = card['UserEmail'];
+
                       String sex = card['Sex'];
                       String weight = card['Weight'];
                       String height = card['Height'];
@@ -147,7 +179,7 @@ class _WalletState extends State<Wallet> {
                       if (userEmailAddress == currentUser.email) {
                         cardWidgets.add(
                           MyCard(
-                            name: 'name',
+                            name: nameOfUser ?? 'Unknown',
                             country: nationality,
                             sex: sex,
                             weight: weight,

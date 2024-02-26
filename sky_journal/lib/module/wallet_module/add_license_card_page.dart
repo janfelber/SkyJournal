@@ -2,24 +2,52 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../global_widgets/my_card.dart';
 import '../../theme/color_theme.dart';
 
 class AddLicenseCard extends StatefulWidget {
-  const AddLicenseCard({Key? key}) : super(key: key);
+  final Function? onLicenseCardAdded;
+  const AddLicenseCard({Key? key, this.onLicenseCardAdded}) : super(key: key);
 
   @override
   State<AddLicenseCard> createState() => _AddLicenseCardState();
 }
 
 class _AddLicenseCardState extends State<AddLicenseCard> {
+  DateTime? dateOfExpiry;
+
+  DateTime? dateOfBirth;
+
+  String? nameOfUser;
+
+  String? selectCountry;
+
+  final country = [
+    'Slovak Republic',
+    'Czech Republic',
+    'Germany',
+    'France',
+    'Italy',
+    'Spain',
+    'Ukraine',
+    'Poland',
+  ];
+
+  String? selectedGender;
+
+  final gender = ['Male', 'Female'];
+
   final FirestoreDatabase database = FirestoreDatabase();
 
   final TextEditingController _certifacicateNumber = TextEditingController();
@@ -40,6 +68,9 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
 
   final TextEditingController _sex = TextEditingController();
 
+  final StreamController<String> _nameController =
+      StreamController<String>.broadcast();
+
   final StreamController<String> _sexController =
       StreamController<String>.broadcast();
 
@@ -57,6 +88,37 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
 
   final StreamController<String> _certificateNumberController =
       StreamController<String>.broadcast();
+
+  final StreamController<String> _dateOfExpiryController =
+      StreamController<String>.broadcast();
+
+  final StreamController<String> _nationalityController =
+      StreamController<String>.broadcast();
+
+  Future getCurrentUserName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String email = user.email!;
+
+      // get user name from firestore by email
+      QuerySnapshot<Map<String, dynamic>> userQuery = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (userQuery.docs.isNotEmpty) {
+        String userName = userQuery.docs.first.data()['first name'];
+        setState(() {
+          nameOfUser = userName; //there we rewrite nameOfUser
+        });
+      } else {
+        print('User does not exist in the database');
+      }
+    } else {
+      print('User is currently signed out');
+    }
+  }
 
   void addCardToDatabase() {
     if (_certifacicateNumber.text.isNotEmpty &&
@@ -88,6 +150,10 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
         hair,
         eyes,
       );
+
+      if (widget.onLicenseCardAdded != null) {
+        widget.onLicenseCardAdded!();
+      }
     }
 
     _certifacicateNumber.clear();
@@ -106,6 +172,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   @override
   void dispose() {
     super.dispose();
+
     _certifacicateNumber.dispose();
     _dateOfExpiry.dispose();
     _nationality.dispose();
@@ -121,11 +188,13 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     _eyeController.close();
     _certificateNumberController.close();
     _sex.dispose();
+    _nationalityController.close();
   }
 
   @override
   void initState() {
     super.initState();
+    getCurrentUserName();
     _sex.addListener(() {
       _sexController.sink.add(_sex.text);
     });
@@ -144,10 +213,19 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     _certifacicateNumber.addListener(() {
       _certificateNumberController.sink.add(_certifacicateNumber.text);
     });
+    _dateOfExpiry.addListener(() {
+      _dateOfExpiryController.sink.add(_dateOfExpiry.text);
+    });
+    _nationality.addListener(() {
+      _nationalityController.sink.add(_nationality.text);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenHeight = screenSize.height;
+    final double screenWidth = screenSize.width;
     return Scaffold(
         backgroundColor: Surface,
         appBar: CustomAppBar(
@@ -162,57 +240,92 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
               SizedBox(
                 height: 200,
                 child: StreamBuilder<String>(
-                  stream: _sexController.stream,
+                  stream: _nameController.stream,
                   initialData: '',
-                  builder: (context, sexSnapshot) {
+                  builder: (context, nameSnapshot) {
                     return StreamBuilder<String>(
-                      stream: _weightController.stream,
+                      stream: _sexController.stream,
                       initialData: '',
-                      builder: (context, weightSnapshot) {
-                        return StreamBuilder(
-                            stream: _heightController.stream,
-                            initialData: '',
-                            builder: (context, heightSnapschot) {
-                              return StreamBuilder(
+                      builder: (context, sexSnapshot) {
+                        return StreamBuilder<String>(
+                          stream: _weightController.stream,
+                          initialData: '',
+                          builder: (context, weightSnapshot) {
+                            return StreamBuilder(
+                              stream: _heightController.stream,
+                              initialData: '',
+                              builder: (context, heightSnapshot) {
+                                return StreamBuilder(
                                   stream: _hairController.stream,
                                   initialData: '',
-                                  builder: (context, hairSnapschot) {
+                                  builder: (context, hairSnapshot) {
                                     return StreamBuilder(
-                                        stream: _eyeController.stream,
-                                        initialData: '',
-                                        builder: (context, eyeSnapshot) {
-                                          return StreamBuilder(
-                                              stream:
-                                                  _certificateNumberController
-                                                      .stream,
+                                      stream: _eyeController.stream,
+                                      initialData: '',
+                                      builder: (context, eyeSnapshot) {
+                                        return StreamBuilder(
+                                          stream: _certificateNumberController
+                                              .stream,
+                                          initialData: '',
+                                          builder: (context,
+                                              certificationNumberSnapshot) {
+                                            return StreamBuilder(
+                                              stream: _dateOfExpiryController
+                                                  .stream,
                                               initialData: '',
                                               builder: (context,
-                                                  certificationNumberSnapshot) {
-                                                return MyCard(
-                                                  name: '',
-                                                  country: '',
-                                                  sex: sexSnapshot.data ?? '',
-                                                  weight:
-                                                      weightSnapshot.data ?? '',
-                                                  height:
-                                                      heightSnapschot.data ??
+                                                  dateOfExpirySnapshot) {
+                                                return StreamBuilder(
+                                                  stream: _nationalityController
+                                                      .stream, // Přidáno
+                                                  initialData: '', // Přidáno
+                                                  builder: (context,
+                                                      nationalitySnapshot) {
+                                                    return MyCard(
+                                                      name: '$nameOfUser',
+                                                      country:
+                                                          nationalitySnapshot
+                                                                  .data ??
+                                                              '',
+                                                      sex: sexSnapshot.data ??
                                                           '',
-                                                  hairColor:
-                                                      hairSnapschot.data ?? '',
-                                                  eyeColor:
-                                                      eyeSnapshot.data ?? '',
-                                                  colorCard: Colors.black12,
-                                                  dateOfBirthDay: '',
-                                                  dateOfExpiry: '',
-                                                  certificationNumber:
-                                                      certificationNumberSnapshot
-                                                              .data ??
-                                                          '',
+                                                      weight:
+                                                          weightSnapshot.data ??
+                                                              '',
+                                                      height:
+                                                          heightSnapshot.data ??
+                                                              '',
+                                                      hairColor:
+                                                          hairSnapshot.data ??
+                                                              '',
+                                                      eyeColor:
+                                                          eyeSnapshot.data ??
+                                                              '',
+                                                      colorCard: Colors.black12,
+                                                      dateOfBirthDay: '',
+                                                      dateOfExpiry:
+                                                          dateOfExpirySnapshot
+                                                                  .data ??
+                                                              '',
+                                                      certificationNumber:
+                                                          certificationNumberSnapshot
+                                                                  .data ??
+                                                              '',
+                                                    );
+                                                  },
                                                 );
-                                              });
-                                        });
-                                  });
-                            });
+                                              },
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        );
                       },
                     );
                   },
@@ -230,6 +343,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Certificate Number',
                         obscureText: false,
                         enabled: true,
+                        maxLength: 7,
+                        numericInput: true,
                       ),
                     ),
                     SizedBox(
@@ -243,32 +358,175 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Date of Expiry',
                         obscureText: false,
                         enabled: true,
+                        icon: Icon(
+                          Icons.calendar_today,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor:
+                                  PopUp, // Prispôsobte farbu podľa svojich potrieb
+                              title: Text(
+                                "Departure Date",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              content: Container(
+                                height: 410,
+                                width: 300,
+                                child: TableCalendar(
+                                  selectedDayPredicate: (day) => isSameDay(
+                                      dateOfExpiry ?? DateTime.now(), day),
+                                  headerStyle: HeaderStyle(
+                                    formatButtonVisible: false,
+                                    titleCentered: true,
+                                    titleTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    leftChevronIcon: Icon(
+                                      Icons.chevron_left,
+                                      color: Colors.white,
+                                    ),
+                                    rightChevronIcon: Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onDaySelected: (selectedDay, focusedDay) {
+                                    if (selectedDay != null) {
+                                      setState(() {
+                                        dateOfExpiry = selectedDay;
+                                        _dateOfExpiry.text =
+                                            DateFormat('dd.M.yyyy')
+                                                .format(dateOfExpiry!);
+                                      });
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  calendarStyle: CalendarStyle(
+                                    defaultTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    holidayTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    weekNumberTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    weekendTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    selectedTextStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                    todayTextStyle: TextStyle(
+                                      color: Colors.blue,
+                                    ),
+                                    todayDecoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    selectedDecoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  focusedDay: dateOfExpiry ?? DateTime.now(),
+                                  firstDay: DateTime(2000),
+                                  lastDay: DateTime(2050),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: MyTextField(
-                        controller: _sex,
-                        hintText: 'Sex',
-                        obscureText: false,
-                        enabled: true,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.025),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width *
+                              0.02, // Adjust the horizontal padding
+                          vertical: screenSize.height *
+                              0.01, // Adjust the vertical padding
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(screenSize.width *
+                              0.03), // Úprava poloměru zaoblení
+                          border: Border.all(
+                              color: Colors.grey[700]!), // Barva ohraničení
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Select Gender',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: selectedGender,
+                            dropdownColor: PopUp,
+                            icon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.white,
+                            ),
+                            iconSize: screenSize.width * 0.06,
+                            items: gender.map(buildMenuItem).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGender = value;
+                                _sex.text = value!;
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: MyTextField(
-                        controller: _nationality,
-                        hintText: 'Nationality',
-                        obscureText: false,
-                        enabled: true,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.025),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width *
+                              0.02, // Adjust the horizontal padding
+                          vertical: screenSize.height *
+                              0.01, // Adjust the vertical padding
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(screenSize.width *
+                              0.03), // Úprava poloměru zaoblení
+                          border: Border.all(
+                              color: Colors.grey[700]!), // Barva ohraničení
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Select Nation',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: selectCountry,
+                            dropdownColor: PopUp,
+                            icon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.white,
+                            ),
+                            iconSize: screenSize.width * 0.06,
+                            items: country.map(buildMenuItem).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectCountry = value;
+                                _nationality.text = value!;
+                              });
+                            },
+                          ),
+                        ),
                       ),
                     ),
+
                     SizedBox(
                       height: 10,
                     ),
@@ -291,6 +549,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Height',
                         obscureText: false,
                         enabled: true,
+                        numericInput: true,
+                        maxLength: 3,
                       ),
                     ),
                     SizedBox(
@@ -303,6 +563,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Weight',
                         obscureText: false,
                         enabled: true,
+                        numericInput: true,
+                        maxLength: 3,
                       ),
                     ),
                     SizedBox(
@@ -347,4 +609,16 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
           ),
         ));
   }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Row(
+          children: [
+            Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      );
 }

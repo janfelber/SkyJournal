@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:sky_journal/global_util/transform_gender.dart';
 import 'package:sky_journal/global_util/transform_nationality.dart';
 
 class MyCard extends StatelessWidget {
@@ -111,7 +112,7 @@ class MyCard extends StatelessWidget {
                               height: 0),
                         ),
                         Text(
-                          sex,
+                          transformGender(sex),
                           style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
