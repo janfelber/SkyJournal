@@ -14,7 +14,9 @@ import 'package:intl/intl.dart';
 import '../../../theme/color_theme.dart';
 
 class AddDoctorAppointment extends StatefulWidget {
-  const AddDoctorAppointment({super.key});
+  final Function? onAppointmentAdded;
+  const AddDoctorAppointment({Key? key, this.onAppointmentAdded})
+      : super(key: key);
 
   @override
   State<AddDoctorAppointment> createState() => _AddDoctorAppointmentState();
@@ -22,8 +24,7 @@ class AddDoctorAppointment extends StatefulWidget {
 
 class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
   DateTime today = DateTime.now();
-
-  DateTime selectedTime = DateTime.now();
+  bool showCalendar = false;
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
@@ -31,10 +32,12 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
     });
   }
 
+  DateTime selectedTime = DateTime.now();
+
   @override
   void initState() {
     super.initState();
-    today = DateTime.now();
+    _timeTextController.text = DateFormat('HH:mm').format(today).toString();
   }
 
   void addDoctorAppointment() {
@@ -52,11 +55,17 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
         speciality,
         "Upcoming",
       );
+
+      if (widget.onAppointmentAdded != null) {
+        widget.onAppointmentAdded!();
+      }
     }
 
     _doctorNameController.clear();
     _timeTextController.clear();
     _specialityController.clear();
+
+    Navigator.pop(context);
   }
 
   final FirestoreDatabase database = FirestoreDatabase();
@@ -66,17 +75,6 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
   final TextEditingController _timeTextController = TextEditingController();
 
   final TextEditingController _specialityController = TextEditingController();
-
-  // void _addDoctorAppointmentToDatabase() {
-  //   if (_doctorNameController.text.isNotEmpty) {
-  //     String name = _doctorNameController.text;
-  //     database.addDoctorAppointment(
-  //       name,
-  //     );
-  //   }
-
-  //   _doctorNameController.clear();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,72 +93,221 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
                   obscureText: false,
                   enabled: true,
                   controller: _doctorNameController),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    TableCalendar(
-                      focusedDay: today,
-                      rowHeight: 48,
-                      selectedDayPredicate: (day) => isSameDay(today, day),
-                      headerStyle: HeaderStyle(
-                        titleTextStyle: TextStyle(color: Colors.white),
-                        formatButtonVisible: false,
-                        titleCentered: true,
-                        leftChevronIcon: Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                        ),
-                        rightChevronIcon: Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
-                        ),
-                      ),
-                      firstDay: DateTime.utc(2010, 10, 16),
-                      lastDay: DateTime.utc(2030, 3, 14),
-                      calendarStyle: CalendarStyle(
-                        defaultTextStyle: TextStyle(color: Colors.white),
-                        holidayTextStyle: TextStyle(color: Colors.white),
-                        weekNumberTextStyle: TextStyle(color: Colors.white),
-                        weekendTextStyle: TextStyle(color: Colors.white),
-                      ),
-                      onDaySelected: _onDaySelected,
+              SizedBox(height: 15),
+              MyTextField(
+                  hintText: 'Doctor Speciality',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _specialityController),
+              SizedBox(height: 15),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Text('Date & Time',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: PopUp,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        Text(
-                          "Time: ",
-                          style: TextStyle(color: Colors.white),
+                        CupertinoButton(
+                          onPressed: () {
+                            setState(() {
+                              showCalendar = !showCalendar;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${DateFormat('dd MMM yyyy').format(today)}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              Text(
+                                DateFormat('HH:mm')
+                                    .format(selectedTime)
+                                    .toString(),
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ],
+                          ),
                         ),
+                        if (showCalendar)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: PopUp,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              children: [
+                                TableCalendar(
+                                  focusedDay: today,
+                                  rowHeight: 48,
+                                  selectedDayPredicate: (day) =>
+                                      isSameDay(today, day),
+                                  headerStyle: HeaderStyle(
+                                    titleTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    formatButtonVisible: false,
+                                    titleCentered: true,
+                                    leftChevronIcon: Icon(
+                                      Icons
+                                          .chevron_left, // ikona šipky směrem doleva
+                                      color: Colors.white,
+                                    ),
+                                    rightChevronIcon: Icon(
+                                      Icons
+                                          .chevron_right, // ikona šipky směrem doprava
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  firstDay: DateTime.utc(2010, 10, 16),
+                                  lastDay: DateTime.utc(2030, 3, 14),
+                                  calendarStyle: CalendarStyle(
+                                    defaultTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    holidayTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    weekNumberTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    weekendTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    selectedTextStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    todayTextStyle:
+                                        TextStyle(color: Colors.blue),
+                                    todayDecoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    selectedDecoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  onDaySelected: _onDaySelected,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(15),
+                                      child: Text(
+                                        "Time",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    CupertinoButton(
+                                        child: Container(
+                                          padding: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: Colors.black26,
+                                          ),
+                                          child: Text(
+                                            DateFormat('HH:mm')
+                                                .format(selectedTime)
+                                                .toString(),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Take Off Time',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20),
+                                                ),
+                                                backgroundColor: PopUp,
+                                                content: Container(
+                                                  height: 200,
+                                                  child: CupertinoTheme(
+                                                    data: CupertinoThemeData(
+                                                      textTheme:
+                                                          CupertinoTextThemeData(
+                                                        dateTimePickerTextStyle:
+                                                            TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: Column(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                            child:
+                                                                CupertinoDatePicker(
+                                                              mode:
+                                                                  CupertinoDatePickerMode
+                                                                      .time,
+                                                              initialDateTime:
+                                                                  selectedTime,
+                                                              use24hFormat:
+                                                                  true,
+                                                              onDateTimeChanged:
+                                                                  (DateTime
+                                                                      newDateTime) {
+                                                                setState(() {
+                                                                  selectedTime =
+                                                                      newDateTime;
+                                                                  _timeTextController
+                                                                      .text = DateFormat(
+                                                                          'HH:mm')
+                                                                      .format(
+                                                                          selectedTime)
+                                                                      .toString();
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        })
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                       ],
                     ),
-                    MyTextField(
-                        hintText: 'Time',
-                        obscureText: false,
-                        enabled: true,
-                        controller: _timeTextController),
-                    SizedBox(height: 20),
-                    MyTextField(
-                        hintText: 'Doctor Speciality',
-                        obscureText: false,
-                        enabled: true,
-                        controller: _specialityController),
-                    SizedBox(height: 20),
-                    MyButton(
-                      text: "Add Appoinment",
-                      onTap: addDoctorAppointment,
-                      color: Primary,
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
+              MyButton(
+                text: "Add Appointment",
+                onTap: addDoctorAppointment,
+                color: Colors.orange,
+              ),
             ],
           ),
         ),

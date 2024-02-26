@@ -8,7 +8,8 @@ import '../add_license_card_page.dart';
 import '../doctors appoinments/add_appoinment_page.dart';
 
 class WalletPopUpMenu extends StatelessWidget {
-  const WalletPopUpMenu({super.key});
+  final Function? onAppointmentAdded;
+  const WalletPopUpMenu({super.key, this.onAppointmentAdded});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,8 @@ class WalletPopUpMenu extends StatelessWidget {
           pushToNewPage(context, AddLicenseCard());
         }
         if (id == 2) {
-          pushToNewPage(context, AddDoctorAppointment());
+          pushToNewPage(context,
+              AddDoctorAppointment(onAppointmentAdded: onAppointmentAdded));
         }
       },
     );

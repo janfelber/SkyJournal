@@ -29,10 +29,12 @@ class _WalletState extends State<Wallet> {
 
   void updateStatusToCompleted(String status) {
     database.updateDoctorAppointmentStatus(status, 'Completed');
+    loadDoctorAppointments();
   }
 
   void updateStatusToCanceled(String status) {
     database.updateDoctorAppointmentStatus(status, 'Canceled');
+    loadDoctorAppointments();
   }
 
   final StreamController<List<QueryDocumentSnapshot>> _cardStreamController =
@@ -50,6 +52,7 @@ class _WalletState extends State<Wallet> {
   void initState() {
     super.initState();
     loadCards();
+    loadDoctorAppointments();
   }
 
   void loadCards() async {
@@ -102,7 +105,11 @@ class _WalletState extends State<Wallet> {
                     ),
 
                     //add card button
-                    WalletPopUpMenu(),
+                    WalletPopUpMenu(
+                      onAppointmentAdded: () {
+                        loadDoctorAppointments();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -327,8 +334,8 @@ class _WalletState extends State<Wallet> {
           doctorSpeciality: appointment['DoctorSpeciality'] ?? 'No speciality',
           appointmentId: doc.id, // Pass the document ID as appointmentId
           completedAppointment: () => updateStatusToCompleted(doc.id),
-          cancelAppointment: () =>
-              updateStatusToCanceled(doc.id), // Pass a callback function
+          cancelAppointment: () => updateStatusToCanceled(doc.id),
+          // Pass a callback function
         ));
 
         appointmentWidgets.add(SizedBox(height: 10));
