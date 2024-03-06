@@ -536,6 +536,10 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Date of Birth',
                         obscureText: false,
                         enabled: true,
+                        numericInput: true,
+                        isDate: true,
+                        dateFormat: 'dd.M.yyyy',
+                        maxLength: 8,
                       ),
                     ),
                     SizedBox(

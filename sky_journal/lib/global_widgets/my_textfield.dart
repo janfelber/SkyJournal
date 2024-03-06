@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_if_null_operators
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,12 +12,13 @@ class MyTextField extends StatelessWidget {
   final Icon? icon;
   final VoidCallback? onPressed;
   final CupertinoButton? button;
-  final bool numericInput; // Volitelný parametr pro povolení číselného vstupu
-  final int?
-      maxLength; // Volitelný parametr pro nastavení maximální délky řetězce
+  final bool numericInput;
+  final int? maxLength;
+  final bool isDate; // Přidán parametr pro nastavení vstupu jako datum
+  final String? dateFormat; // Přidán parametr pro formát data
 
   const MyTextField({
-    Key? key, // Opravený parametr key
+    Key? key,
     required this.hintText,
     required this.obscureText,
     required this.enabled,
@@ -28,28 +27,25 @@ class MyTextField extends StatelessWidget {
     this.button,
     this.icon,
     this.textStyle,
-    this.numericInput =
-        false, // Nastavení výchozí hodnoty pro volitelný parametr numericInput
-    this.maxLength, // Nastavení volitelného parametru maxLength
+    this.numericInput = false,
+    this.maxLength,
+    this.isDate = false,
+    this.dateFormat, // Přidán parametr pro formát data
     this.onPressed,
-  }) : super(key: key); // Přidání super volání pro key
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       style: textStyle == null ? TextStyle(color: Colors.white) : textStyle,
-      keyboardType: numericInput
-          ? TextInputType.number
-          : TextInputType
-              .text, // Dynamicky nastavte klávesnici podle volitelného parametru
+      keyboardType: numericInput ? TextInputType.number : TextInputType.text,
       inputFormatters: [
-        if (numericInput)
-          FilteringTextInputFormatter.allow(RegExp(
-              r'[0-9]')), // Povolit pouze čísla, pokud je zapnutý volitelný parametr
-        if (maxLength != null)
-          LengthLimitingTextInputFormatter(
-              maxLength), // Omezení maximální délky, pokud je zadán volitelný parametr
+        if (numericInput) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        if (maxLength != null) LengthLimitingTextInputFormatter(maxLength),
+        if (isDate && dateFormat != null)
+          FilteringTextInputFormatter.deny(RegExp(r'[^\d' + dateFormat! + ']')),
+        // Pokud je nastavený parametr isDate a dateFormat, použije se zde daný formát data
       ],
       decoration: InputDecoration(
         border: OutlineInputBorder(
