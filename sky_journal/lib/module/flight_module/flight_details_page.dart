@@ -376,7 +376,9 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 Space.X(10),
                                 Text(
                                   'Number of passengers: ' +
-                                      widget.numbersOfPassengers,
+                                      (widget.airline == 'Private'
+                                          ? '1'
+                                          : widget.numbersOfPassengers),
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
@@ -395,7 +397,11 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 ),
                                 Space.X(10),
                                 Text(
-                                  'Average Speed: ' + widget.avgSpeed + 'km/h',
+                                  'Average Speed: ' +
+                                      (widget.airline == 'Private'
+                                          ? '500'
+                                          : widget.avgSpeed) +
+                                      'km/h',
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
@@ -446,7 +452,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                   children: [
                                     Space.X(10),
                                     Text(
-                                      'Aircraft Type: Boeing 737',
+                                      'Aircraft Type: ' +
+                                          (widget.airline == 'Private'
+                                              ? 'Very light jet'
+                                              : 'Boeing 737'),
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 14,
@@ -460,7 +469,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                   children: [
                                     Space.X(10),
                                     Text(
-                                      'Seating Layout: 3-3-3',
+                                      'Seating Layout: ' +
+                                          (widget.airline == 'Private'
+                                              ? '1-1'
+                                              : '3-3-3'),
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 14,
@@ -474,7 +486,11 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                   children: [
                                     Space.X(10),
                                     Text(
-                                      'Max capacity: 388 passengers',
+                                      'Max capacity: ' +
+                                          (widget.airline == 'Private'
+                                              ? '6 '
+                                              : '388 ') +
+                                          'passengers',
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 14,
