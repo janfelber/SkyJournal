@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 import 'package:sky_journal/module/flight_module/components/utils/airlines_convertor.dart';
@@ -27,6 +28,9 @@ class FlightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> parts = timeOfTakeOff.split(':');
+    int hourTakeOff = int.parse(parts[0]);
+
     return Card(
       // Use a Card widget for the outer container
       elevation: 2,
@@ -64,13 +68,25 @@ class FlightCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      timeOfTakeOff + ' - ' + timeOfLanding,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: textColor,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          timeOfTakeOff + ' - ' + timeOfLanding,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: textColor,
+                          ),
+                        ),
+                        Space.X(10),
+                        Icon(
+                          //if time of takeoff is smaller than 18:00 then show a sun icon else show a moon icon
+                          hourTakeOff < 18
+                              ? Icons.sunny
+                              : CupertinoIcons.moon_stars_fill,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                     Space.Y(10),
                     Text(

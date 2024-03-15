@@ -13,6 +13,7 @@ import 'package:sky_journal/theme/color_theme.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../database/firestore.dart';
+import '../../global_util/notifi_service.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({Key? key}) : super(key: key);
@@ -26,6 +27,8 @@ class _WalletState extends State<Wallet> {
   final PageController _controller = PageController();
 
   final FirestoreDatabase database = FirestoreDatabase();
+
+  NotificationService notificationService = NotificationService();
 
   String? nameOfUser;
 
@@ -99,6 +102,26 @@ class _WalletState extends State<Wallet> {
         .where('UserEmail', isEqualTo: currentUser?.email)
         .get();
     _appointmentStreamController.add(appointmentStream.docs);
+
+    for (var doc in appointmentStream.docs) {
+      var appointment = doc.data();
+      if (isAppointmentUpcoming(appointment)) {
+        await notificationService.showNotification(
+          id: doc.id.hashCode, // Unique ID for each notification
+          title: 'Upcoming Appointment',
+          body:
+              'You have an appointment with ${appointment['DoctorName']} on ${DateFormat('dd-MM-yyyy').format((appointment['Date'] as Timestamp).toDate())}',
+        );
+      }
+    }
+  }
+
+  bool isAppointmentUpcoming(Map<String, dynamic> appointment) {
+    DateTime appointmentDate = (appointment['Date'] as Timestamp).toDate();
+    // Assuming you want to notify 1 hour before the appointment
+    DateTime now = DateTime.now();
+    return appointmentDate.isAfter(now) &&
+        appointmentDate.difference(now).inDays <= 1;
   }
 
   @override
