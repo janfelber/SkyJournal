@@ -20,6 +20,7 @@ class UpadateFlight extends StatefulWidget {
   final String timeOfTakeOff;
   final String timeOfLanding;
   final String airline;
+  final String typeOfAircraft;
 
   const UpadateFlight(
       {super.key,
@@ -30,7 +31,8 @@ class UpadateFlight extends StatefulWidget {
       required this.endDestination,
       required this.timeOfTakeOff,
       required this.timeOfLanding,
-      required this.airline});
+      required this.airline,
+      required this.typeOfAircraft});
 
   @override
   State<UpadateFlight> createState() => _UpadateFlightState();
@@ -77,6 +79,9 @@ class _UpadateFlightState extends State<UpadateFlight> {
   final TextEditingController _timeOfLandingController =
       TextEditingController();
 
+  final TextEditingController _typeOfAircraftController =
+      TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -87,6 +92,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
     _endDestinationController.text = widget.endDestination;
     _timeOfTakeOffController.text = widget.timeOfTakeOff;
     _timeOfLandingController.text = widget.timeOfLanding;
+    _typeOfAircraftController.text = widget.typeOfAircraft;
 
     selectedDate = _parseDate(widget.startDate);
     selectedEndDate = _parseDate(widget.endDate);
@@ -122,6 +128,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
     String timeOfTakeOff = _timeOfTakeOffController.text;
     String timeOfLanding = _timeOfLandingController.text;
     String airline = selectedAirline!;
+    String typeOfAircraft = _typeOfAircraftController.text;
 
     // Aktualizácia údajov v Firestore
     database.updateFlight(
@@ -133,6 +140,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
       timeOfTakeOff,
       timeOfLanding,
       airline,
+      typeOfAircraft,
     );
 
     // Odoslanie aktualizovaných údajov späť na predchádzajúcu stránku
@@ -145,6 +153,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
       'timeOfTakeOff': timeOfTakeOff,
       'timeOfLanding': timeOfLanding,
       'airline': airline,
+      'typeOfAircraft': typeOfAircraft,
     });
   }
 
@@ -460,7 +469,15 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   },
                 ),
                 SizedBox(
-                  height: 15.0,
+                  height: 10.0,
+                ),
+                MyTextField(
+                    hintText: 'Type of Aircraft',
+                    obscureText: false,
+                    enabled: true,
+                    controller: _typeOfAircraftController),
+                SizedBox(
+                  height: 10.0,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(

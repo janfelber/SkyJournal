@@ -63,6 +63,9 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   final TextEditingController _airlineController = TextEditingController();
 
+  final TextEditingController _typeOfAircraftController =
+      TextEditingController();
+
   void _handleAirlineSelection(String selectedAirline) {
     print('Selected Airline: $selectedAirline');
     // Tu by ste mohli vykonať ďalšie akcie na základe výberu leteckej spoločnosti
@@ -76,7 +79,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
         _startDateController.text.isNotEmpty &&
         _endDateController.text.isNotEmpty &&
         _timeOfTakeOffController.text.isNotEmpty &&
-        _timeOfLandingController.text.isNotEmpty) {
+        _timeOfLandingController.text.isNotEmpty &&
+        _typeOfAircraftController.text.isNotEmpty) {
       String flightNumber = _flightNumberController.text;
       String startDate = _startDateController.text;
       String endDate = _endDateController.text;
@@ -85,6 +89,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
       String timeOfTakeOff = _timeOfTakeOffController.text;
       String timeOfLanding = _timeOfLandingController.text;
       String airline = _airlineController.text;
+      String typeOfAircraft = _typeOfAircraftController.text;
       database.addFlight(
         flightNumber,
         startDate,
@@ -96,6 +101,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
         airline,
         numOfPassengers,
         avgSpeed,
+        typeOfAircraft,
       );
     }
 
@@ -108,6 +114,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     _timeOfTakeOffController.clear();
     _timeOfLandingController.clear();
     _airlineController.clear();
+    _typeOfAircraftController.clear();
 
     //go back to the previous page
     Navigator.pop(context);
@@ -170,6 +177,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     _timeOfTakeOffController.dispose();
     _timeOfLandingController.dispose();
     _airlineController.dispose();
+    _typeOfAircraftController.dispose();
     super.dispose();
   }
 
@@ -462,7 +470,16 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   },
                 ),
                 SizedBox(
-                  height: 15.0,
+                  height: 10.0,
+                ),
+                MyTextField(
+                  controller: _typeOfAircraftController,
+                  hintText: 'Type of Aircraft',
+                  obscureText: false,
+                  enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(

@@ -28,6 +28,7 @@ class FlightDetailsPage extends StatefulWidget {
   String airline;
   String numbersOfPassengers;
   String avgSpeed;
+  String typeOfAircraft;
 
   FlightDetailsPage({
     Key? key,
@@ -41,6 +42,7 @@ class FlightDetailsPage extends StatefulWidget {
     required this.airline,
     required this.numbersOfPassengers,
     required this.avgSpeed,
+    required this.typeOfAircraft,
   }) : super(key: key);
 
   @override
@@ -132,6 +134,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           timeOfTakeOff: widget.timeOfTakeOff,
           timeOfLanding: widget.timeOfLanding,
           airline: widget.airline,
+          typeOfAircraft: widget.typeOfAircraft,
         ),
       ),
     ).then((value) {
@@ -146,6 +149,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           widget.timeOfTakeOff = value['timeOfTakeOff'];
           widget.timeOfLanding = value['timeOfLanding'];
           widget.airline = value['airline'];
+          widget.typeOfAircraft = value['typeOfAircraft'];
 
           _polylines.clear();
           _point1 = LatLng(0, 0);
@@ -452,10 +456,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                   children: [
                                     Space.X(10),
                                     Text(
-                                      'Aircraft Type: ' +
-                                          (widget.airline == 'Private'
-                                              ? 'Very light jet'
-                                              : 'Boeing 737'),
+                                      'Aircraft Type: ' + widget.typeOfAircraft,
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 14,

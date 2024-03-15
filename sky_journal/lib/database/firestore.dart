@@ -116,6 +116,7 @@ class FirestoreDatabase {
     String airLine,
     String numbersOfPassengers,
     String avgSpeed,
+    String typeOfAircraft,
   ) {
     return flights.add({
       'UserEmail': user!.email,
@@ -129,6 +130,7 @@ class FirestoreDatabase {
       'Airline': airLine,
       'NumberOfPassangers': numbersOfPassengers,
       'AvarageSpeed': avgSpeed,
+      'TypeOfAircraft': typeOfAircraft,
       'TimeStamp': Timestamp.now(),
     });
   }
@@ -306,6 +308,7 @@ class FirestoreDatabase {
     String timeOfTakeOff,
     String timeOfLanding,
     String airLine,
+    String typeOfAircraft,
   ) {
     return flights
         .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
@@ -324,6 +327,7 @@ class FirestoreDatabase {
             'TimeOfTakeOff': timeOfTakeOff,
             'TimeOfLanding': timeOfLanding,
             'Airline': airLine,
+            'TypeOfAircraft': typeOfAircraft,
           });
         });
       }
