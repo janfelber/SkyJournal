@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, prefer_adjacent_string_concatenation
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,9 +28,8 @@ class _StatsState extends State<Stats> {
   int averageOfFlightsHour = 0;
   int averageOfFlightsMinute = 0;
   double totalKmFlown = 0;
-
-  String cityFrom = 'Nitra';
-  String cityTo = 'Vrable';
+  int numberOfNightFlights = 0;
+  int numberOfDayFlights = 0;
 
   bool isLoading = true;
   // Method to get the number of flights
@@ -101,6 +101,18 @@ class _StatsState extends State<Stats> {
     return totalKmFlown;
   }
 
+  Future<int> getNumberOfNightFlights() async {
+    // Call the method to get the number of night flights from the database
+    final int numberOfNightFlights = await database.getTotalNightFlights();
+    return numberOfNightFlights;
+  }
+
+  Future<int> getNumberOfDayFlights() async {
+    // Call the method to get the number of day flights from the database
+    final int numberOfDayFlights = await database.getTotalDayFlights();
+    return numberOfDayFlights;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -163,6 +175,18 @@ class _StatsState extends State<Stats> {
       setState(() {
         totalKmFlown = value;
         isLoading = false;
+      });
+    });
+
+    getNumberOfNightFlights().then((value) {
+      setState(() {
+        numberOfNightFlights = value;
+      });
+    });
+
+    getNumberOfDayFlights().then((value) {
+      setState(() {
+        numberOfDayFlights = value;
       });
     });
   }
@@ -283,6 +307,25 @@ class _StatsState extends State<Stats> {
                       'Longest flight',
                       '${longestFlightHour > 0 || longestFlightMinute >= 60 ? '${longestFlightHour + longestFlightMinute ~/ 60} hours ' : ''}' +
                           '${(longestFlightHour > 0 || longestFlightMinute >= 60) ? longestFlightMinute % 60 : longestFlightMinute} minutes'),
+                  SizedBox(height: 8),
+                  Divider(
+                    indent: 10,
+                    endIndent: 10,
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 8),
+                  buildListTile(CupertinoIcons.moon_stars_fill, 'Night flights',
+                      '$numberOfNightFlights'),
+
+                  SizedBox(height: 8),
+                  Divider(
+                    indent: 10,
+                    endIndent: 10,
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 8),
+                  buildListTile(
+                      Icons.sunny, 'Day flights', '$numberOfDayFlights'),
                 ],
               ),
             ),

@@ -378,4 +378,50 @@ class FirestoreDatabase {
 
     return totalDistanceInKm;
   }
+
+  //get total number of night flights for current user
+  Future<int> getTotalNightFlights() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    int totalNightFlights = 0;
+
+    for (var doc in snapshot.docs) {
+      var format = DateFormat("HH:mm");
+
+      final takeoff = (doc['TimeOfTakeOff']);
+      var takeOffTime = format.parse(takeoff);
+
+      if (takeOffTime.hour >= 18 || takeOffTime.hour < 6) {
+        totalNightFlights++;
+      }
+    }
+
+    return totalNightFlights;
+  }
+
+  //get total number of day flights for current user
+  Future<int> getTotalDayFlights() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    int totalDayFlights = 0;
+
+    for (var doc in snapshot.docs) {
+      var format = DateFormat("HH:mm");
+
+      final takeoff = (doc['TimeOfTakeOff']);
+      var takeOffTime = format.parse(takeoff);
+
+      if (takeOffTime.hour < 18 && takeOffTime.hour >= 6) {
+        totalDayFlights++;
+      }
+    }
+
+    return totalDayFlights;
+  }
 }
