@@ -81,7 +81,7 @@ class FlightCard extends StatelessWidget {
                         Space.X(10),
                         Icon(
                           //if time of takeoff is smaller than 18:00 then show a sun icon else show a moon icon
-                          hourTakeOff < 18
+                          hourTakeOff <= 18 && hourTakeOff >= 6
                               ? Icons.sunny
                               : CupertinoIcons.moon_stars_fill,
                           color: Colors.white,
