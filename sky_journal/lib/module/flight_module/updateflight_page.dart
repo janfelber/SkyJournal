@@ -205,6 +205,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   controller: _startDateController,
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -230,6 +231,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   hintText: 'Date of Arrival',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   controller: _endDateController,
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
@@ -272,6 +274,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   hintText: 'Time of Take Off',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   controller: _timeOfTakeOffController,
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
@@ -294,6 +297,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   hintText: 'Time of Landing',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   controller: _timeOfLandingController,
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {

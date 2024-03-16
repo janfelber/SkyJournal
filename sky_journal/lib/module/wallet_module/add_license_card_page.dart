@@ -360,6 +360,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Date of Expiry',
                         obscureText: false,
                         enabled: true,
+                        readOnly: true,
                         icon: Icon(
                           Icons.calendar_today,
                           color: Colors.white,
@@ -485,10 +486,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Date of Birth',
                         obscureText: false,
                         enabled: true,
-                        numericInput: true,
-                        isDate: true,
-                        dateFormat: 'dd.M.yyyy',
-                        maxLength: 8,
+                        readOnly: true,
                         icon: Icon(
                           Icons.calendar_today,
                           color: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class MyTextField extends StatelessWidget {
   final TextStyle? textStyle;
@@ -14,8 +15,7 @@ class MyTextField extends StatelessWidget {
   final CupertinoButton? button;
   final bool numericInput;
   final int? maxLength;
-  final bool isDate; // Přidán parametr pro nastavení vstupu jako datum
-  final String? dateFormat; // Přidán parametr pro formát data
+  final bool readOnly;
 
   const MyTextField({
     Key? key,
@@ -29,9 +29,8 @@ class MyTextField extends StatelessWidget {
     this.textStyle,
     this.numericInput = false,
     this.maxLength,
-    this.isDate = false,
-    this.dateFormat, // Přidán parametr pro formát data
     this.onPressed,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -43,26 +42,25 @@ class MyTextField extends StatelessWidget {
       inputFormatters: [
         if (numericInput) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
         if (maxLength != null) LengthLimitingTextInputFormatter(maxLength),
-        if (isDate && dateFormat != null)
-          FilteringTextInputFormatter.deny(RegExp(r'[^\d' + dateFormat! + ']')),
-        // Pokud je nastavený parametr isDate a dateFormat, použije se zde daný formát data
       ],
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        suffixIcon: icon != null
+        suffixIcon: icon != null && !readOnly
             ? IconButton(
                 icon: icon!,
                 onPressed: onPressed,
               )
-            : null,
+            : icon,
         hintText: hintText,
         hintStyle: hintTextStyle == null
             ? TextStyle(color: Colors.white)
             : hintTextStyle,
         enabled: enabled,
       ),
+      readOnly: readOnly,
+      onTap: readOnly ? onPressed as void Function()? : null,
       obscureText: obscureText,
     );
   }

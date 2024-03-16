@@ -237,6 +237,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Date of Departure',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -263,6 +264,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Date of Arrival',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -307,6 +309,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Time of Take Off',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -331,6 +334,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Time of Landing',
                   obscureText: false,
                   enabled: true,
+                  readOnly: true,
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
                     showDialog(
