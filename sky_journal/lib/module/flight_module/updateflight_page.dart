@@ -21,6 +21,7 @@ class UpadateFlight extends StatefulWidget {
   final String timeOfLanding;
   final String airline;
   final String typeOfAircraft;
+  final String pilotFunction;
 
   const UpadateFlight(
       {super.key,
@@ -32,7 +33,8 @@ class UpadateFlight extends StatefulWidget {
       required this.timeOfTakeOff,
       required this.timeOfLanding,
       required this.airline,
-      required this.typeOfAircraft});
+      required this.typeOfAircraft,
+      required this.pilotFunction});
 
   @override
   State<UpadateFlight> createState() => _UpadateFlightState();
@@ -44,6 +46,8 @@ class _UpadateFlightState extends State<UpadateFlight> {
   DateTime? selectedEndDate;
 
   String? selectedAirline;
+
+  String? selectedPilotFunction;
 
   final airlines = [
     'Private',
@@ -57,6 +61,13 @@ class _UpadateFlightState extends State<UpadateFlight> {
     'Ryanair',
     'Tus Airways',
     'Wizz Air',
+  ];
+
+  final pilotFunctions = [
+    'Pilot In Command',
+    'Co-Pilot',
+    'Dual',
+    'Instructor',
   ];
 
   final FirestoreDatabase database = FirestoreDatabase();
@@ -97,6 +108,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
     selectedDate = _parseDate(widget.startDate);
     selectedEndDate = _parseDate(widget.endDate);
     selectedAirline = widget.airline;
+    selectedPilotFunction = widget.pilotFunction;
   }
 
   DateTime? _parseDate(String date) {
@@ -129,6 +141,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
     String timeOfLanding = _timeOfLandingController.text;
     String airline = selectedAirline!;
     String typeOfAircraft = _typeOfAircraftController.text;
+    String pilotFunction = selectedPilotFunction!;
 
     // Aktualizácia údajov v Firestore
     database.updateFlight(
@@ -141,6 +154,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
       timeOfLanding,
       airline,
       typeOfAircraft,
+      pilotFunction,
     );
 
     // Odoslanie aktualizovaných údajov späť na predchádzajúcu stránku
@@ -154,6 +168,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
       'timeOfLanding': timeOfLanding,
       'airline': airline,
       'typeOfAircraft': typeOfAircraft,
+      'pilotFunction': pilotFunction,
     });
   }
 
@@ -494,6 +509,42 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
+                      value: selectedPilotFunction,
+                      dropdownColor: PopUp,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      ),
+                      iconSize: screenSize.width * 0.06,
+                      items: pilotFunctions
+                          .map(buildMenuItemPilotFunctions)
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedPilotFunction = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width *
+                        0.02, // Adjust the horizontal padding
+                    vertical:
+                        screenSize.height * 0.01, // Adjust the vertical padding
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        screenSize.width * 0.03), // Adjust the border radius
+                    border: Border.all(color: Colors.grey[700]!),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
                       value: selectedAirline,
                       dropdownColor: PopUp,
                       icon: const Icon(
@@ -501,7 +552,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                         color: Colors.white,
                       ),
                       iconSize: screenSize.width * 0.06,
-                      items: airlines.map(buildMenuItem).toList(),
+                      items: airlines.map(buildMenuItemAirlines).toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedAirline = value;
@@ -522,12 +573,59 @@ class _UpadateFlightState extends State<UpadateFlight> {
     );
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+  DropdownMenuItem<String> buildMenuItemAirlines(String item) =>
+      DropdownMenuItem(
         value: item,
         child: Row(
           children: [
             if (item == 'Private') ...[
               Icon(Icons.star, color: Colors.white),
+              SizedBox(width: 10),
+            ],
+            Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      );
+  DropdownMenuItem<String> buildMenuItemPilotFunctions(String item) =>
+      DropdownMenuItem(
+        value: item,
+        child: Row(
+          children: [
+            if (item == 'Pilot In Command') ...[
+              Container(
+                  height: 30,
+                  child: Image.asset('lib/icons/captain.png',
+                      color: Colors.white)),
+              SizedBox(width: 10),
+            ],
+            if (item == 'Co-Pilot') ...[
+              Container(
+                  height: 30,
+                  child: Image.asset('lib/icons/co-pilot.png',
+                      color: Colors.white)),
+              SizedBox(width: 10),
+            ],
+            if (item == 'Dual') ...[
+              Container(
+                  height: 30,
+                  child: Row(
+                    children: [
+                      Image.asset('lib/icons/co-pilot.png',
+                          color: Colors.white),
+                      Image.asset('lib/icons/co-pilot.png',
+                          color: Colors.white),
+                    ],
+                  )),
+              SizedBox(width: 10),
+            ],
+            if (item == 'Instructor') ...[
+              Container(
+                  height: 30,
+                  child: Image.asset('lib/icons/instructor.png',
+                      color: Colors.white)),
               SizedBox(width: 10),
             ],
             Text(

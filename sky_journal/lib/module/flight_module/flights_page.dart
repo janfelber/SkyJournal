@@ -243,6 +243,8 @@ class _FlightsState extends State<Flights> {
                       String searchQuery = _searchController.text.toLowerCase();
                       String typeOfAircraft =
                           flight['TypeOfAircraft'].toString().toLowerCase();
+                      String pilotFunction =
+                          flight['PilotFunction'].toString().toLowerCase();
                       return !flightNumber.contains(searchQuery) &&
                           !startDestination.contains(searchQuery) &&
                           !endDestination.contains(searchQuery) &&
@@ -253,7 +255,8 @@ class _FlightsState extends State<Flights> {
                           !airline.contains(searchQuery) &&
                           !numOfPassengers.contains(searchQuery) &&
                           !avgSpeed.contains(searchQuery) &&
-                          !typeOfAircraft.contains(searchQuery);
+                          !typeOfAircraft.contains(searchQuery) &&
+                          !pilotFunction.contains(searchQuery);
                     });
                   }
 
@@ -286,6 +289,7 @@ class _FlightsState extends State<Flights> {
                         String numOfPassengers = flight['NumberOfPassangers'];
                         String avgSpeed = flight['AvarageSpeed'];
                         String typeOfAircraft = flight['TypeOfAircraft'];
+                        String pilotFunction = flight['PilotFunction'];
 
                         return MyListTile(
                             flightNumber: flightNumber,
@@ -312,6 +316,7 @@ class _FlightsState extends State<Flights> {
                                     numbersOfPassengers: numOfPassengers,
                                     avgSpeed: avgSpeed,
                                     typeOfAircraft: typeOfAircraft,
+                                    pilotFunction: pilotFunction,
                                   ));
                             });
                       },

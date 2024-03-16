@@ -311,6 +311,7 @@ class FirestoreDatabase {
     String timeOfLanding,
     String airLine,
     String typeOfAircraft,
+    String pilotFunction,
   ) {
     return flights
         .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
@@ -330,6 +331,7 @@ class FirestoreDatabase {
             'TimeOfLanding': timeOfLanding,
             'Airline': airLine,
             'TypeOfAircraft': typeOfAircraft,
+            'PilotFunction': pilotFunction,
           });
         });
       }

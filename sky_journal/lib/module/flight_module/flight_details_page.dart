@@ -29,6 +29,7 @@ class FlightDetailsPage extends StatefulWidget {
   String numbersOfPassengers;
   String avgSpeed;
   String typeOfAircraft;
+  String pilotFunction;
 
   FlightDetailsPage({
     Key? key,
@@ -43,6 +44,7 @@ class FlightDetailsPage extends StatefulWidget {
     required this.numbersOfPassengers,
     required this.avgSpeed,
     required this.typeOfAircraft,
+    required this.pilotFunction,
   }) : super(key: key);
 
   @override
@@ -135,6 +137,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           timeOfLanding: widget.timeOfLanding,
           airline: widget.airline,
           typeOfAircraft: widget.typeOfAircraft,
+          pilotFunction: widget.pilotFunction,
         ),
       ),
     ).then((value) {
@@ -361,6 +364,25 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 Space.X(10),
                                 Text(
                                   'Flight Number: ' + widget.flightNumber,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Space.Y(20),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  color: textColor.withOpacity(0.5),
+                                ),
+                                Space.X(10),
+                                Text(
+                                  'Pilot Function: ' + widget.pilotFunction,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
