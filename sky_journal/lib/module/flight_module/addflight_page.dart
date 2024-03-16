@@ -39,7 +39,16 @@ class _AddFlightPageState extends State<AddFlightPage> {
     'Wizz Air',
   ];
 
+  final pilotFunctions = [
+    'Pilot In Command',
+    'Co-Pilot',
+    'Dual',
+    'Instructor',
+  ];
+
   String? selectedAirline;
+
+  String? selectedPilotFunction;
 
   final FirestoreDatabase database = FirestoreDatabase();
 
@@ -66,10 +75,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
   final TextEditingController _typeOfAircraftController =
       TextEditingController();
 
-  void _handleAirlineSelection(String selectedAirline) {
-    print('Selected Airline: $selectedAirline');
-    // Tu by ste mohli vykonať ďalšie akcie na základe výberu leteckej spoločnosti
-  }
+  final TextEditingController _pilotFunctionController =
+      TextEditingController();
 
   void addFlightRecord() {
     //only add flight record if there is something in the text fields
@@ -90,6 +97,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
       String timeOfLanding = _timeOfLandingController.text;
       String airline = _airlineController.text;
       String typeOfAircraft = _typeOfAircraftController.text;
+      String pilotFunction = _pilotFunctionController.text;
       database.addFlight(
         flightNumber,
         startDate,
@@ -102,6 +110,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
         numOfPassengers,
         avgSpeed,
         typeOfAircraft,
+        pilotFunction,
       );
     }
 
@@ -115,6 +124,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     _timeOfLandingController.clear();
     _airlineController.clear();
     _typeOfAircraftController.clear();
+    _pilotFunctionController.clear();
 
     //go back to the previous page
     Navigator.pop(context);
@@ -496,6 +506,48 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
+                      value: selectedPilotFunction,
+                      dropdownColor: PopUp,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      ),
+                      iconSize: screenSize.width * 0.06,
+                      hint: Text(
+                        'Select Pilot Function',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      items: pilotFunctions
+                          .map(buildMenuItemPilotFunctions)
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedPilotFunction = value;
+                          _pilotFunctionController.text =
+                              selectedPilotFunction!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width *
+                        0.02, // Adjust the horizontal padding
+                    vertical:
+                        screenSize.height * 0.01, // Adjust the vertical padding
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        screenSize.width * 0.03), // Adjust the border radius
+                    border: Border.all(color: Colors.grey[700]!),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
                       value: selectedAirline,
                       dropdownColor: PopUp,
                       icon: const Icon(
@@ -507,7 +559,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                         'Select Airline',
                         style: TextStyle(color: Colors.white),
                       ),
-                      items: airlines.map(buildMenuItem).toList(),
+                      items: airlines.map(buildMenuItemAirLines).toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedAirline = value;
@@ -538,12 +590,60 @@ class _AddFlightPageState extends State<AddFlightPage> {
     );
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+  DropdownMenuItem<String> buildMenuItemAirLines(String item) =>
+      DropdownMenuItem(
         value: item,
         child: Row(
           children: [
             if (item == 'Private') ...[
               Icon(Icons.star, color: Colors.white),
+              SizedBox(width: 10),
+            ],
+            Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      );
+
+  DropdownMenuItem<String> buildMenuItemPilotFunctions(String item) =>
+      DropdownMenuItem(
+        value: item,
+        child: Row(
+          children: [
+            if (item == 'Pilot In Command') ...[
+              Container(
+                  height: 30,
+                  child: Image.asset('lib/icons/captain.png',
+                      color: Colors.white)),
+              SizedBox(width: 10),
+            ],
+            if (item == 'Co-Pilot') ...[
+              Container(
+                  height: 30,
+                  child: Image.asset('lib/icons/co-pilot.png',
+                      color: Colors.white)),
+              SizedBox(width: 10),
+            ],
+            if (item == 'Dual') ...[
+              Container(
+                  height: 30,
+                  child: Row(
+                    children: [
+                      Image.asset('lib/icons/co-pilot.png',
+                          color: Colors.white),
+                      Image.asset('lib/icons/co-pilot.png',
+                          color: Colors.white),
+                    ],
+                  )),
+              SizedBox(width: 10),
+            ],
+            if (item == 'Instructor') ...[
+              Container(
+                  height: 30,
+                  child: Image.asset('lib/icons/instructor.png',
+                      color: Colors.white)),
               SizedBox(width: 10),
             ],
             Text(

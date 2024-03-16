@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../database/firestore.dart';
@@ -137,7 +136,11 @@ class _StatsState extends State<Stats> {
 
     getMostVisitedDestination().then((value) {
       setState(() {
-        mostVisitedDestination = value;
+        if (value == '') {
+          mostVisitedDestination = 'No destination';
+        } else {
+          mostVisitedDestination = value;
+        }
       });
     });
 
@@ -194,143 +197,144 @@ class _StatsState extends State<Stats> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Surface,
+      appBar: AppBar(
+        title: Text('Flight Journal', style: TextStyle(color: textColor)),
         backgroundColor: Surface,
-        appBar: AppBar(
-          title: Text('Flight Journal', style: TextStyle(color: textColor)),
-          backgroundColor: Surface,
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/airlines/stats_circuit.png',
-                    height: 300,
-                  ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Total Flight Distance', // Pridaný popis
-                          style: GoogleFonts.bebasNeue(
-                            fontSize: 24,
-                            color: Colors.white,
-                          ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/airlines/stats_circuit.png',
+                  height: 300,
+                ),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Total Flight Distance', // Pridaný popis
+                        style: GoogleFonts.bebasNeue(
+                          fontSize: 24,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 3),
-                  isLoading
-                      ? CircularProgressIndicator()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${totalKmFlown.toStringAsFixed(0)} KM',
-                              style: GoogleFonts.bebasNeue(
-                                fontSize: 52,
-                                color: Colors.white,
-                              ),
+                ),
+                SizedBox(height: 3),
+                isLoading
+                    ? CircularProgressIndicator()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${totalKmFlown.toStringAsFixed(0)} KM',
+                            style: GoogleFonts.bebasNeue(
+                              fontSize: 52,
+                              color: Colors.white,
                             ),
-                          ],
-                        ), // Medzera medzi textom a čiaro
-                  SizedBox(height: 25),
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(
-                      Icons.flight, 'Total of flights', '$numberOfFlights'),
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(
-                    Icons.timer,
-                    'Total flight time',
-                    '${flightTimeHour > 0 || flightTimeMinute >= 60 ? '${flightTimeHour + flightTimeMinute ~/ 60} hours ' : ''}' +
-                        '${(flightTimeHour > 0 || flightTimeMinute >= 60) ? flightTimeMinute % 60 : flightTimeMinute} minutes',
-                  ),
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(
-                    Icons.location_city,
-                    'Most visited',
-                    mostVisitedDestination,
-                  ),
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(
-                      Icons.av_timer,
-                      'Average of flights',
-                      '${averageOfFlightsHour > 0 || averageOfFlightsMinute >= 60 ? '${averageOfFlightsHour + averageOfFlightsMinute ~/ 60} hours ' : ''}' +
-                          '${(averageOfFlightsHour > 0 || averageOfFlightsMinute >= 60) ? averageOfFlightsMinute % 60 : averageOfFlightsMinute} minutes'),
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(Icons.flight_class, 'Longest flight id',
-                      '$longestFlightId'),
+                          ),
+                        ],
+                      ), // Medzera medzi textom a čiaro
+                SizedBox(height: 25),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.flight, 'Total of flights', '$numberOfFlights'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                  Icons.timer,
+                  'Total flight time',
+                  '${flightTimeHour > 0 || flightTimeMinute >= 60 ? '${flightTimeHour + flightTimeMinute ~/ 60} hours ' : ''}' +
+                      '${(flightTimeHour > 0 || flightTimeMinute >= 60) ? flightTimeMinute % 60 : flightTimeMinute} minutes',
+                ),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                  Icons.location_city,
+                  'Most visited',
+                  mostVisitedDestination,
+                ),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.av_timer,
+                    'Average of flights',
+                    '${averageOfFlightsHour > 0 || averageOfFlightsMinute >= 60 ? '${averageOfFlightsHour + averageOfFlightsMinute ~/ 60} hours ' : ''}' +
+                        '${(averageOfFlightsHour > 0 || averageOfFlightsMinute >= 60) ? averageOfFlightsMinute % 60 : averageOfFlightsMinute} minutes'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(Icons.flight_class, 'Longest flight id',
+                    '$longestFlightId'),
 
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(
-                      Icons.flight_takeoff,
-                      'Longest flight',
-                      '${longestFlightHour > 0 || longestFlightMinute >= 60 ? '${longestFlightHour + longestFlightMinute ~/ 60} hours ' : ''}' +
-                          '${(longestFlightHour > 0 || longestFlightMinute >= 60) ? longestFlightMinute % 60 : longestFlightMinute} minutes'),
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(CupertinoIcons.moon_stars_fill, 'Night flights',
-                      '$numberOfNightFlights'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.flight_takeoff,
+                    'Longest flight',
+                    '${longestFlightHour > 0 || longestFlightMinute >= 60 ? '${longestFlightHour + longestFlightMinute ~/ 60} hours ' : ''}' +
+                        '${(longestFlightHour > 0 || longestFlightMinute >= 60) ? longestFlightMinute % 60 : longestFlightMinute} minutes'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(CupertinoIcons.moon_stars_fill, 'Night flights',
+                    '$numberOfNightFlights'),
 
-                  SizedBox(height: 8),
-                  Divider(
-                    indent: 10,
-                    endIndent: 10,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8),
-                  buildListTile(
-                      Icons.sunny, 'Day flights', '$numberOfDayFlights'),
-                ],
-              ),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.sunny, 'Day flights', '$numberOfDayFlights'),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   ListTile buildListTile(IconData icon, String title, String subtitle) {
