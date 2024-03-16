@@ -10,11 +10,13 @@ import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../theme/color_theme.dart';
 import 'components/menu_item_airlines.dart';
 import 'components/menu_item_pilots.dart';
 import 'components/dialog_calendar.dart';
+import 'components/toast.dart';
 
 class AddFlightPage extends StatefulWidget {
   const AddFlightPage({Key? key}) : super(key: key);
@@ -88,15 +90,16 @@ class _AddFlightPageState extends State<AddFlightPage> {
   final TextEditingController _registrationController = TextEditingController();
 
   void addFlightRecord() {
-    //only add flight record if there is something in the text fields
-    if (_startDestinationController.text.isNotEmpty &&
-        _endDestinationController.text.isNotEmpty &&
-        _airlineController.text.isNotEmpty &&
+    if (_flightNumberController.text.isNotEmpty &&
         _startDateController.text.isNotEmpty &&
         _endDateController.text.isNotEmpty &&
+        _startDestinationController.text.isNotEmpty &&
+        _endDestinationController.text.isNotEmpty &&
         _timeOfTakeOffController.text.isNotEmpty &&
         _timeOfLandingController.text.isNotEmpty &&
+        _airlineController.text.isNotEmpty &&
         _typeOfAircraftController.text.isNotEmpty &&
+        _pilotFunctionController.text.isNotEmpty &&
         _registrationController.text.isNotEmpty) {
       String flightNumber = _flightNumberController.text;
       String startDate = _startDateController.text;
@@ -124,23 +127,32 @@ class _AddFlightPageState extends State<AddFlightPage> {
         pilotFunction,
         registration,
       );
+
+      // Vymazanie obsahu všetkých polí
+      _flightNumberController.clear();
+      _startDateController.clear();
+      _endDateController.clear();
+      _startDestinationController.clear();
+      _endDestinationController.clear();
+      _timeOfTakeOffController.clear();
+      _timeOfLandingController.clear();
+      _airlineController.clear();
+      _typeOfAircraftController.clear();
+      _pilotFunctionController.clear();
+      _registrationController.clear();
+
+      // Návrat na predchádzajúcu stránku
+      Navigator.pop(context);
+    } else {
+      // Ak niektoré pole nie je vyplnené, zobrazíme upozornenie
+      showToast(
+        context,
+        textToast: 'Please fill in all fields',
+        imagePath: 'lib/icons/accident.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
     }
-
-    //clear the text field
-    _flightNumberController.clear();
-    _startDateController.clear();
-    _endDateController.clear();
-    _startDestinationController.clear();
-    _endDestinationController.clear();
-    _timeOfTakeOffController.clear();
-    _timeOfLandingController.clear();
-    _airlineController.clear();
-    _typeOfAircraftController.clear();
-    _pilotFunctionController.clear();
-    _registrationController.clear();
-
-    //go back to the previous page
-    Navigator.pop(context);
   }
 
   String generateRandomNUmberOfPassangers() {
