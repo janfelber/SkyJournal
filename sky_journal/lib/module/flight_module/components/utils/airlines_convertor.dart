@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 Widget getAirlineLogo(String airlineName) {
   final lowercaseAirlineName = airlineName.toLowerCase();
 
   if (lowercaseAirlineName == 'air canada') {
-    return Image.asset(
-      'assets/airlines/air-canada_logo.png',
+    return SvgPicture.asset(
+      'assets/airlines/Air_Canada.svg',
       height: 60,
       width: 60,
     );
   } else if (lowercaseAirlineName == 'british airways') {
-    return Image.asset(
-      'assets/airlines/british-airways_logo.png',
+    return SvgPicture.asset(
+      'assets/airlines/British.svg',
       height: 60,
       width: 100,
     );
   } else if (lowercaseAirlineName == 'emirates') {
-    return Image.asset(
-      'assets/airlines/emirates-airlines-logo.png',
-      height: 60,
+    return SvgPicture.asset(
+      'assets/airlines/Emirates.svg',
+      height: 50,
     );
   } else if (lowercaseAirlineName == 'etihad airways') {
-    return Image.asset(
-      'assets/airlines/etihad-airways_logo.png',
-      height: 80,
+    return SvgPicture.asset(
+      'assets/airlines/Etihad.svg',
+      height: 55,
       width: 80,
     );
   } else if (lowercaseAirlineName == 'japan airlines') {
@@ -32,30 +33,29 @@ Widget getAirlineLogo(String airlineName) {
       height: 55,
     );
   } else if (lowercaseAirlineName == 'lufthansa') {
-    return Image.asset(
-      'assets/airlines/lufthansa_logo.png',
-      height: 60,
+    return SvgPicture.asset(
+      'assets/airlines/Lufthansa.svg',
+      height: 55,
     );
   } else if (lowercaseAirlineName == 'qatar airways') {
-    return Image.asset(
-      'assets/airlines/qatar-airways_logo.png',
+    return SvgPicture.asset(
+      'assets/airlines/Qatar.svg',
       height: 60,
     );
   } else if (lowercaseAirlineName == 'ryanair') {
     return Image.asset(
       'assets/airlines/ryanair_logo.png',
-      height: 60,
-      width: 50,
+      height: 55,
     );
   } else if (lowercaseAirlineName == 'tus airways') {
     return Image.asset(
       'assets/airlines/tus-airways_logo.png',
-      height: 45,
+      height: 55,
     );
   } else if (lowercaseAirlineName == 'wizz air') {
-    return Image.asset(
-      'assets/airlines/wizz-air_logo.png',
-      height: 60,
+    return SvgPicture.asset(
+      'assets/airlines/Wizz_Air_UK.svg',
+      height: 50,
     );
   } else if (lowercaseAirlineName == 'private') {
     return Image.asset(
