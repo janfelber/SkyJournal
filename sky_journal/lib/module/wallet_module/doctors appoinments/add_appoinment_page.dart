@@ -6,6 +6,7 @@ import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
+import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -213,83 +214,40 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
                                       ),
                                     ),
                                     CupertinoButton(
-                                        child: Container(
-                                          padding: EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: Colors.black26,
-                                          ),
-                                          child: Text(
-                                            DateFormat('HH:mm')
-                                                .format(selectedTime)
-                                                .toString(),
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.black26,
                                         ),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  'Take Off Time',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20),
-                                                ),
-                                                backgroundColor: PopUp,
-                                                content: Container(
-                                                  height: 200,
-                                                  child: CupertinoTheme(
-                                                    data: CupertinoThemeData(
-                                                      textTheme:
-                                                          CupertinoTextThemeData(
-                                                        dateTimePickerTextStyle:
-                                                            TextStyle(
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      children: [
-                                                        Expanded(
-                                                          child: Container(
-                                                            child:
-                                                                CupertinoDatePicker(
-                                                              mode:
-                                                                  CupertinoDatePickerMode
-                                                                      .time,
-                                                              initialDateTime:
-                                                                  selectedTime,
-                                                              use24hFormat:
-                                                                  true,
-                                                              onDateTimeChanged:
-                                                                  (DateTime
-                                                                      newDateTime) {
-                                                                setState(() {
-                                                                  selectedTime =
-                                                                      newDateTime;
-                                                                  _timeTextController
-                                                                      .text = DateFormat(
-                                                                          'HH:mm')
-                                                                      .format(
-                                                                          selectedTime)
-                                                                      .toString();
-                                                                });
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        })
+                                        child: Text(
+                                          DateFormat('HH:mm')
+                                              .format(selectedTime)
+                                              .toString(),
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => MyDialogTimer(
+                                              onTimeSelected: (DateTime time) {
+                                                setState(
+                                                  () {
+                                                    selectedTime = time;
+                                                    _timeTextController.text =
+                                                        DateFormat('HH:mm')
+                                                            .format(time)
+                                                            .toString();
+                                                  },
+                                                );
+                                              },
+                                              dialogText:
+                                                  'Time Of Appointment'),
+                                        );
+                                      },
+                                    )
                                   ],
                                 )
                               ],

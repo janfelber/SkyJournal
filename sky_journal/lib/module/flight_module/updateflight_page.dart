@@ -1,15 +1,17 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, sized_box_for_whitespace
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:sky_journal/module/flight_module/components/dialog_calendar.dart';
+import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
 
 import '../../database/firestore.dart';
 import '../../global_widgets/my_textfield.dart';
 import '../../theme/color_theme.dart';
+import 'components/menu_item_airlines.dart';
+import 'components/menu_item_pilots.dart';
 
 class UpadateFlight extends StatefulWidget {
   final String flightNumber;
@@ -206,72 +208,19 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor:
-                            PopUp, // Prispôsobte farbu podľa svojich potrieb
-                        title: Text(
-                          "Departure Date",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        content: Container(
-                          height: 410,
-                          width: 300,
-                          child: TableCalendar(
-                            selectedDayPredicate: (day) =>
-                                isSameDay(selectedDate ?? DateTime.now(), day),
-                            headerStyle: HeaderStyle(
-                              formatButtonVisible: false,
-                              titleCentered: true,
-                              titleTextStyle: TextStyle(color: Colors.white),
-                              leftChevronIcon: Icon(
-                                Icons.chevron_left,
-                                color: Colors.white,
-                              ),
-                              rightChevronIcon: Icon(
-                                Icons.chevron_right,
-                                color: Colors.white,
-                              ),
-                            ),
-                            onDaySelected: (selectedDay, focusedDay) {
-                              if (selectedDay != null) {
+                        context: context,
+                        builder: (context) => MyDialogCalendar(
+                              selectedDate: selectedDate,
+                              dialogText: 'Departure Date',
+                              onDateSelected: (selectedDay) {
                                 setState(() {
                                   selectedDate = selectedDay;
                                   _startDateController.text =
-                                      DateFormat('dd.M.yyyy')
-                                          .format(selectedDate!);
+                                      DateFormat('d.M.yyyy')
+                                          .format(selectedDay);
                                 });
-                                Navigator.pop(context);
-                              }
-                            },
-                            calendarStyle: CalendarStyle(
-                              defaultTextStyle: TextStyle(color: Colors.white),
-                              holidayTextStyle: TextStyle(color: Colors.white),
-                              weekNumberTextStyle:
-                                  TextStyle(color: Colors.white),
-                              weekendTextStyle: TextStyle(color: Colors.white),
-                              selectedTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              todayTextStyle: TextStyle(
-                                color: Colors.blue,
-                              ),
-                              todayDecoration: BoxDecoration(
-                                color: Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              selectedDecoration: BoxDecoration(
-                                color: Colors.blue,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            focusedDay: selectedDate ?? DateTime.now(),
-                            firstDay: DateTime(2000),
-                            lastDay: DateTime(2050),
-                          ),
-                        ),
-                      ),
-                    );
+                              },
+                            ));
                   },
                 ),
                 SizedBox(
@@ -286,68 +235,16 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor: PopUp,
-                        title: Text(
-                          "Arrival Date",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        content: Container(
-                          height: 410,
-                          width: 300,
-                          child: TableCalendar(
-                            selectedDayPredicate: (day) => isSameDay(
-                                selectedEndDate ?? DateTime.now(), day),
-                            headerStyle: HeaderStyle(
-                              formatButtonVisible: false,
-                              titleCentered: true,
-                              titleTextStyle: TextStyle(color: Colors.white),
-                              leftChevronIcon: Icon(
-                                Icons.chevron_left,
-                                color: Colors.white,
-                              ),
-                              rightChevronIcon: Icon(
-                                Icons.chevron_right,
-                                color: Colors.white,
-                              ),
-                            ),
-                            onDaySelected: (selectedDay, focusedDay) {
-                              if (selectedDay != null) {
-                                setState(() {
-                                  selectedEndDate = selectedDay;
-                                  _endDateController.text =
-                                      DateFormat('dd.M.yyyy')
-                                          .format(selectedEndDate!);
-                                });
-                                Navigator.pop(context);
-                              }
-                            },
-                            calendarStyle: CalendarStyle(
-                              defaultTextStyle: TextStyle(color: Colors.white),
-                              holidayTextStyle: TextStyle(color: Colors.white),
-                              weekNumberTextStyle:
-                                  TextStyle(color: Colors.white),
-                              weekendTextStyle: TextStyle(color: Colors.white),
-                              selectedTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              todayTextStyle: TextStyle(
-                                color: Colors.blue,
-                              ),
-                              todayDecoration: BoxDecoration(
-                                color: Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              selectedDecoration: BoxDecoration(
-                                color: Colors.blue,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            focusedDay: selectedEndDate ?? DateTime.now(),
-                            firstDay: DateTime(2000),
-                            lastDay: DateTime(2050),
-                          ),
-                        ),
+                      builder: (context) => MyDialogCalendar(
+                        selectedDate: selectedEndDate,
+                        dialogText: 'Arrival Date',
+                        onDateSelected: (selectedDay) {
+                          setState(() {
+                            selectedEndDate = selectedDay;
+                            _endDateController.text =
+                                DateFormat('d.M.yyyy').format(selectedDay);
+                          });
+                        },
                       ),
                     );
                   },
@@ -379,50 +276,15 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
                     showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Take Off Time',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          backgroundColor: PopUp,
-                          content: Container(
-                            height: 200,
-                            child: CupertinoTheme(
-                              data: CupertinoThemeData(
-                                textTheme: CupertinoTextThemeData(
-                                  dateTimePickerTextStyle: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: CupertinoDatePicker(
-                                      mode: CupertinoDatePickerMode.time,
-                                      initialDateTime: DateFormat('HH:mm')
-                                          .parse(_timeOfTakeOffController.text),
-                                      use24hFormat: true,
-                                      onDateTimeChanged:
-                                          (DateTime newDateTime) {
-                                        setState(() {
-                                          // Handle selected time
-                                          _timeOfTakeOffController.text =
-                                              DateFormat('HH:mm')
-                                                  .format(newDateTime);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
+                        context: context,
+                        builder: (context) => MyDialogTimer(
+                            onTimeSelected: (selectedTime) {
+                              setState(() {
+                                _timeOfTakeOffController.text =
+                                    DateFormat('HH:mm').format(selectedTime);
+                              });
+                            },
+                            dialogText: 'Take Off Time'));
                   },
                 ),
                 SizedBox(
@@ -437,48 +299,15 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Take Off Time',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          backgroundColor: PopUp,
-                          content: Container(
-                            height: 200,
-                            child: CupertinoTheme(
-                              data: CupertinoThemeData(
-                                textTheme: CupertinoTextThemeData(
-                                  dateTimePickerTextStyle: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: CupertinoDatePicker(
-                                      mode: CupertinoDatePickerMode.time,
-                                      use24hFormat: true,
-                                      initialDateTime: DateFormat('HH:mm')
-                                          .parse(_timeOfLandingController.text),
-                                      onDateTimeChanged:
-                                          (DateTime newDateTime) {
-                                        setState(() {
-                                          // Handle selected time
-                                          _timeOfLandingController.text =
-                                              DateFormat('HH:mm')
-                                                  .format(newDateTime);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                      builder: (context) => MyDialogTimer(
+                        onTimeSelected: (selectedTime) {
+                          setState(() {
+                            _timeOfLandingController.text =
+                                DateFormat('HH:mm').format(selectedTime);
+                          });
+                        },
+                        dialogText: 'Landing Time',
+                      ),
                     );
                   },
                 ),
@@ -516,7 +345,8 @@ class _UpadateFlightState extends State<UpadateFlight> {
                       ),
                       iconSize: screenSize.width * 0.06,
                       items: pilotFunctions
-                          .map(buildMenuItemPilotFunctions)
+                          .map((item) => DropdownMenuItemsPilots
+                              .buildMenuItemPilotFunctions(item))
                           .toList(),
                       onChanged: (value) {
                         setState(() {
@@ -551,7 +381,11 @@ class _UpadateFlightState extends State<UpadateFlight> {
                         color: Colors.white,
                       ),
                       iconSize: screenSize.width * 0.06,
-                      items: airlines.map(buildMenuItemAirlines).toList(),
+                      items: airlines
+                          .map((item) =>
+                              DropdownMenuItemsAirLines.buildMenuItemAirLines(
+                                  item))
+                          .toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedAirline = value;
@@ -575,67 +409,4 @@ class _UpadateFlightState extends State<UpadateFlight> {
       ),
     );
   }
-
-  DropdownMenuItem<String> buildMenuItemAirlines(String item) =>
-      DropdownMenuItem(
-        value: item,
-        child: Row(
-          children: [
-            if (item == 'Private') ...[
-              Icon(Icons.star, color: Colors.white),
-              SizedBox(width: 10),
-            ],
-            Text(
-              item,
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      );
-  DropdownMenuItem<String> buildMenuItemPilotFunctions(String item) =>
-      DropdownMenuItem(
-        value: item,
-        child: Row(
-          children: [
-            if (item == 'Pilot In Command') ...[
-              Container(
-                  height: 30,
-                  child: Image.asset('lib/icons/captain.png',
-                      color: Colors.white)),
-              SizedBox(width: 10),
-            ],
-            if (item == 'Co-Pilot') ...[
-              Container(
-                  height: 30,
-                  child: Image.asset('lib/icons/co-pilot.png',
-                      color: Colors.white)),
-              SizedBox(width: 10),
-            ],
-            if (item == 'Dual') ...[
-              Container(
-                  height: 30,
-                  child: Row(
-                    children: [
-                      Image.asset('lib/icons/co-pilot.png',
-                          color: Colors.white),
-                      Image.asset('lib/icons/co-pilot.png',
-                          color: Colors.white),
-                    ],
-                  )),
-              SizedBox(width: 10),
-            ],
-            if (item == 'Instructor') ...[
-              Container(
-                  height: 30,
-                  child: Image.asset('lib/icons/instructor.png',
-                      color: Colors.white)),
-              SizedBox(width: 10),
-            ],
-            Text(
-              item,
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      );
 }

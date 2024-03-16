@@ -9,9 +9,12 @@ import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
 
 import '../../theme/color_theme.dart';
+import 'components/menu_item_airlines.dart';
+import 'components/menu_item_pilots.dart';
+import 'components/dialog_calendar.dart';
 
 class AddFlightPage extends StatefulWidget {
   const AddFlightPage({Key? key}) : super(key: key);
@@ -82,6 +85,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
   final TextEditingController _pilotFunctionController =
       TextEditingController();
 
+  final TextEditingController _registrationController = TextEditingController();
+
   void addFlightRecord() {
     //only add flight record if there is something in the text fields
     if (_startDestinationController.text.isNotEmpty &&
@@ -91,7 +96,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
         _endDateController.text.isNotEmpty &&
         _timeOfTakeOffController.text.isNotEmpty &&
         _timeOfLandingController.text.isNotEmpty &&
-        _typeOfAircraftController.text.isNotEmpty) {
+        _typeOfAircraftController.text.isNotEmpty &&
+        _registrationController.text.isNotEmpty) {
       String flightNumber = _flightNumberController.text;
       String startDate = _startDateController.text;
       String endDate = _endDateController.text;
@@ -102,6 +108,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
       String airline = _airlineController.text;
       String typeOfAircraft = _typeOfAircraftController.text;
       String pilotFunction = _pilotFunctionController.text;
+      String registration = _registrationController.text;
       database.addFlight(
         flightNumber,
         startDate,
@@ -115,6 +122,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
         avgSpeed,
         typeOfAircraft,
         pilotFunction,
+        registration,
       );
     }
 
@@ -129,6 +137,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     _airlineController.clear();
     _typeOfAircraftController.clear();
     _pilotFunctionController.clear();
+    _registrationController.clear();
 
     //go back to the previous page
     Navigator.pop(context);
@@ -173,7 +182,6 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   @override
   void initState() {
-    // getDateOnRecord();
     generateRandomAvgSpeed();
     generateRandomNUmberOfPassangers();
     generateFlightNumber();
@@ -192,6 +200,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
     _timeOfLandingController.dispose();
     _airlineController.dispose();
     _typeOfAircraftController.dispose();
+    _pilotFunctionController.dispose();
+    _registrationController.dispose();
     super.dispose();
   }
 
@@ -231,68 +241,16 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor: PopUp,
-                        title: Text("Departure Date",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        content: Container(
-                          height: 410,
-                          width: 300,
-                          child: TableCalendar(
-                            selectedDayPredicate: (day) =>
-                                isSameDay(selectedDate ?? DateTime.now(), day),
-                            headerStyle: HeaderStyle(
-                              formatButtonVisible: false,
-                              titleCentered: true,
-                              titleTextStyle: TextStyle(color: Colors.white),
-                              leftChevronIcon: Icon(
-                                Icons.chevron_left,
-                                color: Colors.white,
-                              ),
-                              rightChevronIcon: Icon(
-                                Icons.chevron_right,
-                                color: Colors.white,
-                              ),
-                            ),
-                            onDaySelected: (selectedDay, focusedDay) {
-                              if (selectedDay != null) {
-                                setState(() {
-                                  selectedDate = selectedDay;
-                                  _startDateController.text =
-                                      DateFormat('d.M.yyyy')
-                                          .format(selectedDay);
-                                });
-                                Navigator.pop(
-                                    context); // Zavrieť dialóg po výbere dátumu
-                              }
-                            },
-                            calendarStyle: CalendarStyle(
-                              defaultTextStyle: TextStyle(color: Colors.white),
-                              holidayTextStyle: TextStyle(color: Colors.white),
-                              weekNumberTextStyle:
-                                  TextStyle(color: Colors.white),
-                              weekendTextStyle: TextStyle(color: Colors.white),
-                              selectedTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              todayTextStyle: TextStyle(
-                                color: Colors.blue,
-                              ),
-                              todayDecoration: BoxDecoration(
-                                color: Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              selectedDecoration: BoxDecoration(
-                                color: Colors.blue,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            focusedDay: selectedDate ?? DateTime.now(),
-                            firstDay: DateTime(2000),
-                            lastDay: DateTime(2050),
-                          ),
-                        ),
+                      builder: (context) => MyDialogCalendar(
+                        selectedDate: selectedDate,
+                        onDateSelected: (selectedDay) {
+                          setState(() {
+                            selectedDate = selectedDay;
+                            _startDateController.text =
+                                DateFormat('d.M.yyyy').format(selectedDay);
+                          });
+                        },
+                        dialogText: 'Departure Date',
                       ),
                     );
                   },
@@ -308,71 +266,19 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor: PopUp,
-                        title: Text("Arrival Date",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        content: Container(
-                          height: 410,
-                          width: 300,
-                          child: TableCalendar(
-                            selectedDayPredicate: (day) => isSameDay(
-                                selectedEndDate ?? DateTime.now(), day),
-                            headerStyle: HeaderStyle(
-                              formatButtonVisible: false,
-                              titleCentered: true,
-                              titleTextStyle: TextStyle(color: Colors.white),
-                              leftChevronIcon: Icon(
-                                Icons.chevron_left,
-                                color: Colors.white,
-                              ),
-                              rightChevronIcon: Icon(
-                                Icons.chevron_right,
-                                color: Colors.white,
-                              ),
-                            ),
-                            onDaySelected: (selectedDay, focusedDay) {
-                              if (selectedDay != null) {
+                        context: context,
+                        builder: (context) => MyDialogCalendar(
+                              selectedDate: selectedEndDate,
+                              onDateSelected: (selectedDay) {
                                 setState(() {
                                   selectedEndDate = selectedDay;
                                   _endDateController.text =
                                       DateFormat('d.M.yyyy')
                                           .format(selectedDay);
                                 });
-                                Navigator.pop(
-                                    context); // Zavrieť dialóg po výbere dátumu
-                              }
-                            },
-                            calendarStyle: CalendarStyle(
-                              defaultTextStyle: TextStyle(color: Colors.white),
-                              holidayTextStyle: TextStyle(color: Colors.white),
-                              weekNumberTextStyle:
-                                  TextStyle(color: Colors.white),
-                              weekendTextStyle: TextStyle(color: Colors.white),
-                              selectedTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              todayTextStyle: TextStyle(
-                                color: Colors.blue,
-                              ),
-                              todayDecoration: BoxDecoration(
-                                color: Colors.transparent,
-                                shape: BoxShape.circle,
-                              ),
-                              selectedDecoration: BoxDecoration(
-                                color: Colors.blue,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            focusedDay: selectedEndDate ?? DateTime.now(),
-                            firstDay: DateTime(2000),
-                            lastDay: DateTime(2050),
-                          ),
-                        ),
-                      ),
-                    );
+                              },
+                              dialogText: 'Arrival Date',
+                            ));
                   },
                 ),
                 SizedBox(
@@ -405,46 +311,15 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Take Off Time',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          backgroundColor: PopUp,
-                          content: Container(
-                            height: 200,
-                            child: CupertinoTheme(
-                              data: CupertinoThemeData(
-                                textTheme: CupertinoTextThemeData(
-                                  dateTimePickerTextStyle: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: CupertinoDatePicker(
-                                      mode: CupertinoDatePickerMode.time,
-                                      use24hFormat: true,
-                                      onDateTimeChanged:
-                                          (DateTime newDateTime) {
-                                        setState(() {
-                                          // Handle selected time
-                                          _timeOfTakeOffController.text =
-                                              DateFormat('HH:mm')
-                                                  .format(newDateTime);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                      builder: (context) => MyDialogTimer(
+                        onTimeSelected: (selectedTime) {
+                          setState(() {
+                            _timeOfTakeOffController.text =
+                                DateFormat('HH:mm').format(selectedTime);
+                          });
+                        },
+                        dialogText: 'Take Off Time',
+                      ),
                     );
                   },
                 ),
@@ -460,46 +335,15 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Land Time',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          backgroundColor: PopUp,
-                          content: Container(
-                            height: 200,
-                            child: CupertinoTheme(
-                              data: CupertinoThemeData(
-                                textTheme: CupertinoTextThemeData(
-                                  dateTimePickerTextStyle: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: CupertinoDatePicker(
-                                      mode: CupertinoDatePickerMode.time,
-                                      use24hFormat: true,
-                                      onDateTimeChanged:
-                                          (DateTime newDateTime) {
-                                        setState(() {
-                                          // Handle selected time
-                                          _timeOfLandingController.text =
-                                              DateFormat('HH:mm')
-                                                  .format(newDateTime);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                      builder: (context) => MyDialogTimer(
+                        onTimeSelected: (selectedTime) {
+                          setState(() {
+                            _timeOfLandingController.text =
+                                DateFormat('HH:mm').format(selectedTime);
+                          });
+                        },
+                        dialogText: 'Land Time',
+                      ),
                     );
                   },
                 ),
@@ -511,6 +355,15 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Type of Aircraft',
                   obscureText: false,
                   enabled: true,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                MyTextField(
+                  hintText: 'Registration',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _registrationController,
                 ),
                 SizedBox(
                   height: 10.0,
@@ -542,7 +395,8 @@ class _AddFlightPageState extends State<AddFlightPage> {
                         style: TextStyle(color: Colors.white),
                       ),
                       items: pilotFunctions
-                          .map(buildMenuItemPilotFunctions)
+                          .map((item) => DropdownMenuItemsPilots
+                              .buildMenuItemPilotFunctions(item))
                           .toList(),
                       onChanged: (value) {
                         setState(() {
@@ -583,7 +437,11 @@ class _AddFlightPageState extends State<AddFlightPage> {
                         'Select Airline',
                         style: TextStyle(color: Colors.white),
                       ),
-                      items: airlines.map(buildMenuItemAirLines).toList(),
+                      items: airlines
+                          .map((item) =>
+                              DropdownMenuItemsAirLines.buildMenuItemAirLines(
+                                  item))
+                          .toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedAirline = value;
@@ -613,68 +471,4 @@ class _AddFlightPageState extends State<AddFlightPage> {
       ),
     );
   }
-
-  DropdownMenuItem<String> buildMenuItemAirLines(String item) =>
-      DropdownMenuItem(
-        value: item,
-        child: Row(
-          children: [
-            if (item == 'Private') ...[
-              Icon(Icons.star, color: Colors.white),
-              SizedBox(width: 10),
-            ],
-            Text(
-              item,
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      );
-
-  DropdownMenuItem<String> buildMenuItemPilotFunctions(String item) =>
-      DropdownMenuItem(
-        value: item,
-        child: Row(
-          children: [
-            if (item == 'Pilot In Command') ...[
-              Container(
-                  height: 30,
-                  child: Image.asset('lib/icons/captain.png',
-                      color: Colors.white)),
-              SizedBox(width: 10),
-            ],
-            if (item == 'Co-Pilot') ...[
-              Container(
-                  height: 30,
-                  child: Image.asset('lib/icons/co-pilot.png',
-                      color: Colors.white)),
-              SizedBox(width: 10),
-            ],
-            if (item == 'Dual') ...[
-              Container(
-                  height: 30,
-                  child: Row(
-                    children: [
-                      Image.asset('lib/icons/co-pilot.png',
-                          color: Colors.white),
-                      Image.asset('lib/icons/co-pilot.png',
-                          color: Colors.white),
-                    ],
-                  )),
-              SizedBox(width: 10),
-            ],
-            if (item == 'Instructor') ...[
-              Container(
-                  height: 30,
-                  child: Image.asset('lib/icons/instructor.png',
-                      color: Colors.white)),
-              SizedBox(width: 10),
-            ],
-            Text(
-              item,
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      );
 }

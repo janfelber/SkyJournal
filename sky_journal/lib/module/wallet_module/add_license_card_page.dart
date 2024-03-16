@@ -10,10 +10,13 @@ import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
+import 'package:sky_journal/module/flight_module/components/dialog_calendar.dart';
+import 'package:sky_journal/module/wallet_module/components/menu_item_gender.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../global_widgets/my_card.dart';
 import '../../theme/color_theme.dart';
+import 'components/menu_item_country.dart';
 
 class AddLicenseCard extends StatefulWidget {
   final Function? onLicenseCardAdded;
@@ -363,77 +366,17 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         ),
                         onPressed: () {
                           showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor:
-                                  PopUp, // Prispôsobte farbu podľa svojich potrieb
-                              title: Text(
-                                "Departure Date",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                              content: Container(
-                                height: 410,
-                                width: 300,
-                                child: TableCalendar(
-                                  selectedDayPredicate: (day) => isSameDay(
-                                      dateOfExpiry ?? DateTime.now(), day),
-                                  headerStyle: HeaderStyle(
-                                    formatButtonVisible: false,
-                                    titleCentered: true,
-                                    titleTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    leftChevronIcon: Icon(
-                                      Icons.chevron_left,
-                                      color: Colors.white,
-                                    ),
-                                    rightChevronIcon: Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onDaySelected: (selectedDay, focusedDay) {
-                                    if (selectedDay != null) {
-                                      setState(() {
-                                        dateOfExpiry = selectedDay;
-                                        _dateOfExpiry.text =
-                                            DateFormat('dd.M.yyyy')
-                                                .format(dateOfExpiry!);
-                                      });
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  calendarStyle: CalendarStyle(
-                                    defaultTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    holidayTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    weekNumberTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    weekendTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    selectedTextStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                    todayTextStyle: TextStyle(
-                                      color: Colors.blue,
-                                    ),
-                                    todayDecoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    selectedDecoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  focusedDay: dateOfExpiry ?? DateTime.now(),
-                                  firstDay: DateTime(2000),
-                                  lastDay: DateTime(2050),
-                                ),
-                              ),
-                            ),
-                          );
+                              context: context,
+                              builder: (context) => MyDialogCalendar(
+                                  selectedDate: dateOfExpiry,
+                                  dialogText: 'Date of Expiry',
+                                  onDateSelected: (date) {
+                                    setState(() {
+                                      dateOfExpiry = date;
+                                      _dateOfExpiry.text =
+                                          DateFormat('dd.MM.yyyy').format(date);
+                                    });
+                                  }));
                         },
                       ),
                     ),
@@ -470,7 +413,10 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                               color: Colors.white,
                             ),
                             iconSize: screenSize.width * 0.06,
-                            items: gender.map(buildMenuItem).toList(),
+                            items: gender
+                                .map((item) => DropdownMenuItemGenders
+                                    .buildMenuItemGenders(item))
+                                .toList(),
                             onChanged: (value) {
                               setState(() {
                                 selectedGender = value;
@@ -514,7 +460,10 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                               color: Colors.white,
                             ),
                             iconSize: screenSize.width * 0.06,
-                            items: country.map(buildMenuItem).toList(),
+                            items: country
+                                .map((item) => DropdownMenuItemCountries
+                                    .buildMenuItemCountries(item))
+                                .toList(),
                             onChanged: (value) {
                               setState(() {
                                 selectCountry = value;
@@ -540,6 +489,24 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         isDate: true,
                         dateFormat: 'dd.M.yyyy',
                         maxLength: 8,
+                        icon: Icon(
+                          Icons.calendar_today,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => MyDialogCalendar(
+                                  selectedDate: dateOfBirth,
+                                  dialogText: 'Date of Birth',
+                                  onDateSelected: (date) {
+                                    setState(() {
+                                      dateOfBirth = date;
+                                      _dateOfBirth.text =
+                                          DateFormat('dd.MM.yyyy').format(date);
+                                    });
+                                  }));
+                        },
                       ),
                     ),
                     SizedBox(

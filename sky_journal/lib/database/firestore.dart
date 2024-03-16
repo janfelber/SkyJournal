@@ -118,6 +118,7 @@ class FirestoreDatabase {
     String avgSpeed,
     String typeOfAircraft,
     String pilotFunction,
+    String registration,
   ) {
     return flights.add({
       'UserEmail': user!.email,
@@ -133,6 +134,7 @@ class FirestoreDatabase {
       'AvarageSpeed': avgSpeed,
       'TypeOfAircraft': typeOfAircraft,
       'PilotFunction': pilotFunction,
+      'Registration': registration,
       'TimeStamp': Timestamp.now(),
     });
   }
