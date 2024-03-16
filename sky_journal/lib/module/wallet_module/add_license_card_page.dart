@@ -16,6 +16,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../global_widgets/my_card.dart';
 import '../../theme/color_theme.dart';
+import '../flight_module/components/toast.dart';
 import 'components/menu_item_country.dart';
 
 class AddLicenseCard extends StatefulWidget {
@@ -156,8 +157,19 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       if (widget.onLicenseCardAdded != null) {
         widget.onLicenseCardAdded!();
       }
+    } else {
+      // Zobraziť Toast s upozornením, že všetky polia musia byť vyplnené
+      showToast(
+        context,
+        textToast: "Please fill in all fields",
+        imagePath: 'lib/icons/credit-card.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
     }
 
+    // Vyčistiť obsah všetkých polí
     _certifacicateNumber.clear();
     _dateOfExpiry.clear();
     _nationality.clear();
@@ -168,6 +180,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     _eyes.clear();
     _sex.clear();
 
+    // Návrat na predchádzajúcu stránku
     Navigator.pop(context);
   }
 

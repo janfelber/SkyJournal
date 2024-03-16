@@ -11,6 +11,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 import '../../../theme/color_theme.dart';
+import '../../flight_module/components/toast.dart';
 
 class AddDoctorAppointment extends StatefulWidget {
   final Function? onAppointmentAdded;
@@ -58,12 +59,24 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
       if (widget.onAppointmentAdded != null) {
         widget.onAppointmentAdded!();
       }
+    } else {
+      // Zobraziť Toast s upozornením, že všetky polia musia byť vyplnené
+      showToast(
+        context,
+        textToast: "Please fill in all fields",
+        imagePath: 'lib/icons/doctor-problem.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return; // Skončiť funkciu, ak niektoré polia nie sú vyplnené
     }
 
+    // Vyčistiť obsah všetkých polí
     _doctorNameController.clear();
     _timeTextController.clear();
     _specialityController.clear();
 
+    // Návrat na predchádzajúcu stránku
     Navigator.pop(context);
   }
 

@@ -144,7 +144,6 @@ class _AddFlightPageState extends State<AddFlightPage> {
       // Návrat na predchádzajúcu stránku
       Navigator.pop(context);
     } else {
-      // Ak niektoré pole nie je vyplnené, zobrazíme upozornenie
       showToast(
         context,
         textToast: 'Please fill in all fields',
