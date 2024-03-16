@@ -153,6 +153,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           widget.timeOfLanding = value['timeOfLanding'];
           widget.airline = value['airline'];
           widget.typeOfAircraft = value['typeOfAircraft'];
+          widget.pilotFunction = value['pilotFunction'];
 
           _polylines.clear();
           _point1 = LatLng(0, 0);
