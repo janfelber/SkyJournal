@@ -287,10 +287,9 @@ class _UpadateFlightState extends State<UpadateFlight> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        backgroundColor:
-                            PopUp, // Prispôsobte farbu podľa svojich potrieb
+                        backgroundColor: PopUp,
                         title: Text(
-                          "Departure Date",
+                          "Arrival Date",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         content: Container(
@@ -564,7 +563,11 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 50.0,
                 ),
-                MyButton(text: 'Edit Flight', onTap: editFlight, color: Primary)
+                MyButton(
+                  text: 'Edit Flight',
+                  onTap: editFlight,
+                  color: Colors.orange,
+                )
               ],
             ),
           ),

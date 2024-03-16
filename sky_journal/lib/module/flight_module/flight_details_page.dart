@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -347,7 +348,15 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Pilot Information',
+                              'FLIGHT INFORMATION',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: textColor.withOpacity(0.3)),
+                            ),
+                            Space.Y(5),
+                            Text(
+                              'Flight Details',
                               style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 24,
@@ -359,7 +368,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(
-                                  Icons.airplanemode_active,
+                                  Icons.airplane_ticket,
                                   color: textColor.withOpacity(0.5),
                                 ),
                                 Space.X(10),
@@ -477,6 +486,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Icon(
+                                      Icons.flight,
+                                      color: textColor.withOpacity(0.5),
+                                    ),
                                     Space.X(10),
                                     Text(
                                       'Aircraft Type: ' + widget.typeOfAircraft,
@@ -491,6 +504,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Icon(
+                                      Icons.flight_class,
+                                      color: textColor.withOpacity(0.5),
+                                    ),
                                     Space.X(10),
                                     Text(
                                       'Seating Layout: ' +
@@ -508,6 +525,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Icon(
+                                      Icons.airline_seat_recline_extra,
+                                      color: textColor.withOpacity(0.5),
+                                    ),
                                     Space.X(10),
                                     Text(
                                       'Max capacity: ' +

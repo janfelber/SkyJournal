@@ -25,6 +25,10 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   String avgSpeed = "0";
 
+  DateTime? selectedDate;
+
+  DateTime? selectedEndDate;
+
   final airlines = [
     'Private',
     'Air Canada',
@@ -226,61 +230,71 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                            backgroundColor: PopUp,
-                            title: Text("Departure Date",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20)),
-                            content: Container(
-                                height: 410,
-                                width: 300,
-                                child: TableCalendar(
-                                  selectedDayPredicate: (day) =>
-                                      isSameDay(DateTime.now(), day),
-                                  headerStyle: HeaderStyle(
-                                    formatButtonVisible: false,
-                                    titleCentered: true,
-                                    titleTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    leftChevronIcon: Icon(
-                                      Icons.chevron_left,
-                                      color: Colors.white,
-                                    ),
-                                    rightChevronIcon: Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onDaySelected: (selectedDay, focusedDay) {
-                                    if (selectedDay != null) {
-                                      _startDateController.text =
-                                          DateFormat('d.M.yyyy')
-                                              .format(selectedDay);
-                                      Navigator.pop(
-                                          context); // Zavrieť dialóg po výbere dátumu
-                                    }
-                                  },
-                                  calendarStyle: CalendarStyle(
-                                    defaultTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    holidayTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    weekNumberTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    weekendTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    selectedTextStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                    todayTextStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  focusedDay: DateTime.now(),
-                                  firstDay: DateTime(2000),
-                                  lastDay: DateTime(2050),
-                                ))));
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: PopUp,
+                        title: Text("Departure Date",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20)),
+                        content: Container(
+                          height: 410,
+                          width: 300,
+                          child: TableCalendar(
+                            selectedDayPredicate: (day) =>
+                                isSameDay(selectedDate ?? DateTime.now(), day),
+                            headerStyle: HeaderStyle(
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                              titleTextStyle: TextStyle(color: Colors.white),
+                              leftChevronIcon: Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                              ),
+                              rightChevronIcon: Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onDaySelected: (selectedDay, focusedDay) {
+                              if (selectedDay != null) {
+                                setState(() {
+                                  selectedDate = selectedDay;
+                                  _startDateController.text =
+                                      DateFormat('d.M.yyyy')
+                                          .format(selectedDay);
+                                });
+                                Navigator.pop(
+                                    context); // Zavrieť dialóg po výbere dátumu
+                              }
+                            },
+                            calendarStyle: CalendarStyle(
+                              defaultTextStyle: TextStyle(color: Colors.white),
+                              holidayTextStyle: TextStyle(color: Colors.white),
+                              weekNumberTextStyle:
+                                  TextStyle(color: Colors.white),
+                              weekendTextStyle: TextStyle(color: Colors.white),
+                              selectedTextStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              todayTextStyle: TextStyle(
+                                color: Colors.blue,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Colors.transparent,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            focusedDay: selectedDate ?? DateTime.now(),
+                            firstDay: DateTime(2000),
+                            lastDay: DateTime(2050),
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(
@@ -294,61 +308,71 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                            backgroundColor: PopUp,
-                            title: Text("Arrival Date",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20)),
-                            content: Container(
-                                height: 410,
-                                width: 300,
-                                child: TableCalendar(
-                                  selectedDayPredicate: (day) =>
-                                      isSameDay(DateTime.now(), day),
-                                  headerStyle: HeaderStyle(
-                                    formatButtonVisible: false,
-                                    titleCentered: true,
-                                    titleTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    leftChevronIcon: Icon(
-                                      Icons.chevron_left,
-                                      color: Colors.white,
-                                    ),
-                                    rightChevronIcon: Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onDaySelected: (selectedDay, focusedDay) {
-                                    if (selectedDay != null) {
-                                      _endDateController.text =
-                                          DateFormat('d.M.yyyy')
-                                              .format(selectedDay);
-                                      Navigator.pop(
-                                          context); // Zavrieť dialóg po výbere dátumu
-                                    }
-                                  },
-                                  calendarStyle: CalendarStyle(
-                                    defaultTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    holidayTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    weekNumberTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    weekendTextStyle:
-                                        TextStyle(color: Colors.white),
-                                    selectedTextStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                    todayTextStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  focusedDay: DateTime.now(),
-                                  firstDay: DateTime(2000),
-                                  lastDay: DateTime(2050),
-                                ))));
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: PopUp,
+                        title: Text("Arrival Date",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20)),
+                        content: Container(
+                          height: 410,
+                          width: 300,
+                          child: TableCalendar(
+                            selectedDayPredicate: (day) => isSameDay(
+                                selectedEndDate ?? DateTime.now(), day),
+                            headerStyle: HeaderStyle(
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                              titleTextStyle: TextStyle(color: Colors.white),
+                              leftChevronIcon: Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                              ),
+                              rightChevronIcon: Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onDaySelected: (selectedDay, focusedDay) {
+                              if (selectedDay != null) {
+                                setState(() {
+                                  selectedEndDate = selectedDay;
+                                  _endDateController.text =
+                                      DateFormat('d.M.yyyy')
+                                          .format(selectedDay);
+                                });
+                                Navigator.pop(
+                                    context); // Zavrieť dialóg po výbere dátumu
+                              }
+                            },
+                            calendarStyle: CalendarStyle(
+                              defaultTextStyle: TextStyle(color: Colors.white),
+                              holidayTextStyle: TextStyle(color: Colors.white),
+                              weekNumberTextStyle:
+                                  TextStyle(color: Colors.white),
+                              weekendTextStyle: TextStyle(color: Colors.white),
+                              selectedTextStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              todayTextStyle: TextStyle(
+                                color: Colors.blue,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Colors.transparent,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            focusedDay: selectedEndDate ?? DateTime.now(),
+                            firstDay: DateTime(2000),
+                            lastDay: DateTime(2050),
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(
