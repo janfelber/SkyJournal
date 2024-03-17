@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -59,6 +58,8 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   late GoogleMapController mapController;
 
+  bool _isMapLoaded = false;
+
   LatLng _point1 = LatLng(0, 0);
   LatLng _point2 = LatLng(0, 0);
 
@@ -78,7 +79,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     try {
       return await locationFromAddress(cityName);
     } catch (e) {
-      print('Chyba pri získavaní súradníc z mesta $cityName: $e');
+      print('Error with getting coordinates $cityName: $e');
       return [];
     }
   }
@@ -92,17 +93,17 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
       if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
         setState(() {
-          // Nastavte súradnice pre _point1 na získané hodnoty
+          // set coordinates for the start and end destination
           _point1 =
               LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
           _point2 = LatLng(locationsTo[0].latitude, locationsTo[0].longitude);
           _setInitialCameraPosition(locationsFrom[0]);
         });
       } else {
-        print('Nepodarilo sa nájsť súradnice pre mesto $cityNameFrom');
+        return;
       }
     } catch (e) {
-      print('Chyba pri získavaní súradníc: $e');
+      print('Eroor with getting coordinates: $e');
     }
   }
 
@@ -120,7 +121,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
         );
       });
     } catch (e) {
-      print('Chyba pri nastavovaní kamery: $e');
+      print('Error with setting initial camera position: $e');
     }
   }
 
@@ -160,7 +161,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           _point1 = LatLng(0, 0);
           _point2 = LatLng(0, 0);
 
-          // Obnovte mapu na pôvodný stav
+          // Re-fetch the coordinates for the start and end destination
           _getCoordinatesFromCity(
               widget.startDestination, widget.endDestination);
         });
@@ -275,29 +276,72 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
+                                    // Show loading indicator while fetching the coordinates
                                     return Center(
                                         child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text('Error: ${snapshot.error}'));
-                                  } else {
+                                  }
+                                  if (snapshot.data!.isNotEmpty) {
+                                    // Show the map only if the coordinates are available
                                     final targetLatLng = LatLng(
                                         snapshot.data![0].latitude,
                                         snapshot.data![0].longitude);
-                                    return GoogleMap(
-                                      mapType: MapType.normal,
-                                      initialCameraPosition: CameraPosition(
-                                        target: targetLatLng,
-                                        zoom: 9,
+                                    return Stack(
+                                      children: [
+                                        GoogleMap(
+                                          mapType: MapType.normal,
+                                          initialCameraPosition: CameraPosition(
+                                            target: targetLatLng,
+                                            zoom: 9,
+                                          ),
+                                          polylines: _polylines,
+                                          onMapCreated:
+                                              (GoogleMapController controller) {
+                                            mapController = controller;
+                                            mapController
+                                                .setMapStyle(_mapStyle);
+                                            _controller.complete(controller);
+
+                                            // if the map is loaded, set the is map loaded to true
+                                            setState(() {
+                                              _isMapLoaded = true;
+                                            });
+                                          },
+                                        ),
+                                        if (!_isMapLoaded) // show loading text if the map is not loaded
+                                          Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                'Map is loading...',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  } else {
+                                    // If the coordinates are not available, show a message
+                                    return Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'lib/icons/close.png',
+                                            height: 50,
+                                            width: 100,
+                                          ),
+                                          Space.Y(10),
+                                          Text(
+                                            'No route available between ${widget.startDestination} and ${widget.endDestination}',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12),
+                                          ),
+                                        ],
                                       ),
-                                      polylines: _polylines,
-                                      onMapCreated:
-                                          (GoogleMapController controller) {
-                                        mapController = controller;
-                                        mapController.setMapStyle(_mapStyle);
-                                        _controller.complete(controller);
-                                      },
                                     );
                                   }
                                 },
@@ -307,30 +351,34 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               bottom: 0,
                               left: 0,
                               right: 0,
-                              child: SizedBox(
-                                  height: 50,
-                                  width: double.infinity,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      pushToNewPage(
-                                          context,
-                                          ViewMap(
-                                            startDestination:
-                                                widget.startDestination,
-                                            endDestination:
-                                                widget.endDestination,
-                                          ));
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        'View More',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14,
-                                            color: Primary),
-                                      ),
-                                    ),
-                                  )),
+                              child: _point1.latitude != 0 &&
+                                      _point2.latitude != 0
+                                  ? SizedBox(
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          pushToNewPage(
+                                            context,
+                                            ViewMap(
+                                              startDestination:
+                                                  widget.startDestination,
+                                              endDestination:
+                                                  widget.endDestination,
+                                            ),
+                                          );
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'View More',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 14,
+                                                color: Primary),
+                                          ),
+                                        ),
+                                      ))
+                                  : Container(),
                             )
                           ],
                         )),
