@@ -2,7 +2,6 @@
 
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
@@ -10,7 +9,6 @@ import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../theme/color_theme.dart';
 import 'components/menu_item_airlines.dart';

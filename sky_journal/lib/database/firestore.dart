@@ -343,7 +343,9 @@ class FirestoreDatabase {
   //get location from city name
   Future<LatLng> getLocationFromCityName(String cityName) async {
     try {
-      List<Location> locations = await locationFromAddress(cityName);
+      String normalizedCityName = cityName.toLowerCase();
+
+      List<Location> locations = await locationFromAddress(normalizedCityName);
       if (locations.isNotEmpty) {
         return LatLng(locations[0].latitude, locations[0].longitude);
       } else {
@@ -351,7 +353,7 @@ class FirestoreDatabase {
       }
     } catch (e) {
       print('Error while getting location: $e');
-      rethrow; // rethrow the exception for handling it at a higher level
+      rethrow;
     }
   }
 

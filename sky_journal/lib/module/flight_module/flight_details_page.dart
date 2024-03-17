@@ -77,9 +77,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   Future<List<Location>> getLocationFromCityName(String cityName) async {
     try {
-      return await locationFromAddress(cityName);
+      String normalizedCityName = cityName.toLowerCase();
+      return await locationFromAddress(normalizedCityName);
     } catch (e) {
-      print('Error with getting coordinates $cityName: $e');
+      print('Error with getting coordinates for $cityName: $e');
       return [];
     }
   }
@@ -87,13 +88,16 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
   Future<void> _getCoordinatesFromCity(
       String cityNameFrom, String cityNameTo) async {
     try {
+      String normalizedCityNameFrom = cityNameFrom.toLowerCase();
+      String normalizedCityNameTo = cityNameTo.toLowerCase();
+
       List<Location> locationsFrom =
-          await getLocationFromCityName(cityNameFrom);
-      List<Location> locationsTo = await getLocationFromCityName(cityNameTo);
+          await getLocationFromCityName(normalizedCityNameFrom);
+      List<Location> locationsTo =
+          await getLocationFromCityName(normalizedCityNameTo);
 
       if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
         setState(() {
-          // set coordinates for the start and end destination
           _point1 =
               LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
           _point2 = LatLng(locationsTo[0].latitude, locationsTo[0].longitude);
@@ -103,7 +107,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
         return;
       }
     } catch (e) {
-      print('Eroor with getting coordinates: $e');
+      print('Error with getting coordinates: $e');
     }
   }
 
@@ -259,7 +263,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                     ),
                     Space.Y(20),
                     Container(
-                        height: 180,
+                        height: 200,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(15),
@@ -271,17 +275,22 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                             Padding(
                               padding: const EdgeInsets.all(15.0),
                               child: FutureBuilder<List<Location>>(
-                                future: getLocationFromCityName(
-                                    widget.startDestination),
+                                future: Future.delayed(
+                                    Duration(milliseconds: 250),
+                                    () => getLocationFromCityName(
+                                        widget.startDestination)),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     // Show loading indicator while fetching the coordinates
                                     return Center(
-                                        child: CircularProgressIndicator());
+                                      child: CircularProgressIndicator(),
+                                    );
                                   }
-                                  if (snapshot.data!.isNotEmpty) {
-                                    // Show the map only if the coordinates are available
+                                  if (snapshot.hasData &&
+                                      snapshot.data!.isNotEmpty &&
+                                      _point1.latitude != 0 &&
+                                      _point2.latitude != 0) {
                                     final targetLatLng = LatLng(
                                         snapshot.data![0].latitude,
                                         snapshot.data![0].longitude);
@@ -330,7 +339,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                         children: [
                                           Image.asset(
                                             'lib/icons/close.png',
-                                            height: 50,
+                                            height: 60,
                                             width: 100,
                                           ),
                                           Space.Y(10),
