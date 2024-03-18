@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
@@ -9,6 +10,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/theme/color_theme.dart';
+
+import 'flight_details_page.dart';
 
 class ViewMap extends StatefulWidget {
   final String startDestination;
@@ -37,7 +40,7 @@ class _ViewMapState extends State<ViewMap> {
       String normalizedCityName = cityName.toLowerCase();
       return await locationFromAddress(normalizedCityName);
     } catch (e) {
-      print('Chyba pri získavaní súradníc z mesta $cityName: $e');
+      print('Error with getting coordinates for $cityName: $e');
       return [];
     }
   }
@@ -60,26 +63,66 @@ class _ViewMapState extends State<ViewMap> {
     }
   }
 
+  List<AirportData> airports = [];
+
+  String getCityName(String airportCode) {
+    AirportData? airport = airports.firstWhere(
+      (element) =>
+          element.ident.trim().toUpperCase() == airportCode.toUpperCase(),
+      orElse: () => AirportData(ident: '', municipality: ''),
+    );
+
+    if (airport.ident.isEmpty) {
+      return airportCode;
+    }
+    return airport.municipality;
+  }
+
   Future<void> _getCoordinatesFromCity(
       String cityNameFrom, String cityNameTo) async {
     try {
-      List<Location> locationsFrom =
-          await getLocationFromCityName(cityNameFrom);
-      List<Location> locationsTo = await getLocationFromCityName(cityNameTo);
+      List<Location> locationsFrom = await getLocationFromCityName(
+        getCityName(widget.startDestination.toUpperCase()),
+      );
+      List<Location> locationsTo = await getLocationFromCityName(
+        getCityName(widget.endDestination.toUpperCase()),
+      );
 
       if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
         setState(() {
-          //set the coordinates of the two cities
           _point1 =
               LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
           _point2 = LatLng(locationsTo[0].latitude, locationsTo[0].longitude);
           _setInitialCameraPosition(locationsFrom[0]);
         });
       } else {
-        print('Nepodarilo sa nájsť súradnice pre mesto $cityNameFrom');
+        return;
       }
     } catch (e) {
-      print('Chyba pri získavaní súradníc: $e');
+      print('Error with getting coordinates: $e');
+    }
+  }
+
+  Future<void> loadAirportData() async {
+    final String data = await rootBundle.loadString('assets/airports.csv');
+    List<List<dynamic>> csvTable = CsvToListConverter().convert(data);
+
+    if (csvTable.isNotEmpty) {
+      setState(() {
+        airports = csvTable.map((row) {
+          if (row.length >= 2) {
+            return AirportData(
+              ident: row[0]
+                  .toString(), // Assuming airport code is in the first column
+              municipality: row[1]
+                  .toString(), // Assuming municipality name is in the second column
+            );
+          } else {
+            // Handle case where row doesn't contain enough data
+            return AirportData(ident: '', municipality: '');
+          }
+        }).toList();
+      });
     }
   }
 
@@ -93,7 +136,12 @@ class _ViewMapState extends State<ViewMap> {
       _mapStyle = string;
     });
 
-    _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+    loadAirportData().then((_) {
+      getCityName(widget.startDestination);
+      getCityName(widget.endDestination);
+      _getCoordinatesFromCity('Hannen Airport', 'Heathrow Airport');
+      _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+    });
   }
 
   @override
@@ -114,10 +162,25 @@ class _ViewMapState extends State<ViewMap> {
       ),
       body: Container(
         child: FutureBuilder<List<Location>>(
-          future: getLocationFromCityName(widget.startDestination),
+          future: Future.delayed(
+              Duration(seconds: 2),
+              () => getLocationFromCityName(
+                  getCityName(widget.startDestination))),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Loading Map', style: TextStyle(fontSize: 20)),
+                    Image(
+                      image: AssetImage('lib/icons/worldwide.gif'),
+                      height: 60,
+                      width: 60,
+                    )
+                  ],
+                ),
+              );
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {

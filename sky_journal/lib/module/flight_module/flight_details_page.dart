@@ -324,7 +324,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               padding: const EdgeInsets.all(15.0),
                               child: FutureBuilder<List<Location>>(
                                 future: Future.delayed(
-                                    Duration(milliseconds: 250),
+                                    Duration(milliseconds: 300),
                                     () => getLocationFromCityName(
                                         getCityName(widget.startDestination))),
                                 builder: (context, snapshot) {
