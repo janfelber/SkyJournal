@@ -14,8 +14,16 @@ import 'package:sky_journal/theme/color_theme.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/module/flight_module/components/flight_card.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:csv/csv.dart';
 
 import 'package:sky_journal/global_widgets/space.dart';
+
+class AirportData {
+  final String ident;
+  final String municipality;
+
+  AirportData({required this.ident, required this.municipality});
+}
 
 class FlightDetailsPage extends StatefulWidget {
   String flightNumber;
@@ -263,7 +271,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                     ),
                     Space.Y(20),
                     Container(
-                        height: 200,
+                        height: 180,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(15),

@@ -34,7 +34,8 @@ class _ViewMapState extends State<ViewMap> {
 
   Future<List<Location>> getLocationFromCityName(String cityName) async {
     try {
-      return await locationFromAddress(cityName);
+      String normalizedCityName = cityName.toLowerCase();
+      return await locationFromAddress(normalizedCityName);
     } catch (e) {
       print('Chyba pri získavaní súradníc z mesta $cityName: $e');
       return [];
@@ -80,16 +81,6 @@ class _ViewMapState extends State<ViewMap> {
     } catch (e) {
       print('Chyba pri získavaní súradníc: $e');
     }
-  }
-
-  Future<LatLng> _getCinty(city) async {
-    List<Location> locationsFrom = await locationFromAddress(city);
-
-    if (locationsFrom.isNotEmpty) {
-      print(LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude));
-      return LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
-    }
-    return LatLng(0.0, 0.0);
   }
 
   final Set<Polyline> _polylines = {};

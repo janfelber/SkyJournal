@@ -62,6 +62,7 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   geodesy: ^0.10.2
   fluttertoast: ^8.2.4
+  csv: ^6.0.0
 
 
 
@@ -102,6 +103,7 @@ flutter:
     - assets/svg/
     - assets/airlines/
     - lib/icons/
+    - lib/airports_data/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

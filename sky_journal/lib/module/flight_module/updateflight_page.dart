@@ -12,6 +12,7 @@ import '../../global_widgets/my_textfield.dart';
 import '../../theme/color_theme.dart';
 import 'components/menu_item_airlines.dart';
 import 'components/menu_item_pilots.dart';
+import 'components/toast.dart';
 
 class UpadateFlight extends StatefulWidget {
   final String flightNumber;
@@ -133,45 +134,89 @@ class _UpadateFlightState extends State<UpadateFlight> {
 
   //edit flight
   void editFlight() {
-    // Získanie aktualizovaných údajov z kontrolórov
-    String flightNumber = _flightNumberController.text;
-    String startDate = _startDateController.text;
-    String endDate = _endDateController.text;
-    String startDestination = _startDestinationController.text;
-    String endDestination = _endDestinationController.text;
-    String timeOfTakeOff = _timeOfTakeOffController.text;
-    String timeOfLanding = _timeOfLandingController.text;
-    String airline = selectedAirline!;
-    String typeOfAircraft = _typeOfAircraftController.text;
-    String pilotFunction = selectedPilotFunction!;
+    //if destinations are the same
+    if (_startDestinationController.text.isNotEmpty &&
+        _endDestinationController.text.isNotEmpty &&
+        _startDestinationController.text == _endDestinationController.text) {
+      showToast(
+        context,
+        textToast: 'Start and End are the same',
+        imagePath: 'lib/icons/destination.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
 
-    // Aktualizácia údajov v Firestore
-    database.updateFlight(
-      flightNumber,
-      startDate,
-      endDate,
-      startDestination,
-      endDestination,
-      timeOfTakeOff,
-      timeOfLanding,
-      airline,
-      typeOfAircraft,
-      pilotFunction,
-    );
+    //if the start departure time is after the end departure time
+    if (_timeOfTakeOffController.text.isNotEmpty &&
+        _timeOfLandingController.text.isNotEmpty &&
+        _timeOfTakeOffController.text == _timeOfLandingController.text) {
+      showToast(
+        context,
+        textToast: 'Identical takeoff and landing times',
+        imagePath: 'lib/icons/time.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+    if (_flightNumberController.text.isNotEmpty &&
+        _startDateController.text.isNotEmpty &&
+        _endDateController.text.isNotEmpty &&
+        _startDestinationController.text.isNotEmpty &&
+        _endDestinationController.text.isNotEmpty &&
+        _timeOfTakeOffController.text.isNotEmpty &&
+        _timeOfLandingController.text.isNotEmpty &&
+        _typeOfAircraftController.text.isNotEmpty &&
+        selectedAirline != null &&
+        selectedPilotFunction != null) {
+      String flightNumber = _flightNumberController.text;
+      String startDate = _startDateController.text;
+      String endDate = _endDateController.text;
+      String startDestination = _startDestinationController.text;
+      String endDestination = _endDestinationController.text;
+      String timeOfTakeOff = _timeOfTakeOffController.text;
+      String timeOfLanding = _timeOfLandingController.text;
+      String airline = selectedAirline!;
+      String typeOfAircraft = _typeOfAircraftController.text;
+      String pilotFunction = selectedPilotFunction!;
 
-    // Odoslanie aktualizovaných údajov späť na predchádzajúcu stránku
-    Navigator.pop(context, {
-      'flightNumber': flightNumber,
-      'startDate': startDate,
-      'endDate': endDate,
-      'startDestination': startDestination,
-      'endDestination': endDestination,
-      'timeOfTakeOff': timeOfTakeOff,
-      'timeOfLanding': timeOfLanding,
-      'airline': airline,
-      'typeOfAircraft': typeOfAircraft,
-      'pilotFunction': pilotFunction,
-    });
+      // Aktualizácia údajov v Firestore
+      database.updateFlight(
+        flightNumber,
+        startDate,
+        endDate,
+        startDestination,
+        endDestination,
+        timeOfTakeOff,
+        timeOfLanding,
+        airline,
+        typeOfAircraft,
+        pilotFunction,
+      );
+
+      Navigator.pop(context, {
+        'flightNumber': flightNumber,
+        'startDate': startDate,
+        'endDate': endDate,
+        'startDestination': startDestination,
+        'endDestination': endDestination,
+        'timeOfTakeOff': timeOfTakeOff,
+        'timeOfLanding': timeOfLanding,
+        'airline': airline,
+        'typeOfAircraft': typeOfAircraft,
+        'pilotFunction': pilotFunction,
+      });
+    } else {
+      showToast(
+        context,
+        textToast: 'Please fill in all fields',
+        imagePath: 'lib/icons/accident.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+    }
   }
 
   @override

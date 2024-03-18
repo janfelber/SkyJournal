@@ -88,6 +88,35 @@ class _AddFlightPageState extends State<AddFlightPage> {
   final TextEditingController _registrationController = TextEditingController();
 
   void addFlightRecord() {
+    // //if destinations are the same
+    if (_startDestinationController.text.isNotEmpty &&
+        _endDestinationController.text.isNotEmpty &&
+        _startDestinationController.text == _endDestinationController.text) {
+      showToast(
+        context,
+        textToast: 'Start and End are the same',
+        imagePath: 'lib/icons/destination.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    //if the start departure time is after the end departure time
+    if (_timeOfTakeOffController.text.isNotEmpty &&
+        _timeOfLandingController.text.isNotEmpty &&
+        _timeOfTakeOffController.text == _timeOfLandingController.text) {
+      showToast(
+        context,
+        textToast: 'Identical takeoff and landing times',
+        imagePath: 'lib/icons/time.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+
     if (_flightNumberController.text.isNotEmpty &&
         _startDateController.text.isNotEmpty &&
         _endDateController.text.isNotEmpty &&
