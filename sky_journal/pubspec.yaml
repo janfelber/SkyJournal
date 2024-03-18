@@ -103,7 +103,7 @@ flutter:
     - assets/svg/
     - assets/airlines/
     - lib/icons/
-    - lib/airports_data/
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

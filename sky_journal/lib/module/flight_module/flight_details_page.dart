@@ -79,8 +79,50 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
+    loadAirportData().then((_) {
+      getCityName(widget.startDestination);
+      getCityName(widget.endDestination);
+      _getCoordinatesFromCity('Hannen Airport', 'Heathrow Airport');
+      _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+    });
+  }
 
-    _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
+  List<AirportData> airports = [];
+
+  Future<void> loadAirportData() async {
+    final String data = await rootBundle.loadString('assets/airports.csv');
+    List<List<dynamic>> csvTable = CsvToListConverter().convert(data);
+
+    if (csvTable.isNotEmpty) {
+      setState(() {
+        airports = csvTable.map((row) {
+          if (row.length >= 2) {
+            return AirportData(
+              ident: row[0]
+                  .toString(), // Assuming airport code is in the first column
+              municipality: row[1]
+                  .toString(), // Assuming municipality name is in the second column
+            );
+          } else {
+            // Handle case where row doesn't contain enough data
+            return AirportData(ident: '', municipality: '');
+          }
+        }).toList();
+      });
+    }
+  }
+
+  String getCityName(String airportCode) {
+    AirportData? airport = airports.firstWhere(
+      (element) =>
+          element.ident.trim().toUpperCase() == airportCode.toUpperCase(),
+      orElse: () => AirportData(ident: '', municipality: ''),
+    );
+
+    if (airport.ident.isEmpty) {
+      return airportCode;
+    }
+    return airport.municipality;
   }
 
   Future<List<Location>> getLocationFromCityName(String cityName) async {
@@ -96,13 +138,12 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
   Future<void> _getCoordinatesFromCity(
       String cityNameFrom, String cityNameTo) async {
     try {
-      String normalizedCityNameFrom = cityNameFrom.toLowerCase();
-      String normalizedCityNameTo = cityNameTo.toLowerCase();
-
-      List<Location> locationsFrom =
-          await getLocationFromCityName(normalizedCityNameFrom);
-      List<Location> locationsTo =
-          await getLocationFromCityName(normalizedCityNameTo);
+      List<Location> locationsFrom = await getLocationFromCityName(
+        getCityName(widget.startDestination.toUpperCase()),
+      );
+      List<Location> locationsTo = await getLocationFromCityName(
+        getCityName(widget.endDestination.toUpperCase()),
+      );
 
       if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
         setState(() {
@@ -122,7 +163,6 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
   Future<void> _setInitialCameraPosition(Location location) async {
     try {
       setState(() {
-        // Nastavenie inicializačnej pozície kamery na základe získaných zemepisných súradníc
         mapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
@@ -157,7 +197,6 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     ).then((value) {
       if (value != null) {
         setState(() {
-          // Aktualizujte údaje o lete s novými hodnotami
           widget.flightNumber = value['flightNumber'];
           widget.startDate = value['startDate'];
           widget.endDate = value['endDate'];
@@ -187,7 +226,6 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
       polylineId: PolylineId("line 1"),
       visible: true,
       width: 2,
-      //latlng is List<LatLng>
       patterns: [PatternItem.dash(30), PatternItem.gap(10)],
       points: MapsCurvedLines.getPointsOnCurve(
           _point1, _point2), // Invoke lib to get curved line points
@@ -224,7 +262,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.startDestination,
+                                widget.startDestination.toUpperCase(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
@@ -232,7 +270,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               ),
                               Space.Y(5),
                               Text(
-                                widget.startDestination,
+                                widget.startDestination.toUpperCase(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12,
@@ -241,8 +279,10 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               Space.Y(10),
                               FlightCard(
                                 startDate: widget.startDate,
-                                startDestination: widget.startDestination,
-                                endDestination: widget.endDestination,
+                                startDestination:
+                                    widget.startDestination.toUpperCase(),
+                                endDestination:
+                                    widget.endDestination.toUpperCase(),
                                 timeOfTakeOff: widget.timeOfTakeOff,
                                 timeOfLanding: widget.timeOfLanding,
                                 airline: widget.airline,
@@ -250,7 +290,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               ),
                               Space.Y(10),
                               Text(
-                                widget.endDestination,
+                                widget.endDestination.toUpperCase(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 14,
@@ -258,7 +298,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               ),
                               Space.Y(5),
                               Text(
-                                widget.endDestination,
+                                widget.endDestination.toUpperCase(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12,
@@ -286,7 +326,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 future: Future.delayed(
                                     Duration(milliseconds: 250),
                                     () => getLocationFromCityName(
-                                        widget.startDestination)),
+                                        getCityName(widget.startDestination))),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {

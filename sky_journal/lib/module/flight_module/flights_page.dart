@@ -29,8 +29,6 @@ class _FlightsState extends State<Flights> {
 
   bool isFocused = false;
 
-  List<AirportData> airports = [];
-
   String? nameOfUser;
 
   @override
@@ -75,8 +73,6 @@ class _FlightsState extends State<Flights> {
 
     return '$hoursOfFlight h $minutesOfFlight min';
   }
-
-
 
   @override
   Widget build(BuildContext context) {
