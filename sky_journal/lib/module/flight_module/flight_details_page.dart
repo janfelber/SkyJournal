@@ -324,7 +324,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                               padding: const EdgeInsets.all(15.0),
                               child: FutureBuilder<List<Location>>(
                                 future: Future.delayed(
-                                    Duration(milliseconds: 300),
+                                    Duration(seconds: 1),
                                     () => getLocationFromCityName(
                                         getCityName(widget.startDestination))),
                                 builder: (context, snapshot) {
@@ -332,7 +332,24 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                       ConnectionState.waiting) {
                                     // Show loading indicator while fetching the coordinates
                                     return Center(
-                                      child: CircularProgressIndicator(),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Loading Map',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.white),
+                                          ),
+                                          Image(
+                                            image: AssetImage(
+                                                'lib/icons/worldwide.gif'),
+                                            height: 60,
+                                            width: 60,
+                                          )
+                                        ],
+                                      ),
                                     );
                                   }
                                   if (snapshot.hasData &&
@@ -357,25 +374,8 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                             mapController
                                                 .setMapStyle(_mapStyle);
                                             _controller.complete(controller);
-
-                                            // if the map is loaded, set the is map loaded to true
-                                            setState(() {
-                                              _isMapLoaded = true;
-                                            });
                                           },
                                         ),
-                                        if (!_isMapLoaded) // show loading text if the map is not loaded
-                                          Positioned.fill(
-                                            child: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                'Map is loading...',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15),
-                                              ),
-                                            ),
-                                          ),
                                       ],
                                     );
                                   } else {

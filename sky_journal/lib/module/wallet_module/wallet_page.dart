@@ -176,7 +176,10 @@ class _WalletState extends State<Wallet> {
                 stream: _cardStreamController.stream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: Container(
+                          height: 280, child: CircularProgressIndicator()),
+                    );
                   }
 
                   final cards = snapshot.data!;
