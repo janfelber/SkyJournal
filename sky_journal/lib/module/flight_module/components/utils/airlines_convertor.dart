@@ -59,8 +59,8 @@ Widget getAirlineLogo(String airlineName) {
     );
   } else if (lowercaseAirlineName == 'private') {
     return Image.asset(
-      'assets/airlines/private-jet_logo.png',
-      height: 80,
+      'lib/icons/small-plane.png',
+      height: 70,
     );
   } else {
     // If there is an unknown airline, we will return no logo

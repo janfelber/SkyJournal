@@ -21,8 +21,15 @@ import 'package:sky_journal/global_widgets/space.dart';
 class AirportData {
   final String ident;
   final String municipality;
+  final double latitude;
+  final double longitude;
 
-  AirportData({required this.ident, required this.municipality});
+  AirportData({
+    required this.ident,
+    required this.municipality,
+    required this.latitude,
+    required this.longitude,
+  });
 }
 
 class FlightDetailsPage extends StatefulWidget {
@@ -79,101 +86,90 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
-    loadAirportData().then((_) {
-      getCityName(widget.startDestination);
-      getCityName(widget.endDestination);
-      _getCoordinatesFromCity('Hannen Airport', 'Heathrow Airport');
-      _getCoordinatesFromCity(widget.startDestination, widget.endDestination);
-    });
   }
 
   List<AirportData> airports = [];
 
-  Future<void> loadAirportData() async {
-    final String data = await rootBundle.loadString('assets/airports.csv');
+  Future<void> loadAirportDataCoords() async {
+    final String data =
+        await rootBundle.loadString('assets/airports_coords.csv');
     List<List<dynamic>> csvTable = CsvToListConverter().convert(data);
 
     if (csvTable.isNotEmpty) {
       setState(() {
         airports = csvTable.map((row) {
-          if (row.length >= 2) {
+          if (row.length >= 4) {
             return AirportData(
-              ident: row[0]
-                  .toString(), // Assuming airport code is in the first column
-              municipality: row[1]
-                  .toString(), // Assuming municipality name is in the second column
+              ident: row[0].toString(),
+              latitude: double.tryParse(row[1].toString()) ?? 0.0,
+              longitude: double.tryParse(row[2].toString()) ?? 0.0,
+              municipality: row[3].toString(),
             );
           } else {
-            // Handle case where row doesn't contain enough data
-            return AirportData(ident: '', municipality: '');
+            return AirportData(
+                ident: '', municipality: '', latitude: 0.0, longitude: 0.0);
           }
         }).toList();
       });
     }
   }
 
-  String getCityName(String airportCode) {
-    AirportData? airport = airports.firstWhere(
-      (element) =>
-          element.ident.trim().toUpperCase() == airportCode.toUpperCase(),
-      orElse: () => AirportData(ident: '', municipality: ''),
-    );
-
-    if (airport.ident.isEmpty) {
-      return airportCode;
-    }
-    return airport.municipality;
-  }
-
-  Future<List<Location>> getLocationFromCityName(String cityName) async {
+  Future<List<AirportData>> getAirportDataFromCode(String airportCode) async {
     try {
-      String normalizedCityName = cityName.toLowerCase();
-      return await locationFromAddress(normalizedCityName);
+      AirportData? airport = airports.firstWhere(
+        (element) =>
+            element.ident.trim().toUpperCase() == airportCode.toUpperCase(),
+        orElse: () => AirportData(
+            ident: '', municipality: '', latitude: 0.0, longitude: 0.0),
+      );
+
+      if (airport != null) {
+        return [airport]; // Return a list containing the airport data
+      } else {
+        print('Airport with code $airportCode not found.');
+        return []; // Return an empty list if airport not found
+      }
     } catch (e) {
-      print('Error with getting coordinates for $cityName: $e');
-      return [];
+      print('Error with getting airport data: $e');
+      return []; // Return an empty list if any error occurs
     }
   }
 
-  Future<void> _getCoordinatesFromCity(
-      String cityNameFrom, String cityNameTo) async {
+  Future<void> _getCoordinatesFromAirport(
+      String startAirportCode, String endAirportCode) async {
     try {
-      List<Location> locationsFrom = await getLocationFromCityName(
-        getCityName(widget.startDestination.toUpperCase()),
-      );
-      List<Location> locationsTo = await getLocationFromCityName(
-        getCityName(widget.endDestination.toUpperCase()),
+      AirportData? startAirport = airports.firstWhere(
+        (element) =>
+            element.ident.trim().toUpperCase() ==
+            startAirportCode.toUpperCase(),
+        orElse: () => AirportData(
+            ident: '',
+            municipality: '',
+            latitude: 0.0,
+            longitude: 0.0), // Provide default AirportData
       );
 
-      if (locationsFrom.isNotEmpty && locationsTo.isNotEmpty) {
+      AirportData? endAirport = airports.firstWhere(
+        (element) =>
+            element.ident.trim().toUpperCase() == endAirportCode.toUpperCase(),
+        orElse: () => AirportData(
+            ident: '',
+            municipality: '',
+            latitude: 0.0,
+            longitude: 0.0), // Provide default AirportData
+      );
+
+      if (startAirport != null && endAirport != null) {
         setState(() {
-          _point1 =
-              LatLng(locationsFrom[0].latitude, locationsFrom[0].longitude);
-          _point2 = LatLng(locationsTo[0].latitude, locationsTo[0].longitude);
-          _setInitialCameraPosition(locationsFrom[0]);
+          _point1 = LatLng(startAirport.latitude, startAirport.longitude);
+          _point2 = LatLng(endAirport.latitude, endAirport.longitude);
         });
       } else {
+        print('One or both airports not found.');
         return;
       }
     } catch (e) {
       print('Error with getting coordinates: $e');
-    }
-  }
-
-  Future<void> _setInitialCameraPosition(Location location) async {
-    try {
-      setState(() {
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(location.latitude, location.longitude),
-              zoom: 10.4746,
-            ),
-          ),
-        );
-      });
-    } catch (e) {
-      print('Error with setting initial camera position: $e');
     }
   }
 
@@ -213,7 +209,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
           _point2 = LatLng(0, 0);
 
           // Re-fetch the coordinates for the start and end destination
-          _getCoordinatesFromCity(
+          _getCoordinatesFromAirport(
               widget.startDestination, widget.endDestination);
         });
       }
@@ -311,134 +307,168 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                     ),
                     Space.Y(20),
                     Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          color: cards,
+                      height: 180,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
                         ),
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: FutureBuilder<List<Location>>(
-                                future: Future.delayed(
-                                    Duration(seconds: 1),
-                                    () => getLocationFromCityName(
-                                        getCityName(widget.startDestination))),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    // Show loading indicator while fetching the coordinates
-                                    return Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Loading Map',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white),
-                                          ),
-                                          Image(
-                                            image: AssetImage(
-                                                'lib/icons/worldwide.gif'),
-                                            height: 60,
-                                            width: 60,
-                                          )
-                                        ],
+                        color: cards,
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: FutureBuilder<List<AirportData>>(
+                              future: Future.delayed(
+                                  Duration(seconds: 5),
+                                  () => getAirportDataFromCode(
+                                      widget.startDestination)),
+                              builder: (context, snapshot) {
+                                if (!_isMapLoaded) {
+                                  // Zobraziť tlačidlo "Load Map"
+                                  return Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
-                                    );
-                                  }
-                                  if (snapshot.hasData &&
-                                      snapshot.data!.isNotEmpty &&
-                                      _point1.latitude != 0 &&
-                                      _point2.latitude != 0) {
-                                    final targetLatLng = LatLng(
-                                        snapshot.data![0].latitude,
-                                        snapshot.data![0].longitude);
-                                    return Stack(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isMapLoaded = true;
+                                        });
+                                        loadAirportDataCoords().then((_) {
+                                          _getCoordinatesFromAirport(
+                                              widget.startDestination,
+                                              widget.endDestination);
+                                        });
+                                      },
+                                      child: Text(
+                                        'Load Map',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  // Počas načítavania údajov zobraziť GIF sťahovania
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        GoogleMap(
-                                          mapType: MapType.normal,
-                                          initialCameraPosition: CameraPosition(
-                                            target: targetLatLng,
-                                            zoom: 9,
+                                        Image.asset(
+                                          'lib/icons/worldwide.gif', // GIF sťahovania
+                                          height: 60,
+                                          width: 60,
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          'Loading Map',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
                                           ),
-                                          polylines: _polylines,
-                                          onMapCreated:
-                                              (GoogleMapController controller) {
-                                            mapController = controller;
-                                            mapController
-                                                .setMapStyle(_mapStyle);
-                                            _controller.complete(controller);
-                                          },
                                         ),
                                       ],
-                                    );
-                                  } else {
-                                    // If the coordinates are not available, show a message
-                                    return Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            'lib/icons/close.png',
-                                            height: 60,
-                                            width: 100,
-                                          ),
-                                          Space.Y(10),
-                                          Text(
-                                            'No route available between ${widget.startDestination} and ${widget.endDestination}',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              child: _point1.latitude != 0 &&
-                                      _point2.latitude != 0
-                                  ? SizedBox(
-                                      height: 50,
-                                      width: double.infinity,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          pushToNewPage(
-                                            context,
-                                            ViewMap(
-                                              startDestination:
-                                                  widget.startDestination,
-                                              endDestination:
-                                                  widget.endDestination,
-                                            ),
-                                          );
+                                    ),
+                                  );
+                                }
+                                if (snapshot.hasData &&
+                                    snapshot.data!.isNotEmpty &&
+                                    _point1.latitude != 0 &&
+                                    _point2.latitude != 0) {
+                                  final targetLatLng = LatLng(
+                                      snapshot.data![0].latitude,
+                                      snapshot.data![0].longitude);
+                                  return Stack(
+                                    children: [
+                                      GoogleMap(
+                                        mapType: MapType.normal,
+                                        initialCameraPosition: CameraPosition(
+                                          target: targetLatLng,
+                                          zoom: 11,
+                                        ),
+                                        polylines: _polylines,
+                                        onMapCreated:
+                                            (GoogleMapController controller) {
+                                          mapController = controller;
+                                          mapController.setMapStyle(_mapStyle);
+                                          _controller.complete(controller);
                                         },
-                                        child: Center(
-                                          child: Text(
-                                            'View More',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 14,
-                                                color: Primary),
+                                      ),
+                                      Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: SizedBox(
+                                          height: 50,
+                                          width: double.infinity,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              pushToNewPage(
+                                                context,
+                                                ViewMap(
+                                                  startLatitude:
+                                                      _point1.latitude,
+                                                  startLongitude:
+                                                      _point1.longitude,
+                                                  endLatitude: _point2.latitude,
+                                                  endLongitude:
+                                                      _point2.longitude,
+                                                ),
+                                              );
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                'View More',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 14,
+                                                  color: Primary,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ))
-                                  : Container(),
-                            )
-                          ],
-                        )),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  // If the coordinates are not available, show a message
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'lib/icons/close.png',
+                                          height: 60,
+                                          width: 100,
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          'No route available between ${widget.startDestination} and ${widget.endDestination}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Space.Y(20),
                     Container(
                       decoration: BoxDecoration(

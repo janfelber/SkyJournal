@@ -1,11 +1,17 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, prefer_adjacent_string_concatenation
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geodesy/geodesy.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../database/firestore.dart';
 import '../../theme/color_theme.dart';
+import '../flight_module/flight_details_page.dart';
 
 class Stats extends StatefulWidget {
   const Stats({Key? key}) : super(key: key);
@@ -29,6 +35,8 @@ class _StatsState extends State<Stats> {
   double totalKmFlown = 0;
   int numberOfNightFlights = 0;
   int numberOfDayFlights = 0;
+
+  List<AirportData> airports = [];
 
   bool isLoading = true;
   // Method to get the number of flights
@@ -116,6 +124,17 @@ class _StatsState extends State<Stats> {
   void initState() {
     super.initState();
     // Call the method to get the number of flights and assign it to the local variable
+    loadAirportData().then((_) {
+      Future.delayed(Duration(seconds: 5), () {
+        calculateTotalDistance().then((value) {
+          setState(() {
+            totalKmFlown = value;
+            isLoading = false;
+          });
+        });
+      });
+    });
+
     getNumberofFlights().then((value) {
       setState(() {
         numberOfFlights = value;
@@ -174,13 +193,6 @@ class _StatsState extends State<Stats> {
       });
     });
 
-    getTotalKmFlown().then((value) {
-      setState(() {
-        totalKmFlown = value;
-        isLoading = false;
-      });
-    });
-
     getNumberOfNightFlights().then((value) {
       setState(() {
         numberOfNightFlights = value;
@@ -192,6 +204,84 @@ class _StatsState extends State<Stats> {
         numberOfDayFlights = value;
       });
     });
+  }
+
+  Future<void> loadAirportData() async {
+    try {
+      // load the CSV file from the assets folder
+      final String data =
+          await rootBundle.loadString('assets/airports_coords.csv');
+      // convert the CSV data to a List of Lists
+      List<List<dynamic>> csvTable = CsvToListConverter().convert(data);
+
+      // convert the List of Lists to a List of AirportData objects
+      airports = csvTable.map((row) {
+        if (row.length >= 4) {
+          return AirportData(
+            ident: row[0].toString(),
+            latitude: double.tryParse(row[1].toString()) ?? 0.0,
+            longitude: double.tryParse(row[2].toString()) ?? 0.0,
+            municipality: row[3].toString(),
+          );
+        } else {
+          // return an empty AirportData object if the row does not contain the expected number of columns
+          return AirportData(
+              ident: '', municipality: '', latitude: 0.0, longitude: 0.0);
+        }
+      }).toList();
+    } catch (e) {
+      print('Error loading airport data: $e');
+    }
+  }
+
+  Future<List<AirportData>> getAirportDataFromCode(String airportCode) async {
+    try {
+      AirportData? airport = airports.firstWhere(
+        (element) =>
+            element.ident.trim().toUpperCase() == airportCode.toUpperCase(),
+        orElse: () => AirportData(
+            ident: '', municipality: '', latitude: 0.0, longitude: 0.0),
+      );
+
+      if (airport != null) {
+        return [airport]; // Return a list containing the airport data
+      } else {
+        print('Airport with code $airportCode not found.');
+        return []; // Return an empty list if airport not found
+      }
+    } catch (e) {
+      print('Error with getting airport data: $e');
+      return []; // Return an empty list if any error occurs
+    }
+  }
+
+  Future<double> calculateTotalDistance() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('flights')
+        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    double totalDistance = 0;
+
+    for (var doc in snapshot.docs) {
+      final startDestination = doc['StartDestination'];
+      final endDestination = doc['EndDestination'];
+
+      final startCoordinates = await getAirportDataFromCode(startDestination);
+      final endCoordinates = await getAirportDataFromCode(endDestination);
+
+      final distance = Geodesy().distanceBetweenTwoGeoPoints(
+        LatLng(startCoordinates[0].latitude, startCoordinates[0].longitude),
+        LatLng(endCoordinates[0].latitude, endCoordinates[0].longitude),
+      );
+
+      totalDistance += distance;
+    }
+
+    double totalDistanceInKm = totalDistance / 1000;
+    totalDistanceInKm = double.parse(totalDistanceInKm.toStringAsFixed(0));
+
+    return totalDistanceInKm;
   }
 
   @override
@@ -228,7 +318,11 @@ class _StatsState extends State<Stats> {
                 ),
                 SizedBox(height: 3),
                 isLoading
-                    ? CircularProgressIndicator()
+                    ? Image(
+                        image: AssetImage('lib/icons/trip.gif'),
+                        height: 80,
+                        width: 80,
+                      )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -240,8 +334,8 @@ class _StatsState extends State<Stats> {
                             ),
                           ),
                         ],
-                      ), // Medzera medzi textom a čiaro
-                SizedBox(height: 25),
+                      ),
+                SizedBox(height: 10),
                 SizedBox(height: 8),
                 Divider(
                   indent: 10,
@@ -297,7 +391,6 @@ class _StatsState extends State<Stats> {
                 SizedBox(height: 8),
                 buildListTile(Icons.flight_class, 'Longest flight id',
                     '$longestFlightId'),
-
                 SizedBox(height: 8),
                 Divider(
                   indent: 10,
@@ -319,7 +412,6 @@ class _StatsState extends State<Stats> {
                 SizedBox(height: 8),
                 buildListTile(CupertinoIcons.moon_stars_fill, 'Night flights',
                     '$numberOfNightFlights'),
-
                 SizedBox(height: 8),
                 Divider(
                   indent: 10,
