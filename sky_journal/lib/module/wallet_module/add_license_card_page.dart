@@ -12,7 +12,6 @@ import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/module/flight_module/components/dialog_calendar.dart';
 import 'package:sky_journal/module/wallet_module/components/menu_item_gender.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 import '../../global_widgets/my_card.dart';
 import '../../theme/color_theme.dart';
@@ -124,6 +123,35 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   }
 
   void addCardToDatabase() {
+    // If date of expiry is before today
+    if (dateOfExpiry != null) {
+      if (dateOfExpiry!.isBefore(DateTime.now())) {
+        showToast(
+          context,
+          textToast: "Date of expiry must be in the future",
+          imagePath: 'lib/icons/credit-card.png',
+          colorToast: Colors.red,
+          textColor: Colors.white,
+        );
+        return;
+      }
+    }
+
+    // If date of birth is in the future or today
+    if (dateOfBirth != null) {
+      Duration difference = dateOfBirth!.difference(DateTime.now());
+      if (difference.inDays >= 0) {
+        showToast(
+          context,
+          textToast: "Date of birth must be in the past",
+          imagePath: 'lib/icons/credit-card.png',
+          colorToast: Colors.red,
+          textColor: Colors.white,
+        );
+        return;
+      }
+    }
+
     if (_certifacicateNumber.text.isNotEmpty &&
         _dateOfExpiry.text.isNotEmpty &&
         _nationality.text.isNotEmpty &&
@@ -157,8 +185,20 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       if (widget.onLicenseCardAdded != null) {
         widget.onLicenseCardAdded!();
       }
+
+      _certifacicateNumber.clear();
+      _dateOfExpiry.clear();
+      _nationality.clear();
+      _dateOfBirth.clear();
+      _height.clear();
+      _weight.clear();
+      _hair.clear();
+      _eyes.clear();
+      _sex.clear();
+
+      Navigator.pop(context);
     } else {
-      // Zobraziť Toast s upozornením, že všetky polia musia byť vyplnené
+      // Show a Toast indicating that all fields must be filled
       showToast(
         context,
         textToast: "Please fill in all fields",
@@ -168,20 +208,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       );
       return;
     }
-
-    // Vyčistiť obsah všetkých polí
-    _certifacicateNumber.clear();
-    _dateOfExpiry.clear();
-    _nationality.clear();
-    _dateOfBirth.clear();
-    _height.clear();
-    _weight.clear();
-    _hair.clear();
-    _eyes.clear();
-    _sex.clear();
-
-    // Návrat na predchádzajúcu stránku
-    Navigator.pop(context);
   }
 
   @override

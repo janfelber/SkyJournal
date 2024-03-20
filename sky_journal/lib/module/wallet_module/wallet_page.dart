@@ -176,9 +176,11 @@ class _WalletState extends State<Wallet> {
                 stream: _cardStreamController.stream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Container(
-                          height: 280, child: CircularProgressIndicator()),
+                    return SizedBox(
+                      height: 260,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     );
                   }
 
@@ -226,9 +228,14 @@ class _WalletState extends State<Wallet> {
                     return Center(
                       child: Padding(
                         padding: const EdgeInsets.all(25),
-                        child: Text(
-                          'No cards for the current user',
-                          style: TextStyle(color: textColor),
+                        child: Container(
+                          height: 260,
+                          child: Center(
+                            child: Text(
+                              'No cards for the current user',
+                              style: TextStyle(color: textColor),
+                            ),
+                          ),
                         ),
                       ),
                     );

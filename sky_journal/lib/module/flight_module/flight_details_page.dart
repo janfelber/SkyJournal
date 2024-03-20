@@ -13,7 +13,6 @@ import 'package:sky_journal/module/flight_module/view_map.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/module/flight_module/components/flight_card.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:csv/csv.dart';
 
 import 'package:sky_journal/global_widgets/space.dart';
