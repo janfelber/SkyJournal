@@ -10,7 +10,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'theme/color_theme.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String? userName;
+  const HomePage({Key? key, this.userName}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,10 +26,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Widget> _pages = [Wallet(), Flights(), Stats(), Settings()];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      Wallet(),
+      Flights(userName: widget.userName),
+      Stats(),
+      Settings()
+    ];
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(

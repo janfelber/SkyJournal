@@ -16,7 +16,11 @@ import '../../global_util/getCurrentDate.dart';
 import '../../theme/color_theme.dart';
 
 class Flights extends StatefulWidget {
-  const Flights({Key? key}) : super(key: key);
+  final String? userName;
+  const Flights({
+    Key? key,
+    this.userName,
+  }) : super(key: key);
 
   @override
   State<Flights> createState() => _FlightsState();
@@ -28,39 +32,6 @@ class _FlightsState extends State<Flights> {
   TextEditingController _searchController = TextEditingController();
 
   bool isFocused = false;
-
-  String? nameOfUser;
-
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUserName(); // call this function to initialize nameOfUser
-  }
-
-  Future getCurrentUserName() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      String email = user.email!;
-
-      // get user name from firestore by email
-      QuerySnapshot<Map<String, dynamic>> userQuery = await FirebaseFirestore
-          .instance
-          .collection('users')
-          .where('email', isEqualTo: email)
-          .get();
-
-      if (userQuery.docs.isNotEmpty) {
-        String userName = userQuery.docs.first.data()['first name'];
-        setState(() {
-          nameOfUser = userName; //there we rewrite nameOfUser
-        });
-      } else {
-        print('User does not exist in the database');
-      }
-    } else {
-      print('User is currently signed out');
-    }
-  }
 
   String calculateLengthOfFlight(String departureTime, String arrivalTime) {
     var format = DateFormat("HH:mm");
@@ -87,28 +58,27 @@ class _FlightsState extends State<Flights> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (nameOfUser !=
-                      null) // Podmínka pro zobrazení pouze pokud je nameOfUser k dispozici
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hello, ${nameOfUser}!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  // Podmínka pro zobrazení pouze pokud je nameOfUser k dispozici
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hello, ${widget.userName}!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          getCurrentDate('MMMM dd, yyyy'),
-                          style: TextStyle(color: Colors.blue[200]),
-                        ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        getCurrentDate('MMMM dd, yyyy'),
+                        style: TextStyle(color: Colors.blue[200]),
+                      ),
+                    ],
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.blue[600],
@@ -297,8 +267,8 @@ class _FlightsState extends State<Flights> {
                             flightNumber: flightNumber,
                             startDate: startDate,
                             endDate: endDate,
-                            startDestination: startDestination,
-                            endDestination: endDestination,
+                            startDestination: startDestination.toUpperCase(),
+                            endDestination: endDestination.toUpperCase(),
                             timeOfTakeOff: timeOfTakeOff,
                             timeOfLanding: timeOfLanding,
                             lengthOfFlight: calculateLengthOfFlight(
