@@ -27,6 +27,14 @@ class _StatsState extends State<Stats> {
   String mostVisitedDestination = '';
   int flightTimeHour = 0;
   int flightTimeMinute = 0;
+  int flightTimeInCommandHour = 0;
+  int flightTimeInCommandMinute = 0;
+  int flightTimeCoPilotHour = 0;
+  int flightTimeCoPilotMinute = 0;
+  int flightTimeDualHour = 0;
+  int flightTimeDualMinute = 0;
+  int flightTimeInstructorHour = 0;
+  int flightTimeInstructorMinute = 0;
   int longestFlightHour = 0;
   int longestFlightMinute = 0;
   String longestFlightId = '';
@@ -54,9 +62,61 @@ class _StatsState extends State<Stats> {
   }
 
   Future<int> getTotalMinutes() async {
-    // Call the method to get the total hours from the database
+    // Call the method to get the total minutes from the database
     final Map<String, dynamic> flightTime =
         await database.calculateTotalHours();
+    return flightTime['minutes'];
+  }
+
+  Future<int> getTotalHoursInCommand() async {
+    // Call the method to get the total hours in command from the database
+    final Map<String, dynamic> flightTime =
+        await database.getHoursAsPilotInCommand();
+    return flightTime['hours'];
+  }
+
+  Future<int> getTotalMinutesInCommand() async {
+    // Call the method to get the total minutes in command from the database
+    final Map<String, dynamic> flightTime =
+        await database.getHoursAsPilotInCommand();
+    return flightTime['minutes'];
+  }
+
+  Future<int> getTotalHoursCoPilot() async {
+    // Call the method to get the total hours as a co-pilot from the database
+    final Map<String, dynamic> flightTime = await database.getHoursAsCoPilot();
+    return flightTime['hours'];
+  }
+
+  Future<int> getTotalMinutesCoPilot() async {
+    // Call the method to get the total minutes as a co-pilot from the database
+    final Map<String, dynamic> flightTime = await database.getHoursAsCoPilot();
+    return flightTime['minutes'];
+  }
+
+  Future<int> getTotalHoursDual() async {
+    // Call the method to get the total hours dual from the database
+    final Map<String, dynamic> flightTime = await database.getHoursInDual();
+    return flightTime['hours'];
+  }
+
+  Future<int> getTotalMinutesDual() async {
+    // Call the method to get the total minutes dual from the database
+    final Map<String, dynamic> flightTime = await database.getHoursInDual();
+    return flightTime['minutes'];
+  }
+
+  Future<int> getTotalHoursInstructor() async {
+    // Call the method to get the total hours as an instructor from the database
+    final Map<String, dynamic> flightTime =
+        await database.getHoursAsInstructor();
+    return flightTime['hours'];
+  }
+
+  Future<int> getTotalMinutesInstructor() async {
+    // Call the method to get the total minutes as an instructor from the database
+    final Map<String, dynamic> flightTime =
+        await database.getHoursAsInstructor();
     return flightTime['minutes'];
   }
 
@@ -102,12 +162,6 @@ class _StatsState extends State<Stats> {
     return averageOfFlights['minutes'];
   }
 
-  Future<double> getTotalKmFlown() async {
-    // Call the method to get the total km flown from the database
-    final double totalKmFlown = await database.calculateTotalDistance();
-    return totalKmFlown;
-  }
-
   Future<int> getNumberOfNightFlights() async {
     // Call the method to get the number of night flights from the database
     final int numberOfNightFlights = await database.getTotalNightFlights();
@@ -150,6 +204,54 @@ class _StatsState extends State<Stats> {
     getTotalMinutes().then((value) {
       setState(() {
         flightTimeMinute = value;
+      });
+    });
+
+    getTotalHoursInCommand().then((value) {
+      setState(() {
+        flightTimeInCommandHour = value;
+      });
+    });
+
+    getTotalMinutesInCommand().then((value) {
+      setState(() {
+        flightTimeInCommandMinute = value;
+      });
+    });
+
+    getTotalHoursCoPilot().then((value) {
+      setState(() {
+        flightTimeCoPilotHour = value;
+      });
+    });
+
+    getTotalMinutesCoPilot().then((value) {
+      setState(() {
+        flightTimeCoPilotMinute = value;
+      });
+    });
+
+    getTotalHoursDual().then((value) {
+      setState(() {
+        flightTimeDualHour = value;
+      });
+    });
+
+    getTotalMinutesDual().then((value) {
+      setState(() {
+        flightTimeDualMinute = value;
+      });
+    });
+
+    getTotalHoursInstructor().then((value) {
+      setState(() {
+        flightTimeInstructorHour = value;
+      });
+    });
+
+    getTotalMinutesInstructor().then((value) {
+      setState(() {
+        flightTimeInstructorMinute = value;
       });
     });
 
@@ -421,6 +523,54 @@ class _StatsState extends State<Stats> {
                 SizedBox(height: 8),
                 buildListTile(
                     Icons.sunny, 'Day flights', '$numberOfDayFlights'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.flight_land,
+                    'In command',
+                    '${flightTimeInCommandHour > 0 || flightTimeInCommandMinute >= 60 ? '${flightTimeInCommandHour + flightTimeInCommandMinute ~/ 60} hours ' : ''}' +
+                        '${(flightTimeInCommandHour > 0 || flightTimeInCommandMinute >= 60) ? flightTimeInCommandMinute % 60 : flightTimeInCommandMinute} minutes'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.flight_land,
+                    'As co-pilot',
+                    '${flightTimeCoPilotHour > 0 || flightTimeCoPilotMinute >= 60 ? '${flightTimeCoPilotHour + flightTimeCoPilotMinute ~/ 60} hours ' : ''}' +
+                        '${(flightTimeCoPilotHour > 0 || flightTimeCoPilotMinute >= 60) ? flightTimeCoPilotMinute % 60 : flightTimeCoPilotMinute} minutes'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.flight_land,
+                    'Dual',
+                    '${flightTimeDualHour > 0 || flightTimeDualMinute >= 60 ? '${flightTimeDualHour + flightTimeDualMinute ~/ 60} hours ' : ''}' +
+                        '${(flightTimeDualHour > 0 || flightTimeDualMinute >= 60) ? flightTimeDualMinute % 60 : flightTimeDualMinute} minutes'),
+                SizedBox(height: 8),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                buildListTile(
+                    Icons.flight_land,
+                    'Instructor',
+                    '${flightTimeInstructorHour > 0 || flightTimeInstructorMinute >= 60 ? '${flightTimeInstructorHour + flightTimeInstructorMinute ~/ 60} hours ' : ''}' +
+                        '${(flightTimeInstructorHour > 0 || flightTimeInstructorMinute >= 60) ? flightTimeInstructorMinute % 60 : flightTimeInstructorMinute} minutes'),
               ],
             ),
           ),

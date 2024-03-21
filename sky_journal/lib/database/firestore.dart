@@ -340,53 +340,6 @@ class FirestoreDatabase {
     });
   }
 
-  //get location from city name
-  Future<LatLng> getLocationFromCityName(String cityName) async {
-    try {
-      String normalizedCityName = cityName.toLowerCase();
-
-      List<Location> locations = await locationFromAddress(normalizedCityName);
-      if (locations.isNotEmpty) {
-        return LatLng(locations[0].latitude, locations[0].longitude);
-      } else {
-        throw Exception('No location found for the city name: $cityName');
-      }
-    } catch (e) {
-      print('Error while getting location: $e');
-      rethrow;
-    }
-  }
-
-  //calculate total distance of all flights for current user
-  Future<double> calculateTotalDistance() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('flights')
-        .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
-        .get();
-
-    double totalDistance = 0;
-
-    for (var doc in snapshot.docs) {
-      final startDestination = doc['StartDestination'];
-      final endDestination = doc['EndDestination'];
-
-      final startCoordinates = await getLocationFromCityName(startDestination);
-      final endCoordinates = await getLocationFromCityName(endDestination);
-
-      final distance = Geodesy().distanceBetweenTwoGeoPoints(
-        LatLng(startCoordinates.latitude, startCoordinates.longitude),
-        LatLng(endCoordinates.latitude, endCoordinates.longitude),
-      );
-
-      totalDistance += distance;
-    }
-
-    double totalDistanceInKm = totalDistance / 1000;
-    totalDistanceInKm = double.parse(totalDistanceInKm.toStringAsFixed(0));
-
-    return totalDistanceInKm;
-  }
-
   //get total number of night flights for current user
   Future<int> getTotalNightFlights() async {
     final snapshot = await FirebaseFirestore.instance
@@ -431,5 +384,113 @@ class FirestoreDatabase {
     }
 
     return totalDayFlights;
+  }
+
+  //get hours as pilot in command for current user
+  Future<Map<String, dynamic>> getHoursAsPilotInCommand() async {
+    final snapshot =
+        await flights.where('UserEmail', isEqualTo: user!.email).get();
+    int totalHour = 0;
+    int totalMinutes = 0;
+
+    for (var doc in snapshot.docs) {
+      if (doc['PilotFunction'] == 'Pilot In command') {
+        var format = DateFormat("HH:mm");
+
+        final startDate = (doc['TimeOfTakeOff']);
+        final endDate = (doc['TimeOfLanding']);
+        var one = format.parse(startDate);
+        var two = format.parse(endDate);
+        var differenceBetweenTimes = two.difference(one);
+        var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+        var hoursOfFlight = differenceBetweenTimes.inHours;
+
+        totalHour += hoursOfFlight;
+        totalMinutes += minutesOfFlight;
+      }
+    }
+
+    return {'hours': totalHour, 'minutes': totalMinutes};
+  }
+
+  //get hours as co-pilot for current user
+  Future<Map<String, dynamic>> getHoursAsCoPilot() async {
+    final snapshot =
+        await flights.where('UserEmail', isEqualTo: user!.email).get();
+    int totalHour = 0;
+    int totalMinutes = 0;
+
+    for (var doc in snapshot.docs) {
+      if (doc['PilotFunction'] == 'Co-Pilot') {
+        var format = DateFormat("HH:mm");
+
+        final startDate = (doc['TimeOfTakeOff']);
+        final endDate = (doc['TimeOfLanding']);
+        var one = format.parse(startDate);
+        var two = format.parse(endDate);
+        var differenceBetweenTimes = two.difference(one);
+        var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+        var hoursOfFlight = differenceBetweenTimes.inHours;
+
+        totalHour += hoursOfFlight;
+        totalMinutes += minutesOfFlight;
+      }
+    }
+
+    return {'hours': totalHour, 'minutes': totalMinutes};
+  }
+
+  //get hours in dual for current user
+  Future<Map<String, dynamic>> getHoursInDual() async {
+    final snapshot =
+        await flights.where('UserEmail', isEqualTo: user!.email).get();
+    int totalHour = 0;
+    int totalMinutes = 0;
+
+    for (var doc in snapshot.docs) {
+      if (doc['PilotFunction'] == 'Dual') {
+        var format = DateFormat("HH:mm");
+
+        final startDate = (doc['TimeOfTakeOff']);
+        final endDate = (doc['TimeOfLanding']);
+        var one = format.parse(startDate);
+        var two = format.parse(endDate);
+        var differenceBetweenTimes = two.difference(one);
+        var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+        var hoursOfFlight = differenceBetweenTimes.inHours;
+
+        totalHour += hoursOfFlight;
+        totalMinutes += minutesOfFlight;
+      }
+    }
+
+    return {'hours': totalHour, 'minutes': totalMinutes};
+  }
+
+  //get hours as instructor for current user
+  Future<Map<String, dynamic>> getHoursAsInstructor() async {
+    final snapshot =
+        await flights.where('UserEmail', isEqualTo: user!.email).get();
+    int totalHour = 0;
+    int totalMinutes = 0;
+
+    for (var doc in snapshot.docs) {
+      if (doc['PilotFunction'] == 'Instructor') {
+        var format = DateFormat("HH:mm");
+
+        final startDate = (doc['TimeOfTakeOff']);
+        final endDate = (doc['TimeOfLanding']);
+        var one = format.parse(startDate);
+        var two = format.parse(endDate);
+        var differenceBetweenTimes = two.difference(one);
+        var minutesOfFlight = differenceBetweenTimes.inMinutes.remainder(60);
+        var hoursOfFlight = differenceBetweenTimes.inHours;
+
+        totalHour += hoursOfFlight;
+        totalMinutes += minutesOfFlight;
+      }
+    }
+
+    return {'hours': totalHour, 'minutes': totalMinutes};
   }
 }
