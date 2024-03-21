@@ -88,10 +88,38 @@ class _AddFlightPageState extends State<AddFlightPage> {
   final TextEditingController _registrationController = TextEditingController();
 
   void addFlightRecord() {
+    //if the start date is after the end date
+    if (_startDateController.text.isNotEmpty &&
+        _endDateController.text.isNotEmpty &&
+        selectedDate!.isAfter(selectedEndDate!)) {
+      showToast(
+        context,
+        textToast: 'Start date is after the end date',
+        imagePath: 'lib/icons/calendar.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+    //if time of takeoff is after the time of landing
+    if (_timeOfTakeOffController.text.isNotEmpty &&
+        _timeOfLandingController.text.isNotEmpty &&
+        _timeOfTakeOffController.text.compareTo(_timeOfLandingController.text) >
+            0) {
+      showToast(
+        context,
+        textToast: 'Start time is after end time',
+        imagePath: 'lib/icons/time.png',
+        colorToast: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
     // //if destinations are the same
     if (_startDestinationController.text.isNotEmpty &&
         _endDestinationController.text.isNotEmpty &&
-        _startDestinationController.text == _endDestinationController.text) {
+        _startDestinationController.text.toUpperCase() ==
+            _endDestinationController.text.toUpperCase()) {
       showToast(
         context,
         textToast: 'Start and End are the same',
@@ -115,7 +143,6 @@ class _AddFlightPageState extends State<AddFlightPage> {
       );
       return;
     }
-
 
     if (_flightNumberController.text.isNotEmpty &&
         _startDateController.text.isNotEmpty &&

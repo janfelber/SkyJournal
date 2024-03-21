@@ -394,7 +394,7 @@ class FirestoreDatabase {
     int totalMinutes = 0;
 
     for (var doc in snapshot.docs) {
-      if (doc['PilotFunction'] == 'Pilot In command') {
+      if (doc['PilotFunction'] == 'Pilot In Command') {
         var format = DateFormat("HH:mm");
 
         final startDate = (doc['TimeOfTakeOff']);
