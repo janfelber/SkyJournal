@@ -1,17 +1,18 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sky_journal/database/firestore.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
 import 'package:sky_journal/global_widgets/my_button.dart';
 import 'package:sky_journal/global_widgets/my_textfield.dart';
 import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
+import 'package:sky_journal/module/flight_module/components/toast.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
 
 import '../../../theme/color_theme.dart';
-import '../../flight_module/components/toast.dart';
 
 class AddDoctorAppointment extends StatefulWidget {
   final Function? onAppointmentAdded;
@@ -26,6 +27,14 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
   DateTime today = DateTime.now();
   bool showCalendar = false;
 
+  String? token;
+
+  final FirestoreDatabase database = FirestoreDatabase();
+
+  final TextEditingController _doctorNameController = TextEditingController();
+  final TextEditingController _timeTextController = TextEditingController();
+  final TextEditingController _specialityController = TextEditingController();
+
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
       today = selectedDay;
@@ -37,10 +46,17 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
   @override
   void initState() {
     super.initState();
+    getToken();
     _timeTextController.text = DateFormat('HH:mm').format(today).toString();
   }
 
-  void addDoctorAppointment() {
+  //get fcm token
+  Future<void> getToken() async {
+    token = await FirebaseMessaging.instance.getToken();
+    print(token);
+  }
+
+  void addDoctorAppointment() async {
     if (_doctorNameController.text.isNotEmpty &&
         _timeTextController.text.isNotEmpty &&
         _specialityController.text.isNotEmpty) {
@@ -48,19 +64,23 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
       String time = _timeTextController.text;
       String speciality = _specialityController.text;
       DateTime date = today;
-      database.addDoctorAppointment(
+
+      // Add the appointment to Firestore
+      await database.addDoctorAppointment(
         name,
         date,
         time,
         speciality,
         "Upcoming",
+        token!,
+        false,
       );
 
       if (widget.onAppointmentAdded != null) {
         widget.onAppointmentAdded!();
       }
     } else {
-      // Zobraziť Toast s upozornením, že všetky polia musia byť vyplnené
+      // Show Toast with an alert that all fields must be filled
       showToast(
         context,
         textToast: "Please fill in all fields",
@@ -68,25 +88,19 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
         colorToast: Colors.red,
         textColor: Colors.white,
       );
-      return; // Skončiť funkciu, ak niektoré polia nie sú vyplnené
+      return; // End the function if any fields are empty
     }
 
-    // Vyčistiť obsah všetkých polí
+    // Clear content of all fields
     _doctorNameController.clear();
     _timeTextController.clear();
     _specialityController.clear();
 
-    // Návrat na predchádzajúcu stránku
+    // Navigate back to the previous page
     Navigator.pop(context);
   }
 
-  final FirestoreDatabase database = FirestoreDatabase();
-
-  final TextEditingController _doctorNameController = TextEditingController();
-
-  final TextEditingController _timeTextController = TextEditingController();
-
-  final TextEditingController _specialityController = TextEditingController();
+  // Schedule notification using Firebase Cloud Messaging
 
   @override
   Widget build(BuildContext context) {

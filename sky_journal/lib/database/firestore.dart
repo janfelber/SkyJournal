@@ -47,6 +47,8 @@ class FirestoreDatabase {
     String time,
     String doctorSpeciality,
     String status,
+    String fcmToken,
+    bool notificationSent,
   ) {
     return doctorAppointment.add({
       'UserEmail': user!.email,
@@ -55,6 +57,8 @@ class FirestoreDatabase {
       'DoctorName': doctorName,
       'DoctorSpeciality': doctorSpeciality,
       'Status': status,
+      'FcmToken': fcmToken,
+      'notificationSent': notificationSent,
     });
   }
 

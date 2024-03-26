@@ -63,6 +63,8 @@ dependencies:
   geodesy: ^0.10.2
   fluttertoast: ^8.2.4
   csv: ^6.0.0
+  firebase_messaging: ^14.7.20
+  rflutter_alert: ^2.0.7
 
 
 
