@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/module/settings_module/settings_options/about.dart';
 import 'package:sky_journal/module/settings_module/settings_options/appearance.dart';
 import 'package:sky_journal/module/settings_module/settings_options/privacy.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 
+import '../../onboard_module/on_board_page.dart';
 import 'components/icon_style.dart';
 import 'components/settings_group.dart';
 import 'components/settings_items.dart';
@@ -221,8 +223,14 @@ class _SettingsState extends State<Settings> {
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Sign out of your account',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {
+                          onTap: () async {
                             FirebaseAuth.instance.signOut();
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setBool('showLogin', false);
+
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => OnBoardingPage()));
                           },
                           icons: Icons.exit_to_app_rounded,
                           iconStyle: IconStyle(
