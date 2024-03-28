@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
 import 'package:sky_journal/onboard_module/screens/screen4.dart';
