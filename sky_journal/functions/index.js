@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('0 0 * * *').timeZone('Europe/Bratislava').onRun(async (context) => {
-  const appointmentsRef = admin.firestore().collection('docotor-applications');
+  const appointmentsRef = admin.firestore().collection('doctor-applications');
   const now = admin.firestore.Timestamp.now();
 
   try {

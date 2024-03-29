@@ -38,7 +38,7 @@ class FirestoreDatabase {
       FirebaseFirestore.instance.collection('flights');
 
   final CollectionReference doctorAppointment =
-      FirebaseFirestore.instance.collection('docotor-applications');
+      FirebaseFirestore.instance.collection('doctor-applications');
 
   //add doctors apoointment to firestore
   Future<void> addDoctorAppointment(
@@ -61,26 +61,6 @@ class FirestoreDatabase {
       'Status': status,
       'FcmToken': fcmToken,
       'notificationSent': notificationSent,
-    });
-  }
-
-  //add health insurance card to firestore
-  Future<void> addHealthCard(
-    String dateOfBirth,
-    String personalNumber,
-    String numberOfInsuranceInstitution,
-    String numberOfInsuranceCard,
-    String dateOfIssue,
-    String dateOfExpiry,
-  ) {
-    return healthInsuranceCards.add({
-      'UserEmail': user!.email,
-      'DateOfBirth': dateOfBirth,
-      'PersonalNumber': personalNumber,
-      'NumberOfInsuranceInstitution': numberOfInsuranceInstitution,
-      'NumberOfInsuranceCard': numberOfInsuranceCard,
-      'DateOfIssue': dateOfIssue,
-      'DateOfExpiry': dateOfExpiry,
     });
   }
 

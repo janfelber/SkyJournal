@@ -355,14 +355,13 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                 }
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  // Počas načítavania údajov zobraziť GIF sťahovania
                                   return Center(
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Image.asset(
-                                          'lib/icons/worldwide.gif', // GIF sťahovania
+                                          'lib/icons/worldwide.gif',
                                           height: 60,
                                           width: 60,
                                         ),
@@ -429,7 +428,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.normal,
                                                   fontSize: 14,
-                                                  color: Primary,
+                                                  color: Colors.white,
                                                 ),
                                               ),
                                             ),
