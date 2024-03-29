@@ -1,33 +1,48 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-
-
 admin.initializeApp();
-const database = admin.firestore();
 
+exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('0 0 * * *').timeZone('Europe/Bratislava').onRun(async (context) => {
+  const appointmentsRef = admin.firestore().collection('docotor-applications');
+  const now = admin.firestore.Timestamp.now();
 
-exports.sendNotification = functions.pubsub.schedule('* * * * *').onRun(async (context) => {
-    const querySnapshot = await database.collection('docotor-applications').where("Date", '<=' , admin.firestore.Timestamp.now()).where('Status', '==', 'Upcoming').where("notificationSent", "==" , false).get();
+  try {
+    const appointmentsSnapshot = await appointmentsRef.where('Date', '>', now).get();
 
-    function sendNotification(token) {
-        let title = 'Upcoming Appointment';
-        let body = 'You have an upcoming appointment';
+    appointmentsSnapshot.forEach(async (doc) => {
+      const appointmentData = doc.data();
 
-        querySnapshot.forEach(async (doc) => {
-            sendNotification(doc.data().token);
-            await database.collection('docotor-applications/' + snapshot.data().token).update({ "notificationSent": true });
-        });
+      
+      const {FcmToken, notificationSent, DoctorName, Time } = appointmentData;
 
-        const message = {
-            notification: { title: title, body: body },
-            token: token,
-            data: { click_action: 'FLUTTER_NOTIFICATION_CLICK' }
-        };
+      console.log('FCM token:', FcmToken);
+      console.log('Stav notifikácie:', notificationSent);
 
-        admin.messaging().send(message).then(response => {
-            console.log('Successfully sent message:', response);
-        }).catch(error => {
-            console.log('Error sending message:', error);
-        });
-    }
+      if (notificationSent) {
+        console.log('Notification already sent.');
+        return;
+      }
+
+      const payload = {
+        
+        notification: {
+          //title for the notification
+          title: 'Doctor Appointment Reminder',
+          //body of the notification
+          body: 'Dr. ' + DoctorName + ' at ' + Time,
+        },
+      };
+
+      try {
+        // Send notification to the user
+        await admin.messaging().sendToDevice(FcmToken, payload);
+        await doc.ref.update({ notificationSent: true });
+        console.log('Notification was successfully sent.');
+      } catch (error) {
+        console.error('Error in sending: ', error);
+      }
+    });
+  } catch (error) {
+    console.error('Error in getting data from Firestore: ', error);
+  }
 });

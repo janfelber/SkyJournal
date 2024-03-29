@@ -50,9 +50,11 @@ class FirestoreDatabase {
     String fcmToken,
     bool notificationSent,
   ) {
+    DateTime dateWithoutTime = DateTime(date.year, date.month, date.day);
+
     return doctorAppointment.add({
       'UserEmail': user!.email,
-      'Date': date,
+      'Date': dateWithoutTime,
       'Time': time,
       'DoctorName': doctorName,
       'DoctorSpeciality': doctorSpeciality,

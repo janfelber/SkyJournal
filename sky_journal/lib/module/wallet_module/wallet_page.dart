@@ -4,8 +4,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sky_journal/global_widgets/my_card.dart';
@@ -80,29 +78,9 @@ class _WalletState extends State<Wallet> {
     }
   }
 
-  init() async {
-    String deviceToken = await getDeviceToken();
-    print("###### PRINT DEVICE TOKEN TO USE FOR PUSH NOTIFCIATION ######");
-    print(deviceToken);
-    print("############################################################");
-
-    // listen for user to click on notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage remoteMessage) {
-      String? title = remoteMessage.notification!.title;
-      String? description = remoteMessage.notification!.body;
-
-      // Navigácia na stránku Wallet po kliknutí na oznámenie
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Wallet()),
-      );
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    init();
     getCurrentUserName();
     loadCards();
     loadDoctorAppointments();
@@ -390,15 +368,6 @@ class _WalletState extends State<Wallet> {
         ),
       ),
     );
-  }
-
-  //get device token to use for push notification
-  Future getDeviceToken() async {
-    //request user permission for push notification
-    FirebaseMessaging.instance.requestPermission();
-    FirebaseMessaging _firebaseMessage = FirebaseMessaging.instance;
-    String? deviceToken = await _firebaseMessage.getToken();
-    return (deviceToken == null) ? "" : deviceToken;
   }
 
   List<Widget> buildAppointmentWidgets(
