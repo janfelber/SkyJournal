@@ -67,7 +67,7 @@ class _WalletState extends State<Wallet> {
       if (userQuery.docs.isNotEmpty) {
         String birthDate = userQuery.docs.first.data()['date of birth'];
         setState(() {
-          dateOfBirth = birthDate; //there we rewrite nameOfUser
+          dateOfBirth = birthDate;
         });
       } else {
         print('User does not exist in the database');
