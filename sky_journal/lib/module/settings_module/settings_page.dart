@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ import 'package:sky_journal/module/settings_module/settings_options/privacy.dart
 import 'package:sky_journal/theme/color_theme.dart';
 
 import '../../onboard_module/on_board_page.dart';
+import '../flight_module/components/toast.dart';
 import 'components/icon_style.dart';
 import 'components/settings_group.dart';
 import 'components/settings_items.dart';
@@ -60,6 +62,23 @@ class _SettingsState extends State<Settings> {
     } else {
       print('User is currently signed out');
     }
+  }
+
+  void sendResetLink() {
+    FirebaseAuth.instance.sendPasswordResetEmail(email: user.email!);
+    showToast(context,
+        textToast: 'Check your email',
+        colorToast: Colors.green,
+        imagePath: 'lib/icons/email.png');
+  }
+
+  void copyToClipboard(String text) {
+    FlutterClipboard.copy(text)
+        .then((value) => showToast(context,
+            textToast: 'Email copied to clipboard',
+            colorToast: Colors.grey,
+            imagePath: 'lib/icons/email.png'))
+        .catchError((error) => print('Error copying to clipboard: $error'));
   }
 
   @override
@@ -130,8 +149,6 @@ class _SettingsState extends State<Settings> {
                     SizedBox(
                       height: 20,
                     ),
-                    //settings privacy
-
                     SettingsGroup(
                       items: [
                         SettingsItem(
@@ -199,7 +216,9 @@ class _SettingsState extends State<Settings> {
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Send us your feedback',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            copyToClipboard('jfelber2001@gmail.com');
+                          },
                           icons: Icons.feedback_rounded,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,
@@ -246,7 +265,9 @@ class _SettingsState extends State<Settings> {
                               color: Colors.white, fontWeight: FontWeight.bold),
                           subtitle: 'Change your password',
                           subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            sendResetLink();
+                          },
                           icons: Icons.password_rounded,
                           iconStyle: IconStyle(
                             iconsColor: Colors.white,
@@ -267,16 +288,3 @@ class _SettingsState extends State<Settings> {
     );
   }
 }
-
-// const Text('Settings'),
-//           Text('Signed in as: ${user.email!}',
-//               style: TextStyle(color: Colors.white)),
-//           MaterialButton(
-//             onPressed: FirebaseAuth.instance.signOut,
-//             color: Colors.red,
-//             child: const Text('Sign Out'),
-//           ),
-//           Text(
-//             'App Version: $appVersion',
-//             style: TextStyle(color: Colors.grey),
-//           ),

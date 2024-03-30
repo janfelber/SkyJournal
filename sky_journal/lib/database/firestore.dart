@@ -25,10 +25,6 @@ class FirestoreDatabase {
   //current logged in user
   User? user = FirebaseAuth.instance.currentUser;
 
-  //get colletion of health insurance cards from firebase
-  final CollectionReference healthInsuranceCards =
-      FirebaseFirestore.instance.collection('health-insurance-card');
-
   // get collection of licenseCards from firebase
   final CollectionReference licenseCards =
       FirebaseFirestore.instance.collection('license-card');

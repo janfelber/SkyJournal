@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sky_journal/module/flight_module/components/toast.dart';
 
 import '../../../global_widgets/cutom_appbar.dart';
 import '../../../theme/color_theme.dart';
@@ -43,37 +44,12 @@ class _AppareancePageState extends State<AppareancePage> {
                               iconsColor: Colors.white,
                               withBackground: true,
                               backgroundColor: Colors.blue),
-                          onTap: () {},
-                        ),
-                      ]),
-                  SettingsGroup(
-                      settingsGroupTitle: 'Change Theme',
-                      settingsGroupTitleStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                      items: [
-                        SettingsItem(
-                          title: 'Deuteranomaly',
-                          titleStyle: TextStyle(color: Colors.white),
-                          subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
-                        ),
-                        SettingsItem(
-                          title: 'Protanomaly',
-                          titleStyle: TextStyle(color: Colors.white),
-                          subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
-                        ),
-                        SettingsItem(
-                          title: 'Tritanomaly',
-                          titleStyle: TextStyle(color: Colors.white),
-                          subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
-                        ),
-                        SettingsItem(
-                          title: 'Tritanopia',
-                          titleStyle: TextStyle(color: Colors.white),
-                          subtitleStyle: TextStyle(color: Colors.white),
-                          onTap: () {},
+                          onTap: () {
+                            showToast(context,
+                                textToast: 'Still in beta',
+                                colorToast: Colors.green,
+                                imagePath: 'lib/icons/doctor-problem.png');
+                          },
                         ),
                       ]),
                 ],
