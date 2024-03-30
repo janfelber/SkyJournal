@@ -9,12 +9,32 @@ class MyDialogCalendar extends StatefulWidget {
   DateTime? selectedDate;
   final Function(DateTime) onDateSelected;
   final String dialogText;
+  final Color? dialogTextColor;
+  final Color? backgroundColor;
+  final Color? titleCalendarColor;
+  final Color? leftChevronIconColor;
+  final Color? rightChevronIconColor;
+  final Color? defaultTextStyleColor;
+  final Color? holidayTextStyleColor;
+  final Color? weekNumberTextStyle;
+  final Color? weekendTextStyle;
+  final Color? selectedTextStyle;
 
   MyDialogCalendar({
     Key? key,
     required this.selectedDate,
     required this.dialogText,
     required this.onDateSelected,
+    this.backgroundColor,
+    this.defaultTextStyleColor,
+    this.holidayTextStyleColor,
+    this.weekNumberTextStyle,
+    this.selectedTextStyle,
+    this.weekendTextStyle,
+    this.dialogTextColor,
+    this.titleCalendarColor,
+    this.leftChevronIconColor,
+    this.rightChevronIconColor,
   }) : super(key: key);
 
   @override
@@ -33,10 +53,11 @@ class _MyDialogCalendarState extends State<MyDialogCalendar> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: PopUp,
+      backgroundColor: widget.backgroundColor ?? PopUp,
       title: Text(
         widget.dialogText,
-        style: TextStyle(color: Colors.white, fontSize: 20),
+        style: TextStyle(
+            color: widget.dialogTextColor ?? Colors.white, fontSize: 20),
       ),
       content: Container(
         height: 410,
@@ -46,14 +67,15 @@ class _MyDialogCalendarState extends State<MyDialogCalendar> {
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
-            titleTextStyle: TextStyle(color: Colors.white),
+            titleTextStyle:
+                TextStyle(color: widget.titleCalendarColor ?? Colors.white),
             leftChevronIcon: Icon(
               Icons.chevron_left,
-              color: Colors.white,
+              color: widget.leftChevronIconColor ?? Colors.white,
             ),
             rightChevronIcon: Icon(
               Icons.chevron_right,
-              color: Colors.white,
+              color: widget.rightChevronIconColor ?? Colors.white,
             ),
           ),
           onDaySelected: (selectedDay, focusedDay) {
@@ -66,12 +88,17 @@ class _MyDialogCalendarState extends State<MyDialogCalendar> {
             }
           },
           calendarStyle: CalendarStyle(
-            defaultTextStyle: TextStyle(color: Colors.white),
-            holidayTextStyle: TextStyle(color: Colors.white),
-            weekNumberTextStyle: TextStyle(color: Colors.white),
-            weekendTextStyle: TextStyle(color: Colors.white),
-            selectedTextStyle:
-                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            defaultTextStyle:
+                TextStyle(color: widget.defaultTextStyleColor ?? Colors.white),
+            holidayTextStyle:
+                TextStyle(color: widget.holidayTextStyleColor ?? Colors.white),
+            weekNumberTextStyle:
+                TextStyle(color: widget.weekNumberTextStyle ?? Colors.white),
+            weekendTextStyle:
+                TextStyle(color: widget.weekendTextStyle ?? Colors.white),
+            selectedTextStyle: TextStyle(
+                color: widget.selectedTextStyle ?? Colors.white,
+                fontWeight: FontWeight.bold),
             todayTextStyle: TextStyle(color: Colors.blue),
             todayDecoration: BoxDecoration(
               color: Colors.transparent,

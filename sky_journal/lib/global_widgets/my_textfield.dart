@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 class MyTextField extends StatelessWidget {
   final TextStyle? textStyle;
@@ -12,10 +10,12 @@ class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final Icon? icon;
   final VoidCallback? onPressed;
-  final CupertinoButton? button;
   final bool numericInput;
   final int? maxLength;
   final bool readOnly;
+  final Color? backgroundColor;
+  final Color? enabledBorderColor; // Parameter for enabled border color
+  final Color? focusedBorderColor; // Parameter for focused border color
 
   const MyTextField({
     Key? key,
@@ -24,20 +24,22 @@ class MyTextField extends StatelessWidget {
     required this.enabled,
     required this.controller,
     this.hintTextStyle,
-    this.button,
     this.icon,
     this.textStyle,
     this.numericInput = false,
     this.maxLength,
     this.onPressed,
     this.readOnly = false,
+    this.backgroundColor,
+    this.enabledBorderColor,
+    this.focusedBorderColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      style: textStyle == null ? TextStyle(color: Colors.white) : textStyle,
+      style: textStyle,
       keyboardType: numericInput ? TextInputType.number : TextInputType.text,
       inputFormatters: [
         if (numericInput) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
@@ -47,6 +49,22 @@ class MyTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: enabledBorderColor ??
+                  Colors
+                      .white), // Use the provided enabled border color or default to white
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: focusedBorderColor ??
+                  Colors
+                      .orange), // Use the provided focused border color or default to orange
+          borderRadius: BorderRadius.circular(12),
+        ),
+        filled: true,
+        fillColor: backgroundColor,
         suffixIcon: icon != null && !readOnly
             ? IconButton(
                 icon: icon!,
@@ -54,9 +72,7 @@ class MyTextField extends StatelessWidget {
               )
             : icon,
         hintText: hintText,
-        hintStyle: hintTextStyle == null
-            ? TextStyle(color: Colors.white)
-            : hintTextStyle,
+        hintStyle: hintTextStyle,
         enabled: enabled,
       ),
       readOnly: readOnly,
