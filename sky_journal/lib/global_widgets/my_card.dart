@@ -84,21 +84,55 @@ class MyCard extends StatelessWidget {
             ),
             Row(
               children: [
-                Text(
-                  'Natinality ',
-                  style: TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.bold, height: 0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Natinality ',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          transformNationalityName(country),
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'D.O.B',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              height: 0),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          dateOfBirthDay, // Add the variable for date of birth here
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              height: 0),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  width: 3,
-                ),
-                Text(
-                  transformNationalityName(country),
-                  style: TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.w800, height: 0),
-                ),
-                SizedBox(
-                  width: 35,
+                  width: 25,
                 ),
                 Row(
                   children: [

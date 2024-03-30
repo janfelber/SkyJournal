@@ -67,7 +67,6 @@ class FirestoreDatabase {
   //add license card to firestore
   Future<void> addLicenseCard(
     String nationality,
-    String dateOfBirth,
     String certificateNumber,
     String dateOfExpiry,
     String sex,
@@ -79,7 +78,6 @@ class FirestoreDatabase {
     return licenseCards.add({
       'UserEmail': user!.email,
       'Nationality': nationality,
-      'DateOfBirth': dateOfBirth,
       'CertificateNumber': certificateNumber,
       'DateOfExpiry': dateOfExpiry,
       'Sex': sex,

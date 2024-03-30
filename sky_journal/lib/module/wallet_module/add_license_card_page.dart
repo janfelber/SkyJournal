@@ -29,7 +29,7 @@ class AddLicenseCard extends StatefulWidget {
 class _AddLicenseCardState extends State<AddLicenseCard> {
   DateTime? dateOfExpiry;
 
-  DateTime? dateOfBirth;
+  String? dateOfBirth;
 
   String? nameOfUser;
 
@@ -57,8 +57,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   final TextEditingController _dateOfExpiry = TextEditingController();
 
   final TextEditingController _nationality = TextEditingController();
-
-  final TextEditingController _dateOfBirth = TextEditingController();
 
   final TextEditingController _height = TextEditingController();
 
@@ -96,6 +94,31 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
 
   final StreamController<String> _nationalityController =
       StreamController<String>.broadcast();
+
+  Future getDateOfBirth() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String email = user.email!;
+
+      // get user name from firestore by email
+      QuerySnapshot<Map<String, dynamic>> userQuery = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (userQuery.docs.isNotEmpty) {
+        String birthDate = userQuery.docs.first.data()['date of birth'];
+        setState(() {
+          dateOfBirth = birthDate; //there we rewrite nameOfUser
+        });
+      } else {
+        print('User does not exist in the database');
+      }
+    } else {
+      print('User is currently signed out');
+    }
+  }
 
   Future getCurrentUserName() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -137,25 +160,9 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       }
     }
 
-    // If date of birth is in the future or today
-    if (dateOfBirth != null) {
-      Duration difference = dateOfBirth!.difference(DateTime.now());
-      if (difference.inDays >= 0) {
-        showToast(
-          context,
-          textToast: "Date of birth must be in the past",
-          imagePath: 'lib/icons/credit-card.png',
-          colorToast: Colors.red,
-          textColor: Colors.white,
-        );
-        return;
-      }
-    }
-
     if (_certifacicateNumber.text.isNotEmpty &&
         _dateOfExpiry.text.isNotEmpty &&
         _nationality.text.isNotEmpty &&
-        _dateOfBirth.text.isNotEmpty &&
         _height.text.isNotEmpty &&
         _weight.text.isNotEmpty &&
         _hair.text.isNotEmpty &&
@@ -164,7 +171,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       String certificateNumber = _certifacicateNumber.text;
       String dateOfExpiry = _dateOfExpiry.text;
       String nationality = _nationality.text;
-      String dateOfBirth = _dateOfBirth.text;
       String height = _height.text;
       String weight = _weight.text;
       String hair = _hair.text;
@@ -172,7 +178,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       String sex = _sex.text;
       database.addLicenseCard(
         nationality,
-        dateOfBirth,
         certificateNumber,
         dateOfExpiry,
         sex,
@@ -189,7 +194,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       _certifacicateNumber.clear();
       _dateOfExpiry.clear();
       _nationality.clear();
-      _dateOfBirth.clear();
       _height.clear();
       _weight.clear();
       _hair.clear();
@@ -217,7 +221,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     _certifacicateNumber.dispose();
     _dateOfExpiry.dispose();
     _nationality.dispose();
-    _dateOfBirth.dispose();
     _height.dispose();
     _weight.dispose();
     _hair.dispose();
@@ -236,6 +239,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   void initState() {
     super.initState();
     getCurrentUserName();
+    getDateOfBirth();
     _sex.addListener(() {
       _sexController.sink.add(_sex.text);
     });
@@ -343,7 +347,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                                                           eyeSnapshot.data ??
                                                               '',
                                                       colorCard: Colors.black12,
-                                                      dateOfBirthDay: '',
+                                                      dateOfBirthDay:
+                                                          '$dateOfBirth',
                                                       dateOfExpiry:
                                                           dateOfExpirySnapshot
                                                                   .data ??
@@ -533,46 +538,6 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                       ),
                     ),
 
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: MyTextField(
-                        controller: _dateOfBirth,
-                        hintText: 'Date of Birth',
-                        obscureText: false,
-                        enabled: true,
-                        readOnly: true,
-                        textStyle:
-                            TextStyle(color: Colors.white, fontSize: 16.0),
-                        hintTextStyle: TextStyle(
-                            color: Colors.grey[100],
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.normal),
-                        backgroundColor: Colors.transparent,
-                        enabledBorderColor: Colors.grey[700],
-                        focusedBorderColor: Colors.grey[700],
-                        icon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => MyDialogCalendar(
-                                  selectedDate: dateOfBirth,
-                                  dialogText: 'Date of Birth',
-                                  onDateSelected: (date) {
-                                    setState(() {
-                                      dateOfBirth = date;
-                                      _dateOfBirth.text =
-                                          DateFormat('dd.MM.yyyy').format(date);
-                                    });
-                                  }));
-                        },
-                      ),
-                    ),
                     SizedBox(
                       height: 10,
                     ),

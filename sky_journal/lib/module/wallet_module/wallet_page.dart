@@ -32,6 +32,8 @@ class _WalletState extends State<Wallet> {
 
   String? nameOfUser;
 
+  String? dateOfBirth;
+
   void updateStatusToCompleted(String status) {
     database.updateDoctorAppointmentStatus(status, 'Completed');
     loadDoctorAppointments();
@@ -53,6 +55,31 @@ class _WalletState extends State<Wallet> {
 
   int _buttonIndex = 0;
 
+  Future getDateOfBirth() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String email = user.email!;
+
+      // get user name from firestore by email
+      QuerySnapshot<Map<String, dynamic>> userQuery = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (userQuery.docs.isNotEmpty) {
+        String birthDate = userQuery.docs.first.data()['date of birth'];
+        setState(() {
+          dateOfBirth = birthDate; //there we rewrite nameOfUser
+        });
+      } else {
+        print('User does not exist in the database');
+      }
+    } else {
+      print('User is currently signed out');
+    }
+  }
+
   Future getCurrentUserName() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -66,9 +93,10 @@ class _WalletState extends State<Wallet> {
           .get();
 
       if (userQuery.docs.isNotEmpty) {
-        String userName = userQuery.docs.first.data()['first name'];
+        String firstName = userQuery.docs.first.data()['first name'];
+        String lastName = userQuery.docs.first.data()['last name'];
         setState(() {
-          nameOfUser = userName; //there we rewrite nameOfUser
+          nameOfUser = firstName + ' ' + lastName; //there we rewrite nameOfUser
         });
       } else {
         print('User does not exist in the database');
@@ -82,6 +110,7 @@ class _WalletState extends State<Wallet> {
   void initState() {
     super.initState();
     getCurrentUserName();
+    getDateOfBirth();
     loadCards();
     loadDoctorAppointments();
   }
@@ -187,7 +216,6 @@ class _WalletState extends State<Wallet> {
                       String height = card['Height'];
                       String hairColor = card['Hair'];
                       String eyeColor = card['Eyes'];
-                      String dateOfBirth = card['DateOfBirth'];
                       String certificationNumber = card['CertificateNumber'];
                       String dateOfExpiry = card['DateOfExpiry'];
                       String nationality = card['Nationality'];
@@ -203,7 +231,7 @@ class _WalletState extends State<Wallet> {
                             hairColor: hairColor,
                             eyeColor: eyeColor,
                             colorCard: Colors.black,
-                            dateOfBirthDay: dateOfBirth,
+                            dateOfBirthDay: dateOfBirth ?? 'Unknown',
                             certificationNumber: certificationNumber,
                             dateOfExpiry: dateOfExpiry,
                           ),
