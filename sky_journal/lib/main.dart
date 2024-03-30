@@ -5,11 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_journal/auth_user/auth_user.dart';
 import 'package:sky_journal/onboard_module/on_board_page.dart';
 
-import 'global_util/notifi_service.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
 
   await Firebase.initializeApp();
 

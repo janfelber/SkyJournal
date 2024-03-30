@@ -133,9 +133,10 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
           .get();
 
       if (userQuery.docs.isNotEmpty) {
-        String userName = userQuery.docs.first.data()['first name'];
+        String firstName = userQuery.docs.first.data()['first name'];
+        String lastName = userQuery.docs.first.data()['last name'];
         setState(() {
-          nameOfUser = userName; //there we rewrite nameOfUser
+          nameOfUser = firstName + ' ' + lastName; //there we rewrite nameOfUser
         });
       } else {
         print('User does not exist in the database');

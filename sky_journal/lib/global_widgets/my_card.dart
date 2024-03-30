@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sky_journal/global_util/transform_gender.dart';
 import 'package:sky_journal/global_util/transform_nationality.dart';
 
+import '../global_util/get_country_flag.dart';
+
 class MyCard extends StatelessWidget {
   final String certificationNumber;
   final String name;
@@ -44,12 +46,16 @@ class MyCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Text(
-                country,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  country,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                getCountryFlag(country) ??
+                    Container(), // Zobraziť vlajku krajiny
+              ],
             ),
             Align(
               alignment: Alignment.topCenter,
