@@ -115,16 +115,34 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
           child: Column(
             children: [
               MyTextField(
-                  hintText: 'Name of Doctor',
-                  obscureText: false,
-                  enabled: true,
-                  controller: _doctorNameController),
+                hintText: 'Name of Doctor',
+                obscureText: false,
+                enabled: true,
+                controller: _doctorNameController,
+                textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                hintTextStyle: TextStyle(
+                    color: Colors.grey[100],
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal),
+                backgroundColor: Colors.transparent,
+                enabledBorderColor: Colors.grey[700],
+                focusedBorderColor: Colors.grey[700],
+              ),
               SizedBox(height: 15),
               MyTextField(
-                  hintText: 'Doctor Speciality',
-                  obscureText: false,
-                  enabled: true,
-                  controller: _specialityController),
+                hintText: 'Doctor Speciality',
+                obscureText: false,
+                enabled: true,
+                controller: _specialityController,
+                textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                hintTextStyle: TextStyle(
+                    color: Colors.grey[100],
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal),
+                backgroundColor: Colors.transparent,
+                enabledBorderColor: Colors.grey[700],
+                focusedBorderColor: Colors.grey[700],
+              ),
               SizedBox(height: 15),
               Column(
                 children: [

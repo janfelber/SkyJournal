@@ -293,6 +293,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Flight Number',
                   obscureText: false,
                   enabled: false,
+                  textStyle: TextStyle(color: Colors.white),
                 ),
                 SizedBox(
                   height: 10.0,
@@ -303,6 +304,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   obscureText: false,
                   enabled: true,
                   readOnly: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -330,6 +339,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   obscureText: false,
                   enabled: true,
                   readOnly: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -356,6 +373,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Start Destination',
                   enabled: true,
                   obscureText: false,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                 ),
                 SizedBox(
                   height: 10.0,
@@ -365,6 +390,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'End Destination',
                   obscureText: false,
                   enabled: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                 ),
                 SizedBox(
                   height: 10.0,
@@ -375,6 +408,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   obscureText: false,
                   enabled: true,
                   readOnly: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -400,6 +441,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   obscureText: false,
                   enabled: true,
                   readOnly: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -424,6 +473,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   hintText: 'Type of Aircraft',
                   obscureText: false,
                   enabled: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                 ),
                 SizedBox(
                   height: 10.0,
@@ -433,6 +490,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
                   obscureText: false,
                   enabled: true,
                   controller: _registrationController,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                 ),
                 SizedBox(
                   height: 10.0,

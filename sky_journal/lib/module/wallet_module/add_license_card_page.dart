@@ -386,6 +386,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         enabled: true,
                         maxLength: 7,
                         numericInput: true,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                       ),
                     ),
                     SizedBox(
@@ -400,6 +409,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         obscureText: false,
                         enabled: true,
                         readOnly: true,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                         icon: Icon(
                           Icons.calendar_today,
                           color: Colors.white,
@@ -526,6 +544,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         obscureText: false,
                         enabled: true,
                         readOnly: true,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                         icon: Icon(
                           Icons.calendar_today,
                           color: Colors.white,
@@ -558,6 +585,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         enabled: true,
                         numericInput: true,
                         maxLength: 3,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                       ),
                     ),
                     SizedBox(
@@ -572,6 +608,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         enabled: true,
                         numericInput: true,
                         maxLength: 3,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                       ),
                     ),
                     SizedBox(
@@ -584,6 +629,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Hair Color',
                         obscureText: false,
                         enabled: true,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                       ),
                     ),
                     SizedBox(
@@ -596,6 +650,15 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                         hintText: 'Eyes Color',
                         obscureText: false,
                         enabled: true,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 16.0),
+                        hintTextStyle: TextStyle(
+                            color: Colors.grey[100],
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal),
+                        backgroundColor: Colors.transparent,
+                        enabledBorderColor: Colors.grey[700],
+                        focusedBorderColor: Colors.grey[700],
                       ),
                     ),
                     SizedBox(
