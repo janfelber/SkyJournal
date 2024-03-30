@@ -11,8 +11,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/sk.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -20,8 +20,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/cz.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -29,8 +29,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/de.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -38,8 +38,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/fr.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -47,8 +47,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/it.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -56,8 +56,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/es.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -65,8 +65,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/ua.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],
@@ -74,8 +74,8 @@ class DropdownMenuItemCountries {
               SvgPicture.asset(
                 'icons/flags/svg/pl.svg',
                 package: 'country_icons',
-                width: 20, // Specifikujte šířku ikony
-                height: 20, // Specifikujte výšku ikony
+                width: 20,
+                height: 20,
               ),
               SizedBox(width: 10),
             ],

@@ -269,6 +269,14 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   controller: _flightNumberController,
                   obscureText: false,
                   enabled: false,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                 ),
                 SizedBox(
                   height: 10.0,
@@ -279,6 +287,14 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   obscureText: false,
                   enabled: true,
                   readOnly: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -306,6 +322,14 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   enabled: true,
                   readOnly: true,
                   controller: _endDateController,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.calendar_today, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -328,18 +352,36 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   height: 10.0,
                 ),
                 MyTextField(
-                    hintText: 'Start Destination',
-                    obscureText: false,
-                    enabled: true,
-                    controller: _startDestinationController),
+                  hintText: 'Start Destination',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _startDestinationController,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
+                ),
                 SizedBox(
                   height: 10.0,
                 ),
                 MyTextField(
-                    hintText: 'End Destination',
-                    obscureText: false,
-                    enabled: true,
-                    controller: _endDestinationController),
+                  hintText: 'End Destination',
+                  obscureText: false,
+                  enabled: true,
+                  controller: _endDestinationController,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
+                ),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -348,6 +390,14 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   obscureText: false,
                   enabled: true,
                   readOnly: true,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   controller: _timeOfTakeOffController,
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
@@ -372,6 +422,14 @@ class _UpadateFlightState extends State<UpadateFlight> {
                   enabled: true,
                   readOnly: true,
                   controller: _timeOfLandingController,
+                  textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                  hintTextStyle: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.transparent,
+                  enabledBorderColor: Colors.grey[700],
+                  focusedBorderColor: Colors.grey[700],
                   icon: Icon(Icons.access_time, color: Colors.white),
                   onPressed: () {
                     showDialog(
@@ -395,6 +453,14 @@ class _UpadateFlightState extends State<UpadateFlight> {
                     hintText: 'Type of Aircraft',
                     obscureText: false,
                     enabled: true,
+                    textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
+                    hintTextStyle: TextStyle(
+                        color: Colors.grey[100],
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal),
+                    backgroundColor: Colors.transparent,
+                    enabledBorderColor: Colors.grey[700],
+                    focusedBorderColor: Colors.grey[700],
                     controller: _typeOfAircraftController),
                 SizedBox(
                   height: 10.0,
