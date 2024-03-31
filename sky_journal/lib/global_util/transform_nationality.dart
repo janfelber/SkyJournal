@@ -1,3 +1,4 @@
+//transform natiolanity name to short name
 String transformNationalityName(String originalName) {
   if (originalName == 'Slovak Republic') {
     return 'SVK';

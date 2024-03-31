@@ -116,11 +116,11 @@ class _UpadateFlightState extends State<UpadateFlight> {
 
   DateTime? _parseDate(String date) {
     try {
-      // Rozdelíme dátum na časti
+      // Separet the date into parts
       List<String> parts = date.split('.');
-      // Ak máme 3 časti, môžeme získať dátum
+      // Check if the date has three parts
       if (parts.length == 3) {
-        // Konvertujeme časti na čísla a vytvoríme DateTime objekt
+        // Parse the parts into integers
         int year = int.parse(parts[2]);
         int month = int.parse(parts[1]);
         int day = int.parse(parts[0]);
@@ -129,7 +129,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
     } catch (e) {
       print('Invalid date format: $date');
     }
-    return null; // Ak sa nepodarilo parsovať dátum, vrátime null
+    return null;
   }
 
   //edit flight
@@ -161,7 +161,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
       );
       return;
     }
-    // //if destinations are the same
+    // if destinations are the same
     if (_startDestinationController.text.isNotEmpty &&
         _endDestinationController.text.isNotEmpty &&
         _startDestinationController.text.toUpperCase() ==
@@ -224,6 +224,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
         pilotFunction,
       );
 
+      // push the data to the previous page
       Navigator.pop(context, {
         'flightNumber': flightNumber,
         'startDate': startDate,
@@ -281,6 +282,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 10.0,
                 ),
+                // Dialog calendar for the departure date
                 MyTextField(
                   hintText: 'Date of Departure',
                   controller: _startDateController,
@@ -316,6 +318,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 10.0,
                 ),
+                // Dialog calendar for the arrival date
                 MyTextField(
                   hintText: 'Date of Arrival',
                   obscureText: false,
@@ -385,6 +388,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 10.0,
                 ),
+                // Dialog timer for the time of take off
                 MyTextField(
                   hintText: 'Time of Take Off',
                   obscureText: false,
@@ -416,6 +420,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 10.0,
                 ),
+                // Dialog timer for the time of landing
                 MyTextField(
                   hintText: 'Time of Landing',
                   obscureText: false,
@@ -465,6 +470,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 10.0,
                 ),
+                // Dropdown for the pilot function
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: screenSize.width *
@@ -502,6 +508,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                 SizedBox(
                   height: 10.0,
                 ),
+                // Dropdown for the airline
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: screenSize.width *

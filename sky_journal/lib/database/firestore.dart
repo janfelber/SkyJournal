@@ -5,7 +5,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geodesy/geodesy.dart';
 
 /*
-
 This database stores added flights in the firestore database.
 It is stored in collection called 'flights' in Firebase.
 
@@ -18,7 +17,13 @@ Each flight contains the following fields:
 - flight number
 - airline
 - time of flight
-- 
+- registration
+- type of aircraft
+- number of passengers
+- average speed
+- pilot function
+- user email
+- timestamp of added flight
 */
 
 class FirestoreDatabase {
@@ -137,7 +142,7 @@ class FirestoreDatabase {
   Stream<QuerySnapshot> getDoctorAppointmentStream() {
     final doctorAppointmentStream = FirebaseFirestore.instance
         .collection('docotor-applications')
-        .orderBy('Date', descending: true)
+        .orderBy('Date', descending: false)
         .snapshots();
     return doctorAppointmentStream;
   }
@@ -179,28 +184,26 @@ class FirestoreDatabase {
   }
 
   //get most visited destination for current user
-
   Future<String> getMostVisitedDestination() async {
-    // Získání snapshotu všech letů pro aktuálního uživatele
+    //Get all flights for current user
     final snapshot = await FirebaseFirestore.instance
         .collection('flights')
         .where('UserEmail', isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 
-    // Mapa pro ukládání počtu výskytů každé destinace
+    //Map for counting number of flights to each destination
     final Map<String, int> destinationCounts = {};
 
-    // Projití každého dokumentu ve snapshotu
     for (var doc in snapshot.docs) {
-      // Získání EndDestination z dokumentu
+      //Get end destination of each flight
       final endDestination = doc['EndDestination'];
 
-      // Inkrementace počtu výskytů dané destinace
+      //Increase count of flights to this destination
       destinationCounts[endDestination] =
           (destinationCounts[endDestination] ?? 0) + 1;
     }
 
-    // Nalezení destinace s největším počtem výskytů
+    //Find most visited destination
     String mostVisitedDestination = '';
     int max = 0;
     destinationCounts.forEach((destination, count) {
@@ -223,7 +226,7 @@ class FirestoreDatabase {
     int longestFlightInMinutes = 0;
     String longestFlightId = '';
 
-    // Výpočet dĺžky letu pre každý let
+    //Calculate duration of each flight
     for (var doc in snapshot.docs) {
       var format = DateFormat("HH:mm");
 
@@ -232,21 +235,21 @@ class FirestoreDatabase {
       var takeOffTime = format.parse(startDate);
       var landingTime = format.parse(endDate);
 
-      // Rozdiel v čase v minútach
+      //Difference between take off and landing time in minutes
       var differenceInMinutes = landingTime.difference(takeOffTime).inMinutes;
 
-      // Ak je aktuálny let dlhší, aktualizujte najdlhší let
+      //If current flight is longer than the longest flight so far, update the longest flight
       if (differenceInMinutes > longestFlightInMinutes) {
         longestFlightInMinutes = differenceInMinutes;
         longestFlightId = doc['FlightNumber'];
       }
     }
 
-    // Prevod na hodiny a minúty
+    //Convert duration of the longest flight to hours and minutes
     int hours = longestFlightInMinutes ~/ 60;
     int minutes = longestFlightInMinutes % 60;
 
-    // Návratová hodnota: najdlhší let a jeho ID vo formáte hodín a minút
+    //Return duration of the longest flight
     return {'hours': hours, 'minutes': minutes, 'id': longestFlightId};
   }
 
@@ -276,6 +279,7 @@ class FirestoreDatabase {
       totalMinutes += minutesOfFlight;
     }
 
+    //Calculate average of all flights
     int averageHours = totalHours ~/ totalFlights;
     int averageMinutes = totalMinutes ~/ totalFlights;
 
@@ -335,6 +339,7 @@ class FirestoreDatabase {
       final takeoff = (doc['TimeOfTakeOff']);
       var takeOffTime = format.parse(takeoff);
 
+      //if take off time is between 6pm and 6am, it is a night flight
       if (takeOffTime.hour >= 18 || takeOffTime.hour < 6) {
         totalNightFlights++;
       }
@@ -358,6 +363,7 @@ class FirestoreDatabase {
       final takeoff = (doc['TimeOfTakeOff']);
       var takeOffTime = format.parse(takeoff);
 
+      //if take off time is between 6am and 6pm, it is a day flight
       if (takeOffTime.hour < 18 && takeOffTime.hour >= 6) {
         totalDayFlights++;
       }

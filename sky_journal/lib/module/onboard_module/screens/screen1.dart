@@ -15,8 +15,7 @@ class _Screen1State extends State<Screen1> {
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment
-              .center, // Upravíme zarovnanie // Zmeníme veľkosť podľa obsahu
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'Ready to fly? Add your license card now!',
@@ -25,12 +24,12 @@ class _Screen1State extends State<Screen1> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10), // Meníme výšku medzery
+            SizedBox(height: 10),
             Lottie.asset(
               'assets/card_animation.json',
               width: 350,
             ),
-            SizedBox(height: 10), // Meníme výšku medzery
+            SizedBox(height: 10),
             Text(
               'Your pilot license card awaits!',
               textAlign: TextAlign.center,

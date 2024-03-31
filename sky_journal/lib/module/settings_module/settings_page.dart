@@ -12,7 +12,7 @@ import 'package:sky_journal/module/settings_module/settings_options/appearance.d
 import 'package:sky_journal/module/settings_module/settings_options/privacy.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 
-import '../../onboard_module/on_board_page.dart';
+import '../onboard_module/on_board_page.dart';
 import '../flight_module/components/toast.dart';
 import 'components/icon_style.dart';
 import 'components/settings_group.dart';
@@ -64,6 +64,7 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  // Send a password reset link to the user's email
   void sendResetLink() {
     FirebaseAuth.instance.sendPasswordResetEmail(email: user.email!);
     showToast(context,
@@ -72,6 +73,7 @@ class _SettingsState extends State<Settings> {
         imagePath: 'lib/icons/email.png');
   }
 
+  // Copy email to clipboard
   void copyToClipboard(String text) {
     FlutterClipboard.copy(text)
         .then((value) => showToast(context,

@@ -81,6 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  // Create user details in firestore
   Future addUserDetails(
     String firstName,
     String lastName,
@@ -95,6 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+  // Check if passwords match
   bool passwordConfirmed() {
     if (_passwordController.text.trim() ==
         _confirmPasswordController.text.trim()) {
@@ -124,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //Hello again!
+                //Hello There!
                 Text(
                   'Hello There',
                   style: GoogleFonts.bebasNeue(
@@ -197,7 +199,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(
                   height: 10,
                 ),
-
+                // Date of birth textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: MyTextField(
@@ -356,7 +358,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 25,
                 ),
 
-                //don't have an account? register button
+                //I am a member text
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

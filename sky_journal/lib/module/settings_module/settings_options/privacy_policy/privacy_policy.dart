@@ -8,6 +8,7 @@ import '../../../flight_module/components/toast.dart';
 class PrivacyPolicyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Function to copy text to clipboard
     void copyToClipboard(String text) {
       FlutterClipboard.copy(text)
           .then((value) => showToast(context,

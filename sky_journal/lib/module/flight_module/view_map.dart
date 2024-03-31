@@ -36,7 +36,7 @@ class _ViewMapState extends State<ViewMap> {
   late LatLng _point2;
 
   final Set<Polyline> _polylines = {};
-  final Set<Marker> _markers = {}; // Set pre uchovanie značiek (markerov)
+  final Set<Marker> _markers = {}; // Set for markers
 
   @override
   void initState() {
@@ -46,11 +46,11 @@ class _ViewMapState extends State<ViewMap> {
       _mapStyle = string;
     });
 
-    // Nastavenie začiatočných a koncových súradníc trasy
+    // Set start and end points for the route
     _point1 = LatLng(widget.startLatitude, widget.startLongitude);
     _point2 = LatLng(widget.endLatitude, widget.endLongitude);
 
-    // Vytvorenie polyline pre zobrazenie trasy
+    // Create a polyline for the route
     _polylines.add(Polyline(
       polylineId: PolylineId("line 1"),
       visible: true,
@@ -59,11 +59,11 @@ class _ViewMapState extends State<ViewMap> {
       points: MapsCurvedLines.getPointsOnCurve(
         _point1,
         _point2,
-      ), // Získanie bodov pre zakrivenú trasu
-      color: Primary, // Farba trasy
+      ), // Get points on the curve
+      color: Primary, // Color of the route
     ));
 
-    // Pridanie značiek na začiatok a koniec trasy
+    // Set markers for the start and end points
     _markers.add(
       Marker(
         markerId: MarkerId("startMarker"),
@@ -89,11 +89,11 @@ class _ViewMapState extends State<ViewMap> {
         title: 'Flight Route',
       ),
       body: FutureBuilder(
-        future:
-            Future.delayed(Duration(seconds: 5)), // Simulácia načítania údajov
+        future: Future.delayed(
+            Duration(seconds: 5)), // Load the map after 5 seconds
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Zobraziť načítavací indikátor počas načítania údajov
+            // Show loading indicator while data is being loaded
             return Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -108,15 +108,16 @@ class _ViewMapState extends State<ViewMap> {
               ),
             );
           } else {
-            // Zobraziť mapu s trasou, keď je načítanie údajov dokončené
+            // Show the map after data is loaded
             return GoogleMap(
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
-                target: _point1, // Nastavenie začiatočnej pozície kamery
+                target:
+                    _point1, // Set the initial camera position to the start point
                 zoom: 11,
               ),
-              polylines: _polylines, // Zobrazenie trasy v mape
-              markers: _markers, // Zobrazenie značiek (markerov) v mape
+              polylines: _polylines, // Show the route on the map
+              markers: _markers, // Show the markers on the map
               onMapCreated: (GoogleMapController controller) {
                 mapController = controller;
                 mapController.setMapStyle(_mapStyle);

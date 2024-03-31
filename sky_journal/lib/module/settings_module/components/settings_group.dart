@@ -6,8 +6,7 @@ import 'package:sky_journal/theme/color_theme.dart';
 import 'screen_utils.dart';
 import 'settings_items.dart';
 
-/// This component group the Settings items (BabsComponentSettingsItem)
-/// All one BabsComponentSettingsGroup have a title and the developper can improve the design.
+// This component group the Settings items
 class SettingsGroup extends StatelessWidget {
   final String? settingsGroupTitle;
   final TextStyle? settingsGroupTitleStyle;

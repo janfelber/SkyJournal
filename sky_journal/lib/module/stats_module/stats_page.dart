@@ -357,6 +357,7 @@ class _StatsState extends State<Stats> {
     }
   }
 
+  // Method to calculate the total distance
   Future<double> calculateTotalDistance() async {
     final snapshot = await FirebaseFirestore.instance
         .collection('flights')
@@ -409,7 +410,7 @@ class _StatsState extends State<Stats> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Total Flight Distance', // Pridaný popis
+                        'Total Flight Distance',
                         style: GoogleFonts.bebasNeue(
                           fontSize: 24,
                           color: Colors.white,

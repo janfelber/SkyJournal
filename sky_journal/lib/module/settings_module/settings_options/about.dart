@@ -16,6 +16,7 @@ class AboutApp extends StatefulWidget {
 class _AboutAppState extends State<AboutApp> {
   String appVersion = '';
 
+  // Fetch the app version by using the package_info_plus package
   Future<void> fetchPackageInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final version = packageInfo.version;
@@ -53,16 +54,3 @@ class _AboutAppState extends State<AboutApp> {
         )));
   }
 }
-
-// const Text('Settings'),
-//           Text('Signed in as: ${user.email!}',
-//               style: TextStyle(color: Colors.white)),
-//           MaterialButton(
-//             onPressed: FirebaseAuth.instance.signOut,
-//             color: Colors.red,
-//             child: const Text('Sign Out'),
-//           ),
-//           Text(
-//             'App Version: $appVersion',
-//             style: TextStyle(color: Colors.grey),
-//           ),

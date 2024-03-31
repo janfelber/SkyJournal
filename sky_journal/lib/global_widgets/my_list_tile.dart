@@ -46,6 +46,7 @@ class MyListTile extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
+                        //flight number from database
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text('$flightNumber'),
@@ -55,6 +56,7 @@ class MyListTile extends StatelessWidget {
                         height: 8,
                       ),
                       Row(
+                        //start date and end date from database
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('$startDate'),
@@ -65,6 +67,7 @@ class MyListTile extends StatelessWidget {
                         height: 10,
                       ),
                       Row(
+                        //start destination and end destination from database
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('$startDestination'),
@@ -75,6 +78,7 @@ class MyListTile extends StatelessWidget {
                         height: 8,
                       ),
                       Row(
+                        //time of take off and time of landing from database
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('$timeOfTakeOff'),
@@ -87,6 +91,7 @@ class MyListTile extends StatelessWidget {
                       Container(
                         child: Row(
                           children: [
+                            //icons to represent the flight
                             Icon(Icons.fiber_manual_record, color: Colors.grey),
                             Text('- - - - - - - - - - '),
                             Icon(Icons.flight_takeoff, color: Colors.grey),
@@ -101,6 +106,7 @@ class MyListTile extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          //length of flight from database
                           Text(
                             '$lengthOfFlight',
                             style: TextStyle(color: Colors.grey),

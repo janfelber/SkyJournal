@@ -32,6 +32,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
 
   DateTime? selectedEndDate;
 
+// List of airlines
   final airlines = [
     'Private',
     'Air Canada',
@@ -45,7 +46,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     'Tus Airways',
     'Wizz Air',
   ];
-
+// List of pilot functions
   final pilotFunctions = [
     'Pilot In Command',
     'Co-Pilot',
@@ -130,7 +131,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
       return;
     }
 
-    //if the start departure time is after the end departure time
+    //if the start departure time is same as the end departure time
     if (_timeOfTakeOffController.text.isNotEmpty &&
         _timeOfLandingController.text.isNotEmpty &&
         _timeOfTakeOffController.text == _timeOfLandingController.text) {
@@ -182,7 +183,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
         registration,
       );
 
-      // Vymazanie obsahu všetkých polí
+      // Delete the text from the text fields
       _flightNumberController.clear();
       _startDateController.clear();
       _endDateController.clear();
@@ -195,7 +196,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
       _pilotFunctionController.clear();
       _registrationController.clear();
 
-      // Návrat na predchádzajúcu stránku
+      // Go back to the previous page
       Navigator.pop(context);
     } else {
       showToast(
@@ -208,6 +209,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     }
   }
 
+  // Generate a random number of passengers - no access to real data
   String generateRandomNUmberOfPassangers() {
     Random rnd;
     int min = 170;
@@ -218,6 +220,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     return numOfPassengers;
   }
 
+  // Generate a random average speed - no access to real data
   String generateRandomAvgSpeed() {
     Random rnd;
     int min = 800;
@@ -228,6 +231,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     return avgSpeed;
   }
 
+  // Generate a random flight number - no access to real data
   String generateFlightNumber() {
     //generate a random flight number start with random letter and then 4 random numbers
     var random = Random();
@@ -237,12 +241,6 @@ class _AddFlightPageState extends State<AddFlightPage> {
         random.nextInt(10).toString() +
         random.nextInt(10).toString();
     return _flightNumberController.text = flightNumber;
-  }
-
-  String getDateOnRecord() {
-    DateTime currentDate = DateTime.now();
-    String formattedDate = DateFormat('dd MMM yyy').format(currentDate);
-    return _startDateController.text = formattedDate;
   }
 
   @override

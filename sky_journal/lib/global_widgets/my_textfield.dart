@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MyTextField extends StatelessWidget {
-  final TextStyle? textStyle;
-  final String hintText;
-  final TextStyle? hintTextStyle;
-  final bool obscureText;
-  final bool enabled;
-  final TextEditingController controller;
-  final Icon? icon;
-  final VoidCallback? onPressed;
-  final bool numericInput;
-  final int? maxLength;
-  final bool readOnly;
-  final Color? backgroundColor;
+  final TextStyle? textStyle; // Parameter for text style
+  final String hintText; // Parameter for hint text
+  final TextStyle? hintTextStyle; // Parameter for hint text style
+  final bool obscureText; // Parameter for obscure text
+  final bool enabled; // Parameter for enabled
+  final TextEditingController controller; // Parameter for controller
+  final Icon? icon; // Parameter for icon
+  final VoidCallback? onPressed; // Parameter for on pressed
+  final bool numericInput; // Parameter for numeric input
+  final int? maxLength; // Parameter for max length
+  final bool readOnly; // Parameter for read only
+  final Color? backgroundColor; // Parameter for background color
   final Color? enabledBorderColor; // Parameter for enabled border color
   final Color? focusedBorderColor; // Parameter for focused border color
 
@@ -75,6 +75,7 @@ class MyTextField extends StatelessWidget {
         hintStyle: hintTextStyle,
         enabled: enabled,
       ),
+      // Set the text field to read only if the read only parameter is true
       readOnly: readOnly,
       onTap: readOnly ? onPressed as void Function()? : null,
       obscureText: obscureText,

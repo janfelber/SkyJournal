@@ -95,6 +95,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   final StreamController<String> _nationalityController =
       StreamController<String>.broadcast();
 
+  // Get date of birth from firestore
   Future getDateOfBirth() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -120,6 +121,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     }
   }
 
+  // Get current user name from firestore
   Future getCurrentUserName() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -241,6 +243,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     super.initState();
     getCurrentUserName();
     getDateOfBirth();
+    // Add listeners to the text controllers and update the stream controllers
     _sex.addListener(() {
       _sexController.sink.add(_sex.text);
     });
@@ -283,6 +286,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
               SizedBox(
                 height: 20,
               ),
+              // This will dynamically update the card with the user's information
               SizedBox(
                 height: 200,
                 child: StreamBuilder<String>(

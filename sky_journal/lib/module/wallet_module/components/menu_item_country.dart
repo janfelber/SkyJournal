@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+// DropdownMenu for countries
 class DropdownMenuItemCountries {
   static DropdownMenuItem<String> buildMenuItemCountries(String item) =>
       DropdownMenuItem(
         value: item,
         child: Row(
+          // Get images of flags from country_icons package
           children: [
             if (item == 'Slovak Republic') ...[
               SvgPicture.asset(

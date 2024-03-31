@@ -1,7 +1,8 @@
 //from country get flag from country_icons package
-import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/svg.dart';
 
+//get country flag based on country name
 SvgPicture? getCountryFlag(String country) {
   switch (country) {
     case 'Slovak Republic':

@@ -9,12 +9,15 @@ void showToast(BuildContext context,
     Color? iconColor,
     Color? colorToast}) {
   FToast fToast = FToast();
+  // Default text for toast
   final String displayText = textToast ?? "Default text for toast";
   final Widget displayIcon = iconToast != null
       ? Icon(
           iconToast,
+          // Default icon color is black
           color: iconColor ?? Colors.black,
         )
+      // Image path to display image icon
       : imagePath != null
           ? Image.asset(
               imagePath,

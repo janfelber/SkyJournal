@@ -6,19 +6,20 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../theme/color_theme.dart';
 
 class MyDialogCalendar extends StatefulWidget {
-  DateTime? selectedDate;
-  final Function(DateTime) onDateSelected;
-  final String dialogText;
-  final Color? dialogTextColor;
-  final Color? backgroundColor;
-  final Color? titleCalendarColor;
-  final Color? leftChevronIconColor;
-  final Color? rightChevronIconColor;
-  final Color? defaultTextStyleColor;
-  final Color? holidayTextStyleColor;
-  final Color? weekNumberTextStyle;
-  final Color? weekendTextStyle;
-  final Color? selectedTextStyle;
+  DateTime? selectedDate; // The date that is selected by default
+  final Function(DateTime)
+      onDateSelected; // Callback function for date selection
+  final String dialogText; // Text displayed in the dialog
+  final Color? dialogTextColor; // Color of the dialog text
+  final Color? backgroundColor; // Background color of the dialog
+  final Color? titleCalendarColor; // Color of the calendar title
+  final Color? leftChevronIconColor; // Color of the left chevron icon
+  final Color? rightChevronIconColor; // Color of the right chevron icon
+  final Color? defaultTextStyleColor; // Color of the default text style
+  final Color? holidayTextStyleColor; // Color of the holiday text style
+  final Color? weekNumberTextStyle; // Color of the week number text style
+  final Color? weekendTextStyle; // Color of the weekend text style
+  final Color? selectedTextStyle; // Color of the selected text style
 
   MyDialogCalendar({
     Key? key,
@@ -89,14 +90,19 @@ class _MyDialogCalendarState extends State<MyDialogCalendar> {
           },
           calendarStyle: CalendarStyle(
             defaultTextStyle:
+                // Set the default text style color to white
                 TextStyle(color: widget.defaultTextStyleColor ?? Colors.white),
             holidayTextStyle:
+                // Set the holiday text style color to white
                 TextStyle(color: widget.holidayTextStyleColor ?? Colors.white),
             weekNumberTextStyle:
+                // Set the week number text style color to white
                 TextStyle(color: widget.weekNumberTextStyle ?? Colors.white),
             weekendTextStyle:
+                // Set the weekend text style color to white
                 TextStyle(color: widget.weekendTextStyle ?? Colors.white),
             selectedTextStyle: TextStyle(
+                // Set the selected text style color to white
                 color: widget.selectedTextStyle ?? Colors.white,
                 fontWeight: FontWeight.bold),
             todayTextStyle: TextStyle(color: Colors.blue),

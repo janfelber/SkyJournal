@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_journal/components/push_to_new_page.dart';
-import 'package:sky_journal/onboard_module/screens/screen4.dart';
-import 'package:sky_journal/onboard_module/screens/welcome_page.dart';
+import 'package:sky_journal/module/onboard_module/screens/screen4.dart';
+import 'package:sky_journal/module/onboard_module/screens/welcome_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../auth_user/auth_user.dart';
+import '../../auth_user/auth_user.dart';
 import 'screens/screen1.dart';
 import 'screens/screen2.dart';
 import 'screens/screen3.dart';

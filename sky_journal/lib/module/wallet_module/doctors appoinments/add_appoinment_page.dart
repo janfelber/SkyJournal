@@ -53,7 +53,6 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
   //get fcm token
   Future<void> getToken() async {
     token = await FirebaseMessaging.instance.getToken();
-    print(token);
   }
 
   void addDoctorAppointment() async {
@@ -99,8 +98,6 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
     // Navigate back to the previous page
     Navigator.pop(context);
   }
-
-  // Schedule notification using Firebase Cloud Messaging
 
   @override
   Widget build(BuildContext context) {
@@ -207,13 +204,11 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
                                     formatButtonVisible: false,
                                     titleCentered: true,
                                     leftChevronIcon: Icon(
-                                      Icons
-                                          .chevron_left, // ikona šipky směrem doleva
+                                      Icons.chevron_left,
                                       color: Colors.white,
                                     ),
                                     rightChevronIcon: Icon(
-                                      Icons
-                                          .chevron_right, // ikona šipky směrem doprava
+                                      Icons.chevron_right,
                                       color: Colors.white,
                                     ),
                                   ),

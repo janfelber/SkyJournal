@@ -385,6 +385,7 @@ class _WalletState extends State<Wallet> {
     );
   }
 
+  // Function to build appointment widgets based on the status
   List<Widget> buildAppointmentWidgets(
       List<QueryDocumentSnapshot> appointments) {
     List<Widget> appointmentWidgets = [];

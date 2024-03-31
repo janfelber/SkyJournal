@@ -18,10 +18,10 @@ import 'package:csv/csv.dart';
 import 'package:sky_journal/global_widgets/space.dart';
 
 class AirportData {
-  final String ident;
-  final String municipality;
-  final double latitude;
-  final double longitude;
+  final String ident; // Airport code
+  final String municipality; // City
+  final double latitude; // Latitude
+  final double longitude; // Longitude
 
   AirportData({
     required this.ident,
@@ -74,6 +74,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   bool _isMapLoaded = false;
 
+  // Default coordinates for the start and end destination
   LatLng _point1 = LatLng(0, 0);
   LatLng _point2 = LatLng(0, 0);
 
@@ -89,6 +90,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
 
   List<AirportData> airports = [];
 
+  // Load airport data from CSV file
   Future<void> loadAirportDataCoords() async {
     final String data =
         await rootBundle.loadString('assets/airports_coords.csv');
@@ -99,9 +101,11 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
         airports = csvTable.map((row) {
           if (row.length >= 4) {
             return AirportData(
-              ident: row[0].toString(),
-              latitude: double.tryParse(row[1].toString()) ?? 0.0,
-              longitude: double.tryParse(row[2].toString()) ?? 0.0,
+              ident: row[0].toString(), // Position 0 is the airport code
+              latitude: double.tryParse(row[1].toString()) ??
+                  0.0, // Position 1 is the latitude
+              longitude: double.tryParse(row[2].toString()) ??
+                  0.0, // Position 2 is the longitude
               municipality: row[3].toString(),
             );
           } else {
@@ -113,6 +117,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     }
   }
 
+  // Get airport data from airport code
   Future<List<AirportData>> getAirportDataFromCode(String airportCode) async {
     try {
       AirportData? airport = airports.firstWhere(
@@ -134,6 +139,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
     }
   }
 
+  // Get coordinates from airport codes
   Future<void> _getCoordinatesFromAirport(
       String startAirportCode, String endAirportCode) async {
     try {
@@ -223,7 +229,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
       width: 2,
       patterns: [PatternItem.dash(30), PatternItem.gap(10)],
       points: MapsCurvedLines.getPointsOnCurve(
-          _point1, _point2), // Invoke lib to get curved line points
+          _point1, _point2), // Invoke to get curved line points
       color: Primary,
     ));
     return Scaffold(
@@ -324,7 +330,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                                       widget.startDestination)),
                               builder: (context, snapshot) {
                                 if (!_isMapLoaded) {
-                                  // Zobraziť tlačidlo "Load Map"
+                                  // Show a button to load the map
                                   return Center(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -475,6 +481,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                         ),
                         color: cards,
                       ),
+                      //Flight information
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -592,6 +599,7 @@ class _FlightDetailsPageState extends State<FlightDetailsPage> {
                         ),
                         color: cards,
                       ),
+                      // Aircraft information
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 0, top: 10, bottom: 15),

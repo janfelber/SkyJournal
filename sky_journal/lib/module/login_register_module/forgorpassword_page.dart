@@ -14,6 +14,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   //text controllers
   final _emailController = TextEditingController();
 
+  // Reset password function
   Future passwordReset() async {
     try {
       await FirebaseAuth.instance

@@ -5,17 +5,17 @@ import 'screen_utils.dart';
 
 class SettingsItem extends StatelessWidget {
   final IconData? icons; // Make icons parameter nullable
-  final IconStyle? iconStyle;
-  final String title;
-  final TextStyle? titleStyle;
-  final String? subtitle;
-  final TextStyle? subtitleStyle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final Color? backgroundColor;
-  final int? titleMaxLine;
-  final int? subtitleMaxLine;
-  final TextOverflow? overflow;
+  final IconStyle? iconStyle; // Make iconStyle parameter nullable
+  final String title; // Make title parameter required
+  final TextStyle? titleStyle; // Make titleStyle parameter nullable
+  final String? subtitle; // Make subtitle parameter nullable
+  final TextStyle? subtitleStyle; // Make subtitleStyle parameter nullable
+  final Widget? trailing; // Make trailing parameter nullable
+  final VoidCallback? onTap; // Make onTap parameter nullable
+  final Color? backgroundColor; // Make backgroundColor parameter nullable
+  final int? titleMaxLine; // Make titleMaxLine parameter nullable
+  final int? subtitleMaxLine; // Make subtitleMaxLine parameter nullable
+  final TextOverflow? overflow; // Make overflow parameter nullable
 
   SettingsItem(
       {this.icons, // Make icons parameter nullable

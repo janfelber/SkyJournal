@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import '../../../theme/color_theme.dart';
 
 class MyDialogTimer extends StatefulWidget {
-  final Function(DateTime) onTimeSelected;
-  final String dialogText;
+  final Function(DateTime)
+      onTimeSelected; // Callback function for time selection
+  final String dialogText; // Text displayed in the dialog
   const MyDialogTimer(
       {super.key, required this.onTimeSelected, required this.dialogText});
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+// Get airline logo based on the airline name
 Widget getAirlineLogo(String airlineName) {
   final lowercaseAirlineName = airlineName.toLowerCase();
 

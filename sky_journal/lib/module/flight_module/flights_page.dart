@@ -29,8 +29,10 @@ class _FlightsState extends State<Flights> {
 
   TextEditingController _searchController = TextEditingController();
 
+  // Focus state for search bar
   bool isFocused = false;
 
+  // Calculate length of flight
   String calculateLengthOfFlight(String departureTime, String arrivalTime) {
     var format = DateFormat("HH:mm");
     var one = format.parse(departureTime);
@@ -56,7 +58,6 @@ class _FlightsState extends State<Flights> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Podmínka pro zobrazení pouze pokud je nameOfUser k dispozici
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -229,7 +230,7 @@ class _FlightsState extends State<Flights> {
                           !pilotFunction.contains(searchQuery);
                     });
                   }
-
+                  // If there are no flights for the current user
                   if (userFlights.isEmpty) {
                     return Center(
                       child: Padding(

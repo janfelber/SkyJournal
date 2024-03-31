@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+// Dropdown menu items for airlines
 class DropdownMenuItemsAirLines {
   static DropdownMenuItem<String> buildMenuItemAirLines(String item) =>
       DropdownMenuItem(

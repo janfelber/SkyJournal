@@ -25,13 +25,13 @@ class _Screen3State extends State<Screen3> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10), // Meníme výšku medzery
+            SizedBox(height: 10),
             Lottie.asset(
               'assets/map_animation.json',
               height: 353,
               width: 500,
             ),
-            SizedBox(height: 10), // Meníme výšku medzery
+            SizedBox(height: 10),
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

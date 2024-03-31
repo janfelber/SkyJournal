@@ -7,13 +7,13 @@ import 'package:sky_journal/module/flight_module/components/utils/airlines_conve
 import 'package:sky_journal/global_widgets/space.dart';
 
 class FlightCard extends StatelessWidget {
-  final VoidCallback? onEdit;
-  final String startDestination;
-  final String endDestination;
-  final String startDate;
-  final String timeOfTakeOff;
-  final String timeOfLanding;
-  final String airline;
+  final VoidCallback? onEdit; // Callback function for editing a flight
+  final String startDestination; // The starting destination of the flight
+  final String endDestination; // The ending destination of the flight
+  final String startDate; // The date of the flight
+  final String timeOfTakeOff; // The time of takeoff
+  final String timeOfLanding; // The time of landing
+  final String airline; // The airline of the flight
 
   const FlightCard({
     Key? key,

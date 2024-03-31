@@ -54,7 +54,7 @@ class MyCard extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 getCountryFlag(country) ??
-                    Container(), // Zobraziť vlajku krajiny
+                    Container(), // show country flag based on country name
               ],
             ),
             Align(
@@ -127,7 +127,7 @@ class MyCard extends StatelessWidget {
                           width: 3,
                         ),
                         Text(
-                          dateOfBirthDay, // Add the variable for date of birth here
+                          dateOfBirthDay, //date of birth from database
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w800,

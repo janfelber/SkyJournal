@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Dropdown menu items for pilots function
 class DropdownMenuItemsPilots {
   static DropdownMenuItem<String> buildMenuItemPilotFunctions(String item) =>
       DropdownMenuItem(

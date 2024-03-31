@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class Screen2 extends StatefulWidget {
-  const Screen2({Key? key}) : super(key: key);
+class Screen4 extends StatefulWidget {
+  const Screen4({Key? key}) : super(key: key);
 
   @override
-  _Screen2State createState() => _Screen2State();
+  _Screen4State createState() => _Screen4State();
 }
 
-class _Screen2State extends State<Screen2> {
+class _Screen4State extends State<Screen4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,17 +18,15 @@ class _Screen2State extends State<Screen2> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Boost your flight experience with live stats!',
+            Text('Ready to navigate the skies? ',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 )),
-            SizedBox(height: 10), // Add space above the Lottie animation
-            Lottie.asset(
-              'assets/stats_animation.json',
-              height: 362,
-            ),
-            SizedBox(height: 20), // Add space below the Lottie animation
+            SizedBox(height: 10),
+            Lottie.asset('assets/flight_animation.json', height: 350),
+            SizedBox(height: 20),
+            Text('Hop into our app and chart your course!'),
           ],
         ),
       ),
