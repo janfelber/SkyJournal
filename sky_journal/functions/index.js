@@ -38,10 +38,10 @@ exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('0 0 * * *
         // Prepare notification payload
         const payload = {
           notification: {
-            title: 'Doctor Appointment Reminder',
-            body: 'Dr. ' + DoctorName + ' at ' + Time,
+              title: `Today's Appointment: Dr. ${DoctorName}`,
+              body: `Appointment at ${Time}`,
           },
-        };
+      };
 
         try {
           // Send notification to the user - FCM token is used to identify the device
@@ -86,7 +86,7 @@ exports.sendNotificationBeforeExpiry = functions.pubsub.schedule('0 0 * * *').ti
       if (diffInDays < 7) {
           console.log('less than 7 days.');
           // Get FCM token, notification status
-          const { FcmToken, notificationSent } = licenseCardData;
+          const { FcmToken, notificationSent, CertificateNumber} = licenseCardData;
 
           if(notificationSent){
             console.log('Notification already sent.');
@@ -96,8 +96,8 @@ exports.sendNotificationBeforeExpiry = functions.pubsub.schedule('0 0 * * *').ti
           // Prepare notification payload
           const payload = {
             notification: {
-              title: 'License Card Expiry Reminder',
-              body: 'Your license card will expire in 7 days. - ' + licenseCardDateFormat,
+              title: 'License Card Expiring Soon: ' + CertificateNumber ,
+              body: 'Card will expire in 7 days - ' + licenseCardDateFormat,
             },
           };
 
