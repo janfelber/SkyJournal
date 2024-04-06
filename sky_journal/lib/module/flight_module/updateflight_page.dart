@@ -290,6 +290,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                     showDialog(
                         context: context,
                         builder: (context) => MyDialogCalendar(
+                              yearPickerTextColor: Colors.white,
                               selectedDate: selectedDate,
                               dialogText: 'Departure Date',
                               onDateSelected: (selectedDay) {
@@ -326,6 +327,7 @@ class _UpadateFlightState extends State<UpadateFlight> {
                     showDialog(
                       context: context,
                       builder: (context) => MyDialogCalendar(
+                        yearPickerTextColor: Colors.white,
                         selectedDate: selectedEndDate,
                         dialogText: 'Arrival Date',
                         onDateSelected: (selectedDay) {

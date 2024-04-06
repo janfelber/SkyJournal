@@ -431,6 +431,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                           showDialog(
                               context: context,
                               builder: (context) => MyDialogCalendar(
+                                  yearPickerTextColor: Colors.white,
                                   selectedDate: dateOfExpiry,
                                   dialogText: 'Date of Expiry',
                                   onDateSelected: (date) {

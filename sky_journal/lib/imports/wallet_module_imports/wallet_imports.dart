@@ -26,5 +26,3 @@ export 'package:sky_journal/module/wallet_module/components/menu_item_country.da
 
 //add doctor appointment imports
 export 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
-
-export 'package:table_calendar/table_calendar.dart';

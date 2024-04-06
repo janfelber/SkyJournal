@@ -302,6 +302,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                     showDialog(
                       context: context,
                       builder: (context) => MyDialogCalendar(
+                        yearPickerTextColor: Colors.white,
                         selectedDate: selectedDate,
                         onDateSelected: (selectedDay) {
                           setState(() {
@@ -337,6 +338,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
                     showDialog(
                         context: context,
                         builder: (context) => MyDialogCalendar(
+                              yearPickerTextColor: Colors.white,
                               selectedDate: selectedEndDate,
                               onDateSelected: (selectedDay) {
                                 setState(() {

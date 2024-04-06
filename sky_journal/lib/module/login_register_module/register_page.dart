@@ -211,26 +211,31 @@ class _RegisterPageState extends State<RegisterPage> {
                     backgroundColor: Colors.grey[200],
                     onPressed: () {
                       showDialog(
-                          context: context,
-                          builder: (context) => MyDialogCalendar(
-                              backgroundColor: Colors.white,
-                              titleCalendarColor: Colors.black,
-                              leftChevronIconColor: Colors.black,
-                              rightChevronIconColor: Colors.black,
-                              defaultTextStyleColor: Colors.black,
-                              weekNumberTextStyle: Colors.black,
-                              weekendTextStyle: Colors.black,
-                              holidayTextStyleColor: Colors.black,
-                              dialogTextColor: Colors.black,
-                              selectedDate: dateOfBirth,
-                              dialogText: 'Date of Birth',
-                              onDateSelected: (date) {
-                                setState(() {
-                                  dateOfBirth = date;
-                                  _dateOfBirth.text =
-                                      DateFormat('dd.MM.yyyy').format(date);
-                                });
-                              }));
+                        context: context,
+                        builder: (context) => MyDialogCalendar(
+                          selectYearTextColor: Colors.black,
+                          backgroundColor: Colors.white,
+                          titleCalendarColor: Colors.black,
+                          leftChevronIconColor: Colors.black,
+                          rightChevronIconColor: Colors.black,
+                          defaultTextStyleColor: Colors.black,
+                          weekNumberTextStyle: Colors.black,
+                          weekendTextStyle: Colors.black,
+                          holidayTextStyleColor: Colors.black,
+                          dialogTextColor: Colors.black,
+                          selectedDate: dateOfBirth,
+                          dialogText: 'Date of Birth',
+                          onDateSelected: (date) {
+                            setState(() {
+                              // Update the selected date with the year, month, and day from the selected date
+                              dateOfBirth =
+                                  DateTime(date.year, date.month, date.day);
+                              _dateOfBirth.text =
+                                  DateFormat('dd.MM.yyyy').format(dateOfBirth!);
+                            });
+                          },
+                        ),
+                      );
                     },
                   ),
                 ),

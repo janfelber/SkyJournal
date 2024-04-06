@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:sky_journal/imports/wallet_module_imports/wallet_imports.dart';
+import 'package:table_calendar/table_calendar.dart' as table_calendar;
 
 class AddDoctorAppointment extends StatefulWidget {
   final Function? onAppointmentAdded;
@@ -182,12 +183,12 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
                             ),
                             child: Column(
                               children: [
-                                TableCalendar(
+                                table_calendar.TableCalendar(
                                   focusedDay: today,
                                   rowHeight: 48,
                                   selectedDayPredicate: (day) =>
                                       isSameDay(today, day),
-                                  headerStyle: HeaderStyle(
+                                  headerStyle: table_calendar.HeaderStyle(
                                     titleTextStyle:
                                         TextStyle(color: Colors.white),
                                     formatButtonVisible: false,
@@ -203,7 +204,7 @@ class _AddDoctorAppointmentState extends State<AddDoctorAppointment> {
                                   ),
                                   firstDay: DateTime.utc(2010, 10, 16),
                                   lastDay: DateTime.utc(2030, 3, 14),
-                                  calendarStyle: CalendarStyle(
+                                  calendarStyle: table_calendar.CalendarStyle(
                                     defaultTextStyle:
                                         TextStyle(color: Colors.white),
                                     holidayTextStyle:
