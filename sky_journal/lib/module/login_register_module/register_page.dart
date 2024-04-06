@@ -1,14 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/module/flight_module/components/toast.dart';
-
-import '../../global_widgets/my_textfield.dart';
-import '../flight_module/components/dialog_calendar.dart';
+import 'package:sky_journal/imports/loging_register_module_imports/login_register_imports.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;

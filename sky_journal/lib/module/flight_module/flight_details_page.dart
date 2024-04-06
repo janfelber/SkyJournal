@@ -1,21 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_final_fields, avoid_print, prefer_interpolation_to_compose_strings, prefer_collection_literals, avoid_unnecessary_containers, must_be_immutable
 
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maps_curved_line/maps_curved_line.dart';
-import 'package:sky_journal/components/push_to_new_page.dart';
-import 'package:sky_journal/module/flight_module/updateflight_page.dart';
-import 'package:sky_journal/module/flight_module/view_map.dart';
-import 'package:sky_journal/theme/color_theme.dart';
-import 'package:sky_journal/global_widgets/cutom_appbar.dart';
-import 'package:sky_journal/module/flight_module/components/flight_card.dart';
-import 'package:csv/csv.dart';
-
-import 'package:sky_journal/global_widgets/space.dart';
+import 'package:sky_journal/imports/flight_module_imports/flight_imports.dart';
 
 class AirportData {
   final String ident; // Airport code

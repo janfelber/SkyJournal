@@ -1,18 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/database/firestore.dart';
-import 'package:sky_journal/global_widgets/cutom_appbar.dart';
-import 'package:sky_journal/global_widgets/my_button.dart';
-import 'package:sky_journal/global_widgets/my_textfield.dart';
-import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
-import 'package:sky_journal/module/flight_module/components/toast.dart';
-import 'package:table_calendar/table_calendar.dart';
-
-import '../../../theme/color_theme.dart';
+import 'package:sky_journal/imports/wallet_module_imports/wallet_imports.dart';
 
 class AddDoctorAppointment extends StatefulWidget {
   final Function? onAppointmentAdded;

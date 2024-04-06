@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sky_journal/theme/color_theme.dart';
 
 import '../../../components/push_to_new_page.dart';
-import '../add_license_card_page.dart';
-import '../doctors appoinments/add_appoinment_page.dart';
+import '../license_card/add_license_card_page.dart';
+import '../doctors_appoinment/add_appoinment_page.dart';
 
 class WalletPopUpMenu extends StatelessWidget {
   final Function? onAppointmentAdded;

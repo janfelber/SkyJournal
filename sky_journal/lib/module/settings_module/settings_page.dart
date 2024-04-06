@@ -1,22 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:clipboard/clipboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sky_journal/components/push_to_new_page.dart';
-import 'package:sky_journal/module/settings_module/settings_options/about.dart';
-import 'package:sky_journal/module/settings_module/settings_options/appearance.dart';
-import 'package:sky_journal/module/settings_module/settings_options/privacy.dart';
-import 'package:sky_journal/theme/color_theme.dart';
-
-import '../onboard_module/on_board_page.dart';
-import '../flight_module/components/toast.dart';
-import 'components/icon_style.dart';
-import 'components/settings_group.dart';
-import 'components/settings_items.dart';
+import 'package:sky_journal/imports/settings_module_imports/settings_imports.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);

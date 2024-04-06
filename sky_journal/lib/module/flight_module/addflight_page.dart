@@ -1,20 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_new
 
-import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/global_widgets/cutom_appbar.dart';
-import 'package:sky_journal/global_widgets/my_button.dart';
-import 'package:sky_journal/global_widgets/my_textfield.dart';
-import 'package:sky_journal/database/firestore.dart';
-import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
-
-import '../../theme/color_theme.dart';
-import 'components/menu_item_airlines.dart';
-import 'components/menu_item_pilots.dart';
-import 'components/dialog_calendar.dart';
-import 'components/toast.dart';
+import 'package:sky_journal/imports/flight_module_imports/flight_imports.dart';
 
 class AddFlightPage extends StatefulWidget {
   const AddFlightPage({Key? key}) : super(key: key);

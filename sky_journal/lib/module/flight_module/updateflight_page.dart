@@ -1,18 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, sized_box_for_whitespace
-
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/global_widgets/cutom_appbar.dart';
-import 'package:sky_journal/global_widgets/my_button.dart';
-import 'package:sky_journal/module/flight_module/components/dialog_calendar.dart';
-import 'package:sky_journal/module/flight_module/components/dialog_timer.dart';
-
-import '../../database/firestore.dart';
-import '../../global_widgets/my_textfield.dart';
-import '../../theme/color_theme.dart';
-import 'components/menu_item_airlines.dart';
-import 'components/menu_item_pilots.dart';
-import 'components/toast.dart';
+import 'package:sky_journal/imports/flight_module_imports/flight_imports.dart';
 
 class UpadateFlight extends StatefulWidget {
   final String flightNumber;

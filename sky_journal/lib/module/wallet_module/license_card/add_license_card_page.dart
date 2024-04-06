@@ -1,23 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/global_widgets/cutom_appbar.dart';
-import 'package:sky_journal/global_widgets/my_button.dart';
-import 'package:sky_journal/global_widgets/my_textfield.dart';
-import 'package:sky_journal/database/firestore.dart';
-import 'package:sky_journal/module/flight_module/components/dialog_calendar.dart';
-import 'package:sky_journal/module/wallet_module/components/menu_item_gender.dart';
-
-import '../../global_widgets/my_card.dart';
-import '../../theme/color_theme.dart';
-import '../flight_module/components/toast.dart';
-import 'components/menu_item_country.dart';
+import 'package:sky_journal/imports/wallet_module_imports/wallet_imports.dart';
 
 class AddLicenseCard extends StatefulWidget {
   final Function? onLicenseCardAdded;
@@ -338,8 +322,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                                                   dateOfExpirySnapshot) {
                                                 return StreamBuilder(
                                                   stream: _nationalityController
-                                                      .stream, // Přidáno
-                                                  initialData: '', // Přidáno
+                                                      .stream,
+                                                  initialData: '',
                                                   builder: (context,
                                                       nationalitySnapshot) {
                                                     return MyCard(

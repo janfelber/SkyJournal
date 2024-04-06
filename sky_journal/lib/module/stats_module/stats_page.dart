@@ -1,17 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, prefer_adjacent_string_concatenation
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:csv/csv.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geodesy/geodesy.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../database/firestore.dart';
-import '../../theme/color_theme.dart';
-import '../flight_module/flight_details_page.dart';
+import 'package:sky_journal/imports/stats_module/stats_imports.dart';
 
 class Stats extends StatefulWidget {
   const Stats({Key? key}) : super(key: key);

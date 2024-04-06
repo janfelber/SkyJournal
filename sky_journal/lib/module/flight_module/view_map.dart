@@ -1,13 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maps_curved_line/maps_curved_line.dart';
-import 'package:sky_journal/global_widgets/cutom_appbar.dart';
-import 'package:sky_journal/theme/color_theme.dart';
+import 'package:sky_journal/imports/flight_module_imports/flight_imports.dart';
 
 class ViewMap extends StatefulWidget {
   final double startLatitude;
@@ -68,16 +61,14 @@ class _ViewMapState extends State<ViewMap> {
       Marker(
         markerId: MarkerId("startMarker"),
         position: _point1,
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueGreen), // Ikona pre začiatok (odlet)
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
       ),
     );
     _markers.add(
       Marker(
         markerId: MarkerId("endMarker"),
         position: _point2,
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueRed), // Ikona pre koniec (pristátie)
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ),
     );
   }

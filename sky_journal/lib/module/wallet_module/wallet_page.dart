@@ -1,18 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, curly_braces_in_flow_control_structures
 
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sky_journal/global_widgets/my_card.dart';
-import 'package:sky_journal/module/wallet_module/components/popup_walltet_menu.dart';
-import 'package:sky_journal/module/wallet_module/doctors%20appoinments/doctor_appointment.dart';
-import 'package:sky_journal/theme/color_theme.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../database/firestore.dart';
+import 'package:sky_journal/imports/wallet_module_imports/wallet_imports.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({Key? key}) : super(key: key);
