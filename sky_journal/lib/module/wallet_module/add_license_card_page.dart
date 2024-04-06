@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sky_journal/global_widgets/cutom_appbar.dart';
@@ -49,6 +50,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
   String? selectedGender;
 
   final gender = ['Male', 'Female'];
+
+  String? token;
 
   final FirestoreDatabase database = FirestoreDatabase();
 
@@ -111,7 +114,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
       if (userQuery.docs.isNotEmpty) {
         String birthDate = userQuery.docs.first.data()['date of birth'];
         setState(() {
-          dateOfBirth = birthDate; //there we rewrite nameOfUser
+          dateOfBirth = birthDate; //there we rewrite birthDate
         });
       } else {
         print('User does not exist in the database');
@@ -146,6 +149,11 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     } else {
       print('User is currently signed out');
     }
+  }
+
+  //get fcm token
+  Future<void> getToken() async {
+    token = await FirebaseMessaging.instance.getToken();
   }
 
   void addCardToDatabase() {
@@ -188,6 +196,8 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
         weight,
         hair,
         eyes,
+        token!,
+        false,
       );
 
       if (widget.onLicenseCardAdded != null) {
@@ -243,6 +253,7 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
     super.initState();
     getCurrentUserName();
     getDateOfBirth();
+    getToken();
     // Add listeners to the text controllers and update the stream controllers
     _sex.addListener(() {
       _sexController.sink.add(_sex.text);
@@ -462,10 +473,9 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                               0.01, // Adjust the vertical padding
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(screenSize.width *
-                              0.03), // Úprava poloměru zaoblení
-                          border: Border.all(
-                              color: Colors.grey[700]!), // Barva ohraničení
+                          borderRadius:
+                              BorderRadius.circular(screenSize.width * 0.03),
+                          border: Border.all(color: Colors.grey[700]!),
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
@@ -509,10 +519,9 @@ class _AddLicenseCardState extends State<AddLicenseCard> {
                               0.01, // Adjust the vertical padding
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(screenSize.width *
-                              0.03), // Úprava poloměru zaoblení
-                          border: Border.all(
-                              color: Colors.grey[700]!), // Barva ohraničení
+                          borderRadius:
+                              BorderRadius.circular(screenSize.width * 0.03),
+                          border: Border.all(color: Colors.grey[700]!),
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(

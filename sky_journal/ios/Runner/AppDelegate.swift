@@ -1,9 +1,6 @@
 import UIKit
 import Flutter
 import GoogleMaps 
-
-import flutter_local_notifications
-
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
@@ -12,8 +9,6 @@ import flutter_local_notifications
   ) -> Bool {
     GMSServices.provideAPIKey("AIzaSyBogiAHjAxIlaZmCQo6WVzihkYHagTjAdM")
 
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-    GeneratedPluginRegistrant.register(with: registry)}
 
     GeneratedPluginRegistrant.register(with: self)
 

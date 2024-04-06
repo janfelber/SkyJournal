@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geodesy/geodesy.dart';
 
 /*
 This database stores added flights in the firestore database.
@@ -39,7 +37,7 @@ class FirestoreDatabase {
       FirebaseFirestore.instance.collection('flights');
 
   final CollectionReference doctorAppointment =
-      FirebaseFirestore.instance.collection('doctor-applications');
+      FirebaseFirestore.instance.collection('doctor-appointment');
 
   //add doctors apoointment to firestore
   Future<void> addDoctorAppointment(
@@ -75,6 +73,8 @@ class FirestoreDatabase {
     String weight,
     String hair,
     String eyes,
+    String fcmToken,
+    bool notificationSent,
   ) {
     return licenseCards.add({
       'UserEmail': user!.email,
@@ -85,7 +85,9 @@ class FirestoreDatabase {
       'Height': height,
       'Weight': weight,
       'Hair': hair,
-      'Eyes': eyes
+      'Eyes': eyes,
+      'FcmToken': fcmToken,
+      'notificationSent': notificationSent,
     });
   }
 

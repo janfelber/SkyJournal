@@ -146,7 +146,7 @@ class _PrivacyPageState extends State<PrivacyPage> {
                         firestore.collection('license-card');
 
                     CollectionReference doctorAppointmentDataCollection =
-                        firestore.collection('doctor-applications');
+                        firestore.collection('doctor-appointment');
 
                     // Query to find documents associated with user's email
                     QuerySnapshot userDataSnapshot = await userDataCollection

@@ -124,7 +124,7 @@ class _WalletState extends State<Wallet> {
   void loadDoctorAppointments() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     var appointmentStream = await FirebaseFirestore.instance
-        .collection('doctor-applications')
+        .collection('doctor-appointment')
         .where('UserEmail', isEqualTo: currentUser?.email)
         .get();
     _appointmentStreamController.add(appointmentStream.docs);
