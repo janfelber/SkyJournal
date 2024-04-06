@@ -4,9 +4,9 @@ admin.initializeApp();
 
 const { DateTime } = require('luxon');
 
-exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('8 7 * * *').timeZone('Europe/Bratislava').onRun(async (context) => {
+exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('0 0 * * *').timeZone('Europe/Bratislava').onRun(async (context) => {
   // Get all appointments from Firestore
-  const appointmentsRef = admin.firestore().collection('doctor-applications');
+  const appointmentsRef = admin.firestore().collection('doctor-appointment');
   // Get current date and format it to day month year (12 January 2024)
   const now = DateTime.now().setZone('Europe/Bratislava').toFormat('dd LLLL yyyy');
 
@@ -18,10 +18,11 @@ exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('8 7 * * *
       const appointmentData = doc.data();
       // Get appointment date and format it to day month year (12 January 2024)
       const appointmentDate = appointmentData.Date;
+      const appointmentStatus = appointmentData.Status;
       const appointmentDateTime = DateTime.fromMillis(appointmentDate.seconds * 1000).setZone('Europe/Bratislava').toFormat('dd LLLL yyyy');
 
       // Check if appointment date is today 
-      if (appointmentDateTime === now ) {
+      if (appointmentDateTime === now && appointmentStatus === 'Upcoming') {
         // Get FCM token, notification status, doctor name and time of the appointment
         const { FcmToken, notificationSent, DoctorName, Time } = appointmentData;
 
@@ -50,6 +51,11 @@ exports.sendNotificationBeforeAppointment = functions.pubsub.schedule('8 7 * * *
         } catch (error) {
           console.error('Error in sending: ', error);
         }
+      }
+      //if appointment is not upcoming - its status is not 'Upcoming' or no appointment is today - do nothing
+      if (appointmentStatus !== 'Upcoming' || appointmentDateTime !== now) {
+        console.log('No appointment today.');
+        return;
       }
     });
   } catch (error) {
