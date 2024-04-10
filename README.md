@@ -59,5 +59,5 @@ Some icons are sourced from Flaticon and integrated into the application's user 
 
 ## Technologies Used
 - **Flutter**: The application is developed using Flutter, a cross-platform framework for building mobile applications.
-- **Google Maps SDK**: Integrated for displaying flight routes and navigation within the application.
+- **Google Maps SDK**: Integrated for displaying flight routes.
 - **Firebase Database**: Utilized for cloud-based storage and synchronization of logbook data across devices.
