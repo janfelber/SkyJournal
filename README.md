@@ -45,7 +45,7 @@ Please ensure that these steps are completed to enable proper functionality on A
 
 
 ## Features
-- **Flight Entry Management**: Easily input and manage flight details such as date, aircraft type, airports, registration, time of takeoff, time of landing, function of the pilot during the flight, airline, numbers of passengers, and average flight speed. Please note that certain details such as average speed and number of passengers are generated randomly as we do not have access to real flight data.
+- **Flight Management**: Easily input and manage flight details such as date, aircraft type, airports, registration, time of takeoff, time of landing, function of the pilot during the flight, airline, numbers of passengers, and average flight speed. Please note that certain details such as average speed and number of passengers are generated randomly as we do not have access to real flight data.
 - **Data Visualization**: Gain insights through graphical representations of flight hours and other statistics.
 - **Cloud Integration**: Backup and synchronize logbook data across devices seamlessly using Firebase.
 - **Google Maps Integration**: Visualize flight routes using Google Maps for enhanced visualization.
