@@ -4,12 +4,11 @@
 
 
 
-
-# Electronic Pilot Logbook
+# Electronic Pilot Logbook  ✈️
 
 ## Introduction
 This repository hosts the source code for a pilot logbook application developed as a bachelor's thesis project to streamline the management of flight data for pilots. The application aims to provide a user-friendly interface for pilots to record and manage their flight hours, and related details. It includes features such as Google Maps integration to visualize flight routes, the ability to add pilot license information. Additionally, the application utilizes push notifications to remind users of upcoming medical examinations and license expirations.
-## Google Maps IOS
+## Google Maps iOS
 ``` dart
 import UIKit
 import Flutter
